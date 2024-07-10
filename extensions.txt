@@ -1,0 +1,173 @@
+Extension Manager - Upgrade Assistant Report
+
+Currently on: GNOME 46.3.1
+Upgrading to: GNOME 46
+
+On upgrading to GNOME 46, 38 out of 40 currently
+installed extensions will be compatible (95%).
+
+User-Installed Extensions:
+
+'Tiling Assistant' by Leleat
+Extension ID: tiling-assistant@leleat-on-github
+Supported: Yes
+
+'Tweaks & Extensions in System Menu' by F-i-f
+Extension ID: tweaks-system-menu@extensions.gnome-shell.fifi.org
+Supported: Yes
+
+'Clipboard Indicator' by Tudmotu
+Extension ID: clipboard-indicator@tudmotu.com
+Supported: Yes
+
+'Compiz windows effect' by hermes83
+Extension ID: compiz-windows-effect@hermes83.github.com
+Supported: Yes
+
+'AATWS (Advanced Alt-Tab Window Switcher)' by GdH
+Extension ID: advanced-alt-tab@G-dH.github.com
+Supported: Yes
+
+'ArcMenu' by andrew_z
+Extension ID: arcmenu@arcmenu.com
+Supported: Yes
+
+'Freon' by UshakovVasilii
+Extension ID: freon@UshakovVasilii_Github.yahoo.com
+Supported: Yes
+
+'System Monitor' by fmuellner
+Extension ID: system-monitor@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Just Perfection' by JustPerfection
+Extension ID: just-perfection-desktop@just-perfection
+Supported: Yes
+
+'Space Bar' by luchrioh
+Extension ID: space-bar@luchrioh
+Supported: Yes
+
+'Bluetooth Quick Connect' by Extensions Valhalla
+Extension ID: bluetooth-quick-connect@bjarosze.gmail.com
+Supported: Yes
+
+'Lock Keys' by kazimieras.vaina
+Extension ID: lockkeys@vaina.lt
+Supported: Yes
+
+'Emoji Copy' by FelipeFTN
+Extension ID: emoji-copy@felipeftn
+Supported: Yes
+
+'Gesture Improvements' by harshadgavali
+Extension ID: gestureImprovements@gestures
+Supported: No
+
+'Hibernate Status Button' by slaclau
+Extension ID: hibernate-status@dromi
+Supported: Yes
+
+'User Themes' by fmuellner
+Extension ID: user-theme@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Compiz alike magic lamp effect' by hermes83
+Extension ID: compiz-alike-magic-lamp-effect@hermes83.github.com
+Supported: Yes
+
+'[QSTweak] Quick Setting Tweaker' by qwreey75
+Extension ID: quick-settings-tweaks@qwreey
+Supported: Yes
+
+'Peek Top Bar on Fullscreen' by marcinjahn
+Extension ID: peek-top-bar-on-fullscreen@marcinjahn.com
+Supported: Yes
+
+'Bluetooth battery indicator' by michalwanat
+Extension ID: bluetooth-battery@michalw.github.com
+Supported: Yes
+
+'Net speed Simplified' by Prateek SU
+Extension ID: netspeedsimplified@prateekmedia.extension
+Supported: Yes
+
+'Caffeine' by eon
+Extension ID: caffeine@patapon.info
+Supported: Yes
+
+'Alphabetical App Grid' by Stuart Hayhurst
+Extension ID: AlphabeticalAppGrid@stuarthayhurst
+Supported: Yes
+
+'Dash to Dock' by michele_g
+Extension ID: dash-to-dock@micxgx.gmail.com
+Supported: Yes
+
+'GPU profile selector' by lori_more
+Extension ID: GPU_profile_selector@lorenzo9904.gmail.com
+Supported: Yes
+
+'Tray Icons: Reloaded' by Martin
+Extension ID: trayIconsReloaded@selfmade.pl
+Supported: Yes
+
+'Media Controls' by Sakith B.
+Extension ID: mediacontrols@cliffniff.github.com
+Supported: Yes
+
+
+System Extensions:
+
+'Light Style' by fmuellner
+Extension ID: light-style@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Apps Menu' by fmuellner
+Extension ID: apps-menu@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Places Status Indicator' by fmuellner
+Extension ID: places-menu@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Auto Move Windows' by fmuellner
+Extension ID: auto-move-windows@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Pamac Updates Indicator' by (null)
+Extension ID: pamac-updates@manjaro.org
+Supported: Unknown
+
+'Workspace Indicator' by fmuellner
+Extension ID: workspace-indicator@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Window List' by fmuellner
+Extension ID: window-list@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Rounded Window Corners Reborn' by flexagoon
+Extension ID: rounded-window-corners@fxgn
+Supported: Yes
+
+'windowNavigator' by fmuellner
+Extension ID: windowsNavigator@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Launch new instance' by fmuellner
+Extension ID: launch-new-instance@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Native Window Placement' by fmuellner
+Extension ID: native-window-placement@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Removable Drive Menu' by fmuellner
+Extension ID: drive-menu@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
+'Screenshot Window Sizer' by fmuellner
+Extension ID: screenshot-window-sizer@gnome-shell-extensions.gcampax.github.com
+Supported: Yes
+
