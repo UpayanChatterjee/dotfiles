@@ -1,0 +1,20 @@
+[Keyboard]
+NumLock=0
+
+[Libinput][1133][50498][Logitech Wireless Receiver Mouse]
+MiddleButtonEmulation=true
+
+[Libinput][1267][12410][ELAN1203:00 04F3:307A Touchpad]
+DisableWhileTyping=true
+Enabled=true
+NaturalScroll=true
+PointerAcceleration=0.600
+
+[Libinput][13652][64515][2.4G Receiver Mouse]
+PointerAcceleration=0.400
+PointerAccelerationProfile=1
+
+[Mouse]
+X11LibInputXAccelProfileFlat=true
+cursorSize=32
+cursorTheme=Gruvbox-Retro

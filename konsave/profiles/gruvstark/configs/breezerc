@@ -1,0 +1,10 @@
+[Common]
+OutlineCloseButton=true
+OutlineIntensity=OutlineOff
+RoundedCorners=false
+
+[Style]
+DockWidgetDrawFrame=true
+MenuItemDrawStrongFocus=false
+MenuOpacity=10
+SidePanelDrawFrame=true

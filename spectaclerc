@@ -1,0 +1,9 @@
+[General]
+clipboardGroup=PostScreenshotCopyImage
+useReleaseToCapture=true
+
+[ImageSave]
+translatedScreenshotsFolder=Screenshots
+
+[VideoSave]
+translatedScreencastsFolder=Screencasts

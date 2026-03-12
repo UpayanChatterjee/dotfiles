@@ -1,0 +1,178 @@
+{
+    "layer": "top",
+    "position": "top",
+    "mod": "dock",
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "height": 30,
+    "modules-left": [
+        "custom/power",
+        "hyprland/workspaces",
+        "cpu",
+        "memory"
+    ],
+    "modules-center": [
+        "mpris"
+    ],
+    "modules-right": [
+        "custom/notification",
+        "network",
+        "tray",
+        "bluetooth",
+        "pulseaudio",
+        "pulseaudio#microphone",
+        "battery",
+        "clock"
+    ],
+
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "on-click": "activate",
+        "format": "{name}",
+        "persistent-workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": []
+        }
+    },
+    
+    "cpu": {
+        "interval": 10,
+        "format": "  {usage}%",
+        "max-length": 10
+    },
+
+    "memory": {
+        "interval": 30,
+        "format": "  {percentage}%",
+        "max-length": 10
+    },
+
+    "mpris": {
+        "format": "{player_icon} {title}",
+        "format-paused": "{status_icon} <i>{title}</i>",
+        "player-icons": {
+            "default": "▶",
+            "mpd": "🎵"
+        },
+        "status-icons": {
+            "paused": "⏸"
+        },
+        "ignored-players": ["firefox"]
+    },
+
+    "custom/notification": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "<span foreground='#cc241d'><sup></sup></span>",
+            "none": "",
+            "dnd-notification": "<span foreground='#cc241d'><sup></sup></span>",
+            "dnd-none": "",
+            "inhibited-notification": "<span foreground='#cc241d'><sup></sup></span>",
+            "inhibited-none": "",
+            "dnd-inhibited-notification": "<span foreground='#cc241d'><sup></sup></span>",
+            "dnd-inhibited-none": ""
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 10
+    },
+
+    // "network": {
+    //     "format-wifi": "  {signalStrength}%",
+    //     "format-ethernet": "  {ipaddr}",
+    //     "tooltip-format": "{essid} - {ifname} via {gwaddr}",
+    //     "format-linked": "{ifname} (No IP)",
+    //     "format-disconnected": "⚠ Disconnected",
+    //     "format-alt": "{ifname}:{essid} {ipaddr}/{cidr}",
+    //     "on-click": "kitty -e nmtui" 
+    // },
+
+    "bluetooth": {
+        "format": " {status}",
+        "format-disabled": " Off",
+        "format-connected": " {num_connections}",
+        "tooltip-format": "{controller_alias}\t{controller_address}",
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+        "on-click": "blueman-manager",
+        "on-click-middle": "rfkill toggle bluetooth"
+    },
+
+    "pulseaudio": {
+        "format": "{icon}  {volume}%",
+        "format-muted": "  Muted",
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+        "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
+        "scroll-step": 5,
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        }
+    },
+
+    "pulseaudio#microphone": {
+        "format": "{format_source}",
+        "format-source": " {volume}%",
+        "format-source-muted": "  Muted",
+        "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle",
+        "on-scroll-up": "pactl set-source-volume @DEFAULT_SOURCE@ +5%",
+        "on-scroll-down": "pactl set-source-volume @DEFAULT_SOURCE@ -5%",
+        "scroll-step": 5
+    },
+
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-alt": "{time} {icon}",
+        "format-icons": ["", "", "", "", ""]
+    },
+
+    "custom/power": {
+        "format": "⏻ ",
+        "on-click": "wlogout",
+        "tooltip": false
+    },
+
+    "clock": {
+        "format": "{:%H:%M   %d/%m}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "network": {
+        "format": "{ifname}",
+        "format-wifi": " {bandwidthDownBytes}   {bandwidthUpBytes}",
+        "format-ethernet": " {bandwidthDownBytes}   {bandwidthUpBytes}",
+        "format-disconnected": "", // Hides the module if you lose internet
+        "tooltip-format": "{ifname} via {gwaddr}",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)\n {bandwidthDownBytes}\n {bandwidthUpBytes}",
+        "tooltip-format-ethernet": "{ifname}\n {bandwidthDownBytes}\n {bandwidthUpBytes}",
+        "tooltip-format-disconnected": "Disconnected",
+        "interval": 1,
+        "max-length": 50
+    }
+}

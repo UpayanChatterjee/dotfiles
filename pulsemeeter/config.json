@@ -1,0 +1,12 @@
+{
+	"devices": {
+		"vi": {},
+		"hi": {},
+		"a": {},
+		"b": {}
+	},
+	"vumeters": true,
+	"cleanup": true,
+	"tray": false,
+	"layout": "blocks"
+}

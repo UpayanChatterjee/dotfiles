@@ -1,0 +1,10 @@
+[config]
+reload_on_change = true
+
+[templates.kitty]
+input_path = "/home/tony/.config/matugen/templates/kitty.conf"
+output_path = "/home/tony/.config/kitty/colors.conf"
+
+[templates.vivaldi]
+input_path = "/home/tony/.config/matugen/templates/vivaldi.css"
+output_path = "/home/tony/vivaldi-custom-css/theme.css"

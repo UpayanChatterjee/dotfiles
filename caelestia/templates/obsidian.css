@@ -1,0 +1,51 @@
+/* Caelestia Obsidian Theme */
+.theme-{{ mode }} {
+  --background-primary: #{{ surface.hex }};
+  --background-primary-alt: #{{ surfaceContainerLow.hex }};
+  --background-secondary: #{{ surfaceContainer.hex }};
+  --background-secondary-alt: #{{ surfaceContainerHigh.hex }};
+  --background-modifier-border: #{{ outline.hex }};
+  
+  --text-normal: #{{ onSurface.hex }};
+  --text-muted: #{{ onSurfaceVariant.hex }};
+  --text-faint: #{{ outline.hex }};
+  
+  --text-accent: #{{ primary.hex }};
+  --text-accent-hover: #{{ primaryDim.hex }};
+  
+  --text-selection: #{{ surfaceVariant.hex }};
+  
+  /* Headings - Using distinct tonal shifts for legibility */
+  --h1-color: #{{ term1.hex }};
+  --h2-color: #{{ term5.hex }};
+  --h3-color: #{{ term2.hex }};
+  --h4-color: #{{ term4.hex }};
+  --h5-color: #{{ term6.hex }};
+  --h6-color: #{{ term7.hex }};
+
+  /* Emphasis & Markdown Elements */
+  --bold-color: #{{ primary.hex }};
+  --italic-color: #{{ secondary.hex }};
+  --blockquote-border-color: #{{ primary.hex }};
+  --nav-item-color-active: #{{ primary.hex }};
+  --nav-item-background-active: #{{ surfaceVariant.hex }};
+  
+  /* Interactive Elements */
+  --interactive-accent: #{{ primary.hex }};
+  --interactive-hover: #{{ primaryDim.hex }};
+}
+
+/* Specific Heading Styles for better legibility */
+.markdown-rendered h1, .cm-header-1 { font-weight: 800; border-bottom: 1px solid #{{ outline.hex }}; padding-bottom: 0.2em; }
+.markdown-rendered h2, .cm-header-2 { font-weight: 700; }
+
+/* Legible Selection */
+::selection {
+  background-color: #{{ surfaceVariant.hex }} !important;
+  color: #{{ onSurface.hex }} !important;
+}
+
+/* Active line highlight */
+.cm-active {
+  background-color: #{{ surfaceContainerLow.hex }} !important;
+}

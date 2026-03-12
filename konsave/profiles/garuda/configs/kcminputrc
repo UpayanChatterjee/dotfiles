@@ -1,0 +1,9 @@
+[Keyboard]
+KeyRepeat=repeat
+NumLock=0
+RepeatDelay=250
+RepeatRate=25
+
+[Libinput][1267][12410][ELAN1203:00 04F3:307A Touchpad]
+NaturalScroll=true
+PointerAcceleration=0.400

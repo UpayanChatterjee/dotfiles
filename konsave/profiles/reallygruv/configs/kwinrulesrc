@@ -1,0 +1,27 @@
+[4ed3753f-c996-4a6e-8d3e-3e8a60a2dc95]
+Description=Application settings for zen
+above=true
+aboverule=3
+desktops=\\0
+desktopsrule=2
+skippager=true
+skippagerrule=2
+title=Picture-in-Picture
+titlematch=1
+wmclass=zen-bin zen
+wmclasscomplete=true
+wmclassmatch=1
+
+[933493d4-f312-449e-af2e-5fe794b28b83]
+Description=glava
+desktops=\\0
+desktopsrule=2
+wmclass=GLava
+wmclassmatch=2
+
+[General]
+count=2
+rules=4ed3753f-c996-4a6e-8d3e-3e8a60a2dc95,933493d4-f312-449e-af2e-5fe794b28b83
+
+[ff361847-f41a-4834-bb9d-952fd31dfd82]
+opacityactiverule=2

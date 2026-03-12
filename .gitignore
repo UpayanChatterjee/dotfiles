@@ -1,0 +1,17 @@
+vivaldi/**
+/.git
+discord/**
+Antigravity/**
+YouTube Music/**
+browsh/**
+Code - Insiders/**
+obsidian/**
+mozilla/**
+clipse/*history.json
+clipse/*.log
+clipse/tmp_files/**
+ggshield/**
+github-copilot/**
+ytm-player/auth.json
+google-chrome/**
+viu/**

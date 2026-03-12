@@ -1,0 +1,17 @@
+[General]
+FreeFloating=true
+
+[Plugins]
+baloosearchEnabled=true
+
+[Plugins][Favorites]
+plugins=krunner_services,krunner_systemsettings,krunner_shell,krunner_recentdocuments,baloosearch,krunner_sessions,krunner_kwin,emojirunner
+
+[Runners][emojirunner]
+disabledCategories=
+favourites=7;1;37;14;18;154;77;36;10;111;59;23;33;87;167;168;0;6;12;
+globalSearch=false
+iosVersion=13.0
+searchByDescription=true
+searchByTags=true
+unicodeVersion=12.0

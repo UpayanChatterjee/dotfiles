@@ -1,0 +1,24 @@
+{
+    "name": "Caelestia",
+    "globals":
+    {
+        "background": "#{{ surface.hex }}",
+        "foreground": "#{{ onSurface.hex }}",
+        "caret": "#{{ primary.hex }}",
+        "line_highlight": "#{{ surfaceVariant.hex }}",
+        "selection": "#{{ surfaceVariant.hex }}",
+        "selection_border": "#{{ outline.hex }}",
+        "gutter": "#{{ surface.hex }}",
+        "gutter_foreground": "#{{ outline.hex }}"
+    },
+    "rules":
+    [
+        { "name": "Comment", "scope": "comment", "foreground": "#{{ outline.hex }}" },
+        { "name": "String", "scope": "string", "foreground": "#{{ term4.hex }}" },
+        { "name": "Number", "scope": "constant.numeric", "foreground": "#{{ term3.hex }}" },
+        { "name": "Keyword", "scope": "keyword", "foreground": "#{{ term7.hex }}" },
+        { "name": "Function", "scope": "entity.name.function", "foreground": "#{{ term5.hex }}" },
+        { "name": "Variable", "scope": "variable", "foreground": "#{{ term1.hex }}" },
+        { "name": "Class", "scope": "entity.name.class", "foreground": "#{{ term2.hex }}" }
+    ]
+}

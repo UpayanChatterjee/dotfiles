@@ -1,0 +1,15 @@
+{
+    "toggles": {
+        "communication": {
+            "discord": {
+                "enable": false
+            },
+            "zapzap": {
+                "enable": true,
+                "match": [{"class": "com.rtosta.zapzap"}],
+                "command": ["zapzap"],
+                "move": true
+            }
+        }
+    }
+}

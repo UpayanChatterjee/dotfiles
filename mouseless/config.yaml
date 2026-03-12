@@ -1,0 +1,141 @@
+# the keyboard devices it reads from, if no devices are specified, it reads from all
+devices:
+# - "/dev/input/by-id/SOME_KEYBOARD_REPLACE_ME-event-kbd"
+
+# this is executed when mouseless starts, e.g. useful for setting the keyboard layout
+# startCommand: "setxkbmap de"
+
+# the rate at which the mouse pointer moves (in ms)
+mouseLoopInterval: 20
+
+# the default speed for mouse movement and scrolling
+baseMouseSpeed: 750.0
+baseScrollSpeed: 20.0
+
+# the time it takes to accelerate to baseMouseSpeed (in ms), 0 to reach top speed immediately
+mouseAccelerationTime: 200.0
+# the shape of the acceleration curve, 1.0 is linear, higher values have more time at low speeds
+mouseAccelerationCurve: 2.0
+# speed of the mouse when it starts moving
+startMouseSpeed: 0.0
+# same for deceleration
+mouseDecelerationTime: 300.0
+mouseDecelerationCurve: 3.0
+
+# enables auto-repeat of a tap key when pressed twice within this duration
+quickTapTime: 150
+# two keys must be pressed within this duration to activate a combo (e.g. f+d)
+comboTime: 25
+
+# the rest of the config defines the layers with their bindings
+layers:
+  # the first layer is active at start
+  - name: initial
+    bindings:
+      # when tab is held and another key pressed, activate mouse layer
+      f1: tap-hold-next f1 ; toggle-layer mouse ; 300
+      # a: tap-hold a ; toggle-layer mouse ; 1000
+      # right alt key toggles arrows layer
+      f2: tap-hold-next f2; toggle-layer arrows ; 300
+      f3: tap-hold-next f3; toggle-layer kitty  ; 300
+      capslock: tap-hold-next esc ; toggle-layer leftM ; 300
+      # leftctrl: tap-hold leftctrl ; toggle-layer krohnkite_ctrl ; 1000
+      # esc: capslock
+      # rightshift+leftshift: capslock
+      # switch escape with capslock
+      # key combos are activated when both keys are pressed simultaneously
+      # when a is held for 300ms, activate mouse layer
+      # esc: capslock
+      # f+d: layer mouse
+  # a layer for mouse movement
+  - name: mouse
+    # when true, keys that are not mapped keep their original meaning
+    passThrough: true
+    # these commands are executed when the layer is entered/exited
+    enterCommand: exec notify-send -t 500 "mouse ON"
+    exitCommand: exec notify-send -t 500 "mouse OFF"
+    bindings:
+      # quit mouse layer
+      q: layer initial
+      # keep the mouse layer active
+      space: layer mouse
+      a: layer arrow
+      r: reload-config
+      l: move  1  0
+      h: move -1  0
+      j: move  0  1
+      k: move  0 -1
+      p: scroll up
+      n: scroll down
+      leftalt: speed 4.0
+      e: speed 0.3
+      capslock: speed 0.1
+      o: button right
+      i: button middle
+      u: button left
+      # # move to the top left corner
+      # 0: "exec xdotool mousemove 0 0"
+
+  - name: krohnkite_ctrl
+
+    passThrough: true
+    enterCommand: exec notify-send -t 500 "krohnkite_ctrl ON"
+    exitCommand: exec notify-send -t 500 "krohnkite_ctrl OFF"
+    bindings:
+      h: leftmeta+leftctrl+h
+      j: leftmeta+leftctrl+j
+      k: leftmeta+leftctrl+k
+      l: leftmeta+leftctrl+l
+      # space: layer righttM
+      # m: rightmeta
+      # comma: rightctrl
+      # dot: rightshift
+      # slash: rightalt
+      # k: rightmeta
+      # l: rightctrl
+      # semicolon: rightshift
+      # apostrophe: rightalt
+
+  - name: leftM
+    passThrough: true
+    enterCommand: exec notify-send -t 500 "leftM ON"
+    exitCommand: exec notify-send -t 500 "leftM OFF"
+    bindings:
+      space: layer leftM
+      a: leftmeta
+      s: leftctrl
+      d: leftshift
+      f: leftalt
+
+  - name: kitty
+    passThrough: true
+    enterCommand: exec notify-send -t 500 "kitty ON"
+    exitCommand: exec notify-send -t 500 "kitty OFF"
+    bindings:
+      # space: layer leftM
+      h: leftctrl+left
+      j: leftctrl+down
+      k: leftctrl+up
+      l: leftctrl+right
+      _: leftctrl+leftshift+_
+
+  # another layer for arrows and some other keys
+  - name: arrows
+    passThrough: true
+    enterCommand: exec notify-send -t 500 "arrow ON"
+    exitCommand: exec notify-send -t 500 "arrow OFF"
+
+    bindings:
+      space: layer arrows
+      j: down
+      k: up
+      l: right
+      h: left
+      x: backspace
+      q: esc
+      d: delete
+      enter: enter
+      # capslock+h: ctrl+left
+      # _ is the wildcard key, which matches any key that is not mapped
+      # _: rightalt+_
+      # capslock: esc

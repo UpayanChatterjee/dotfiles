@@ -1,0 +1,7 @@
+[Greeter][LnF][General]
+showMediaControls=false
+
+[Greeter][Wallpaper][org.kde.image][General]
+Image=file:///home/tony/Wallpapers/gruvbox/gruvbox-japan-street.jpg
+PreviewImage=file:///home/tony/Wallpapers/gruvbox/gruvbox-japan-street.jpg
+SlidePaths=/home/tony/.local/share/wallpapers/,/usr/share/wallpapers/

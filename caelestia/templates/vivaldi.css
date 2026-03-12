@@ -1,0 +1,112 @@
+/* Caelestia Vivaldi Theme - Vertical Layout & Legibility Fix */
+
+/* --- CORE VARIABLE OVERRIDES --- */
+#browser {
+  --colorBg: #{{ surface.hex }} !important;
+  --colorFg: #{{ onSurface.hex }} !important;
+  
+  --colorWindowBg: #{{ surfaceContainerLowest.hex }} !important;
+  --colorWindowFg: #{{ onSurface.hex }} !important;
+  
+  --colorAccentBg: #{{ primary.hex }} !important;
+  --colorAccentFg: #{{ onPrimary.hex }} !important;
+  
+  --colorHighlightBg: #{{ secondary.hex }} !important;
+  --colorHighlightFg: #{{ onSecondary.hex }} !important;
+  
+  --colorBorder: #{{ outlineVariant.hex }} !important;
+  
+  /* Uniform slightly rounded corners for vertical tabs */
+  --radius: 6px; 
+}
+
+/* --- 1. MAIN UI & HYPRLAND BLUR --- */
+#browser, 
+#main, 
+.app-inner {
+  background-color: transparent !important;
+}
+
+#browser, #main, .app-inner, button, span, .title {
+  color: var(--colorFg) !important;
+}
+
+/* --- 2. THE SIDE PANEL --- */
+/* Specifically target the panel container to force Caelestia colors */
+#panels-container,
+#switch, 
+.panel-group,
+.panel {
+  background-color: var(--colorWindowBg) !important;
+  color: var(--colorFg) !important;
+}
+
+/* --- 3. VERTICAL TABS --- */
+.tab-position .tab {
+  background-color: transparent !important;
+  color: var(--colorFg) !important;
+  /* Add a transparent border to inactive tabs to prevent layout shift */
+  border: 1px solid transparent !important; 
+  border-radius: var(--radius) !important; 
+}
+
+/* Full, uniform border for the active tab */
+.tab-position .tab.active {
+  background-color: var(--colorBg) !important;
+  border: 1px solid var(--colorAccentBg) !important;
+  border-radius: var(--radius) !important; /* Uniformly rounded on all sides */
+  z-index: 2 !important; 
+}
+
+/* Gentle hover effect for inactive tabs (avoids the giant stretch bug) */
+.tab-position .tab:hover:not(.active) {
+  background-color: #{{ surfaceContainerHigh.hex }} !important;
+}
+
+/* --- 4. ADDRESS BAR & INPUTS --- */
+.toolbar-addressbar .addressfield,
+.toolbar-addressbar .searchfield {
+  background-color: #{{ surfaceContainerHigh.hex }} !important;
+  border: 1px solid #{{ outline.hex }} !important;
+  color: var(--colorFg) !important;
+  border-radius: var(--radius) !important;
+}
+
+.addressfield input, .searchfield input {
+  color: var(--colorFg) !important;
+}
+
+::-webkit-input-placeholder {
+  color: #{{ onSurfaceVariant.hex }} !important;
+}
+
+/* --- 5. MENUS & DROPDOWNS --- */
+.vivaldi-dropdown,
+.menu-item,
+.Omnibox-result {
+    background-color: var(--colorWindowBg) !important;
+    color: var(--colorFg) !important;
+}
+
+/* Remove debug border */
+#browser { border: none !important; }
+
+/* --- 6. START PAGE (SPEED DIAL) --- */
+/* Strip Vivaldi's default gray overlay and apply the deepest theme color */
+.startpage,
+.startpage .startpage-bg-image {
+  background-color: #{{ background.hex }} !important;
+  background-image: none !important; 
+}
+
+/* Ensure the Speed Dial folders/buttons also match */
+.dial {
+  background-color: #{{ surfaceContainerHigh.hex }} !important;
+  border: 1px solid #{{ outline.hex }} !important;
+  border-radius: var(--radius) !important;
+}
+
+.dial:hover {
+  background-color: #{{ surfaceContainerHighest.hex }} !important;
+  border-color: #{{ primary.hex }} !important;
+}

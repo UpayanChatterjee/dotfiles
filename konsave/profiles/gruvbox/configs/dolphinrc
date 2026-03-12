@@ -1,0 +1,21 @@
+[DetailsMode]
+RightPadding=495
+
+[ExtractDialog]
+1920x1080 screen: Height=540
+1920x1080 screen: Width=1280
+DirHistory[$e]=$HOME/Downloads/
+
+[General]
+Version=202
+ViewPropsTimestamp=2025,3,27,0,4,15.366
+
+[KFileDialog Settings]
+Places Icons Auto-resize=false
+Places Icons Static Size=22
+
+[MainWindow]
+MenuBar=Disabled
+
+[PreviewSettings]
+Plugins=imagethumbnail,jpegthumbnail,svgthumbnail,ffmpegthumbs

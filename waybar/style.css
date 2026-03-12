@@ -1,0 +1,169 @@
+/* -----------------------------------------------------------------------------
+ * Gruvbox Dark Palette
+ * -------------------------------------------------------------------------- */
+@define-color bg #282828;
+@define-color bg_dim #1d2021;
+@define-color fg #ebdbb2;
+@define-color red #cc241d;
+@define-color green #98971a;
+@define-color yellow #d79921;
+@define-color blue #458588;
+@define-color purple #b16286;
+@define-color aqua #689d6a;
+@define-color orange #d65d0e;
+@define-color gray #a89984;
+
+/* -----------------------------------------------------------------------------
+ * Global Styles
+ * -------------------------------------------------------------------------- */
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: @bg;
+    color: @fg;
+}
+
+tooltip {
+    background: @bg_dim;
+    border: 1px solid @gray;
+}
+
+tooltip label {
+    color: @fg;
+}
+
+/* -----------------------------------------------------------------------------
+ * Module Styles
+ * -------------------------------------------------------------------------- */
+
+#workspaces button {
+    padding: 0 5px;
+    background: transparent;
+    color: @gray;
+    border-bottom: 2px solid transparent;
+}
+
+#workspaces button.empty {
+    color: @bg_dim;
+}
+
+#workspaces button.occupied {
+    color: @fg;
+}
+
+#workspaces button.active {
+    color: @fg;
+    border-bottom: 2px solid @yellow;
+}
+
+#workspaces button:hover {
+    background: @bg_dim;
+    color: @fg;
+}
+
+#cpu, #memory, #mpris, #tray, #network, #pulseaudio, #battery, #custom-power, #clock {
+    padding: 0 5px;
+    margin: 0 4px;
+}
+
+/* Hardware Stats - Blue/Purple */
+#cpu {
+    color: @blue;
+}
+#memory {
+    color: @purple;
+}
+
+/* Center Media - Aqua */
+#mpris {
+    color: @aqua;
+}
+
+/* System Status */
+#network {
+    color: @green;
+}
+
+#pulseaudio {
+    color: @yellow;
+    /* margin-right: 0; */
+    /* margin-left: 0; */
+    /* padding-left: 5px; */
+    /* padding-right: 5px; */
+
+}
+#pulseaudio.microphone {
+    color: @orange;
+}
+#pulseaudio.muted {
+    color: @gray;
+}
+
+#battery {
+    color: @fg;
+}
+#battery.charging {
+    color: @green;
+}
+#battery.warning {
+    color: @yellow;
+}
+#battery.critical {
+    color: @red;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+/* Power Button - NOW ON THE LEFT */
+#custom-power {
+    background: @bg_dim;
+    color: @red;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin-left: 0; /* Flush with left edge */
+    margin-right: 20px;
+    border-bottom: 2px solid @red;
+}
+
+/* Clock - NOW ON THE RIGHT */
+#clock {
+    background: @bg_dim;
+    color: @blue;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: 0; /* Flush with right edge */
+    border-bottom: 2px solid @blue;
+}
+#custom-notification {
+    color: @aqua;
+    padding: 0 10px;
+    margin: 0 4px;
+}
+
+#bluetooth {
+    color: @blue;
+    padding: 0 10px;
+    margin: 0 4px;
+}
+
+#network {
+    color: @purple;
+    padding: 0 10px;
+    margin: 0 4px;
+}
+/* Animations */
+@keyframes blink {
+    to {
+        background-color: @red;
+        color: @bg;
+    }
+}

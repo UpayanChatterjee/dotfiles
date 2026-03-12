@@ -1,0 +1,33 @@
+/* Matugen generated Vivaldi Theme */
+#browser {
+    /* Background (Window & Inactive Tabs) */
+    --colorBg: {{colors.surface.default.hex}} !important;
+    --colorBgAlpha: {{colors.surface.default.hex}} !important;
+    --colorBgIntense: {{colors.surface_container.default.hex}} !important;
+
+    /* Foreground (Text) */
+    --colorFg: {{colors.on_surface.default.hex}} !important;
+    --colorFgAlpha: {{colors.on_surface_variant.default.hex}} !important;
+    --colorFgIntense: {{colors.on_surface.default.hex}} !important;
+
+    /* Accent (Active Tab & Address Bar) */
+    --colorAccentBg: {{colors.primary.default.hex}} !important;
+    --colorAccentFg: {{colors.on_primary.default.hex}} !important;
+
+    /* Highlight (Selection) */
+    --colorHighlightBg: {{colors.tertiary.default.hex}} !important;
+    --colorHighlightFg: {{colors.on_tertiary.default.hex}} !important;
+
+    /* Border */
+    --colorBorder: {{colors.outline.default.hex}} !important;
+}
+
+/* Force background on the main window container */
+#app {
+    background-color: var(--colorBg) !important;
+}
+
+/* Optional: Make the start page background match */
+.startpage {
+    background-color: var(--colorBg) !important;
+}

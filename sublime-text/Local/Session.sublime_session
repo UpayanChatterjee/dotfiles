@@ -1,0 +1,507 @@
+{
+	"file_history":
+	[
+		"/home/tony/.zshrc",
+		"/home/tony/.condarc",
+		"/home/tony/fix_howdy.md",
+		"/home/tony/.local/share/hyprsession/default/clients.json",
+		"/home/tony/.local/share/hyprsession/default/exec.conf",
+		"/home/tony/.config/nvim/lua/plugins/example.lua",
+		"/home/tony/Sem10/CoVi/Computer_Vision_Notes.md",
+		"/home/tony/.config/vivaldi/custom_css/theme.css",
+		"/home/tony/.config/vivaldi/custom_css/fix-font.css",
+		"/home/tony/.config/vivaldi/custom_css/remove-header.css",
+		"/home/tony/vivaldi-custom-css/remove-header.css",
+		"/home/tony/vivaldi-custom-css/fix-font.css",
+		"/home/tony/vivaldi-custom-css/theme.css",
+		"/home/tony/errors.log",
+		"/home/tony/.config/sublime-text/Packages/Theme - Default/Default.sublime-theme",
+		"/home/tony/.config/sublime-text/Packages/User/Default.sublime-theme",
+		"/home/tony/.config/caelestia/shell.json",
+		"/home/tony/Games/red-dead-redemption-2/drive_c/Red Dead Redemption 2/_Unlocker/Open Saves Location.bat",
+		"/home/tony/.local/share/icons/Gruvbox-macOS/index.theme",
+		"/home/tony/.config/hypr/keybinds.md",
+		"/home/tony/Obsidian/.obsidian/appearance.json",
+		"/home/tony/Games/red-dead-redemption-2/drive_c/Red Dead Redemption 2/_Unlocker/readme.txt",
+		"/home/tony/.local/share/caelestia/GEMINI.md",
+		"/home/tony/.config/xsettingsd/xsettingsd.conf",
+		"/run/media/tony/fedora/home/tony/.local/share/fastfetch/presets/6.jsonc",
+		"/run/media/tony/fedora/home/tony/local_coding/one guide to rule them all/flatpaks.txt",
+		"/run/media/tony/fedora/home/tony/local_coding/one guide to rule them all/README.md",
+		"/home/tony/Downloads/New Folder/VOL00010/DATA/VOL00010.DAT",
+		"/home/tony/Downloads/Obey.The.Voice/OneHack.Us.txt",
+		"/home/tony/Downloads/Obey.The.Voice/README.txt",
+		"/home/tony/Downloads/Obey.The.Voice/_INSTALL TUTORIAL.txt",
+		"/home/tony/.cache/kioexec/krun/261951_0/KernelSU_Next_install_log_2026-01-07-16-03-07.log",
+		"/home/tony/Downloads/pdfsam-basic-5.4.1-linux-x64/bin/pdfsam.sh",
+		"/home/tony/Games/MIO Memories in Orbit/RunMe.bat",
+		"/home/tony/Games/MIO Memories in Orbit/RunMeMod.bat",
+		"/home/tony/Downloads/MIO-Memories-in-Orbit-AnkerGames/Run Me!.bat",
+		"/home/tony/Downloads/MIO-Memories-in-Orbit-AnkerGames/Read Me.txt",
+		"/home/tony/Games/Prince-of-Persia-The-Two-Thrones-Ankergames/RUN THIS FIX FIRST.bat",
+		"/home/tony/Downloads/mtp2.txt",
+		"/home/tony/Downloads/keybox.xml",
+		"/home/tony/Games/call-of-duty-black-ops-6/drive_c/users/steamuser/Call of Duty - Black Ops 6/!start_sp24.bat",
+		"/home/tony/Games/call-of-duty-black-ops-6/drive_c/users/steamuser/Call of Duty - Black Ops 6/bootstrapper.log",
+		"/home/tony/Games/call-of-duty-black-ops-6/drive_c/users/steamuser/Call of Duty - Black Ops 6/!README FIRST.txt",
+		"/home/tony/.cache/kioexec/krun/423367_0/keybox.xml",
+		"/home/tony/Games/Buckshot Roulette/drive_c/users/steamuser/Buckshot-Roulette-AnkerGames/OnlineFix.ini",
+		"/home/tony/Games/Buckshot Roulette/drive_c/users/steamuser/Buckshot-Roulette-AnkerGames/steam_settings/steam_appid.txt",
+		"/run/media/tony/fedora/home/tony/Documents/RDR2_backup/readme.md",
+		"/run/media/tony/fedora/home/tony/.zsh_history",
+		"/home/tony/.zsh_history",
+		"/home/tony/Downloads/sine-mods-export.json",
+		"/home/tony/Games/Persona5/drive_c/users/steamuser/Persona 5 Royal/_Redist/fitgirl.md5",
+		"/home/tony/Persona 5 Royal/steam_settings/force_steamid.txt",
+		"/home/tony/Persona 5 Royal/steam_settings/steam_appid.txt",
+		"/home/tony/Persona 5 Royal/OSS_LICENSE_P5R.txt",
+		"/home/tony/Persona 5 Royal/steam_settings/offline.txt",
+		"/home/tony/Downloads/Compressed/Persona-5-Royal-AnkerGames/Read Me.txt",
+		"/run/media/tony/fedora/home/tony/.zshrc"
+	],
+	"folder_history":
+	[
+	],
+	"last_version": 4200,
+	"last_window_id": 3,
+	"log_indexing": false,
+	"next_update_check": 1773394012,
+	"settings":
+	{
+		"new_window_full_screen": false,
+		"new_window_height": 1024.0,
+		"new_window_maximized": true,
+		"new_window_position":
+		[
+			0.0,
+			25.0
+		],
+		"new_window_settings":
+		{
+			"auto_complete":
+			{
+				"selected_items":
+				[
+				]
+			},
+			"build_system_choices":
+			[
+			],
+			"build_varint": "",
+			"command_palette":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"console":
+			{
+				"height": 0.0,
+				"history":
+				[
+				]
+			},
+			"distraction_free":
+			{
+				"menu_visible": true,
+				"show_minimap": false,
+				"show_open_files": false,
+				"show_tabs": false,
+				"side_bar_visible": false,
+				"status_bar_visible": false
+			},
+			"file_history":
+			[
+				"/home/tony/.zshrc",
+				"/home/tony/.condarc",
+				"/home/tony/fix_howdy.md",
+				"/home/tony/.local/share/hyprsession/default/clients.json",
+				"/home/tony/.local/share/hyprsession/default/exec.conf",
+				"/home/tony/.config/nvim/lua/plugins/example.lua",
+				"/home/tony/Sem10/CoVi/Computer_Vision_Notes.md",
+				"/home/tony/.config/vivaldi/custom_css/theme.css",
+				"/home/tony/.config/vivaldi/custom_css/fix-font.css",
+				"/home/tony/.config/vivaldi/custom_css/remove-header.css",
+				"/home/tony/vivaldi-custom-css/remove-header.css",
+				"/home/tony/vivaldi-custom-css/fix-font.css",
+				"/home/tony/vivaldi-custom-css/theme.css",
+				"/home/tony/errors.log",
+				"/home/tony/.config/sublime-text/Packages/Theme - Default/Default.sublime-theme",
+				"/home/tony/.config/sublime-text/Packages/User/Default.sublime-theme",
+				"/home/tony/.config/caelestia/shell.json",
+				"/home/tony/Games/red-dead-redemption-2/drive_c/Red Dead Redemption 2/_Unlocker/Open Saves Location.bat",
+				"/home/tony/.local/share/icons/Gruvbox-macOS/index.theme",
+				"/home/tony/.config/hypr/keybinds.md",
+				"/home/tony/Obsidian/.obsidian/appearance.json",
+				"/home/tony/Games/red-dead-redemption-2/drive_c/Red Dead Redemption 2/_Unlocker/readme.txt",
+				"/home/tony/.local/share/caelestia/GEMINI.md",
+				"/home/tony/.config/xsettingsd/xsettingsd.conf",
+				"/run/media/tony/fedora/home/tony/.local/share/fastfetch/presets/6.jsonc",
+				"/run/media/tony/fedora/home/tony/local_coding/one guide to rule them all/flatpaks.txt",
+				"/run/media/tony/fedora/home/tony/local_coding/one guide to rule them all/README.md",
+				"/home/tony/Downloads/New Folder/VOL00010/DATA/VOL00010.DAT",
+				"/home/tony/Downloads/Obey.The.Voice/OneHack.Us.txt",
+				"/home/tony/Downloads/Obey.The.Voice/README.txt",
+				"/home/tony/Downloads/Obey.The.Voice/_INSTALL TUTORIAL.txt",
+				"/home/tony/.cache/kioexec/krun/261951_0/KernelSU_Next_install_log_2026-01-07-16-03-07.log",
+				"/home/tony/Downloads/pdfsam-basic-5.4.1-linux-x64/bin/pdfsam.sh",
+				"/home/tony/Games/MIO Memories in Orbit/RunMe.bat",
+				"/home/tony/Games/MIO Memories in Orbit/RunMeMod.bat",
+				"/home/tony/Downloads/MIO-Memories-in-Orbit-AnkerGames/Run Me!.bat",
+				"/home/tony/Downloads/MIO-Memories-in-Orbit-AnkerGames/Read Me.txt",
+				"/home/tony/Games/Prince-of-Persia-The-Two-Thrones-Ankergames/RUN THIS FIX FIRST.bat",
+				"/home/tony/Downloads/mtp2.txt",
+				"/home/tony/Downloads/keybox.xml",
+				"/home/tony/Games/call-of-duty-black-ops-6/drive_c/users/steamuser/Call of Duty - Black Ops 6/!start_sp24.bat",
+				"/home/tony/Games/call-of-duty-black-ops-6/drive_c/users/steamuser/Call of Duty - Black Ops 6/bootstrapper.log",
+				"/home/tony/Games/call-of-duty-black-ops-6/drive_c/users/steamuser/Call of Duty - Black Ops 6/!README FIRST.txt",
+				"/home/tony/.cache/kioexec/krun/423367_0/keybox.xml",
+				"/home/tony/Games/Buckshot Roulette/drive_c/users/steamuser/Buckshot-Roulette-AnkerGames/OnlineFix.ini",
+				"/home/tony/Games/Buckshot Roulette/drive_c/users/steamuser/Buckshot-Roulette-AnkerGames/steam_settings/steam_appid.txt",
+				"/run/media/tony/fedora/home/tony/Documents/RDR2_backup/readme.md",
+				"/run/media/tony/fedora/home/tony/.zsh_history",
+				"/home/tony/.zsh_history",
+				"/home/tony/Downloads/sine-mods-export.json",
+				"/home/tony/Games/Persona5/drive_c/users/steamuser/Persona 5 Royal/_Redist/fitgirl.md5",
+				"/home/tony/Persona 5 Royal/steam_settings/force_steamid.txt",
+				"/home/tony/Persona 5 Royal/steam_settings/steam_appid.txt",
+				"/home/tony/Persona 5 Royal/OSS_LICENSE_P5R.txt",
+				"/home/tony/Persona 5 Royal/steam_settings/offline.txt",
+				"/home/tony/Downloads/Compressed/Persona-5-Royal-AnkerGames/Read Me.txt",
+				"/run/media/tony/fedora/home/tony/.zshrc"
+			],
+			"find":
+			{
+				"height": 41.0
+			},
+			"find_in_files":
+			{
+				"height": 0.0,
+				"where_history":
+				[
+				]
+			},
+			"find_state":
+			{
+				"case_sensitive": false,
+				"find_history":
+				[
+				],
+				"highlight": true,
+				"in_selection": false,
+				"preserve_case": false,
+				"regex": false,
+				"replace_history":
+				[
+				],
+				"reverse": false,
+				"scrollbar_highlights": true,
+				"show_context": true,
+				"use_buffer2": true,
+				"use_gitignore": true,
+				"whole_word": false,
+				"wrap": true
+			},
+			"incremental_find":
+			{
+				"height": 29.0
+			},
+			"input":
+			{
+				"height": 0.0
+			},
+			"menu_visible": true,
+			"output.find_results":
+			{
+				"height": 0.0,
+				"history":
+				[
+				]
+			},
+			"pinned_build_system": "",
+			"replace":
+			{
+				"height": 54.0
+			},
+			"save_all_on_build": true,
+			"select_file":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"select_project":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"select_symbol":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"show_minimap": false,
+			"show_open_files": false,
+			"show_tabs": true,
+			"side_bar_visible": false,
+			"side_bar_width": 150.0,
+			"status_bar_visible": true,
+			"template_settings":
+			{
+			}
+		},
+		"new_window_width": 906.0
+	},
+	"windows":
+	[
+		{
+			"auto_complete":
+			{
+				"selected_items":
+				[
+				]
+			},
+			"buffers":
+			[
+			],
+			"build_system": "",
+			"build_system_choices":
+			[
+			],
+			"build_varint": "",
+			"command_palette":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"console":
+			{
+				"height": 0.0,
+				"history":
+				[
+				]
+			},
+			"distraction_free":
+			{
+				"menu_visible": true,
+				"show_minimap": false,
+				"show_open_files": false,
+				"show_tabs": false,
+				"side_bar_visible": false,
+				"status_bar_visible": false
+			},
+			"file_history":
+			[
+				"/home/tony/.zshrc",
+				"/home/tony/.condarc",
+				"/home/tony/fix_howdy.md",
+				"/home/tony/.local/share/hyprsession/default/clients.json",
+				"/home/tony/.local/share/hyprsession/default/exec.conf",
+				"/home/tony/.config/nvim/lua/plugins/example.lua",
+				"/home/tony/Sem10/CoVi/Computer_Vision_Notes.md",
+				"/home/tony/.config/vivaldi/custom_css/theme.css",
+				"/home/tony/.config/vivaldi/custom_css/fix-font.css",
+				"/home/tony/.config/vivaldi/custom_css/remove-header.css",
+				"/home/tony/vivaldi-custom-css/remove-header.css",
+				"/home/tony/vivaldi-custom-css/fix-font.css",
+				"/home/tony/vivaldi-custom-css/theme.css",
+				"/home/tony/errors.log",
+				"/home/tony/.config/sublime-text/Packages/Theme - Default/Default.sublime-theme",
+				"/home/tony/.config/sublime-text/Packages/User/Default.sublime-theme",
+				"/home/tony/.config/caelestia/shell.json",
+				"/home/tony/Games/red-dead-redemption-2/drive_c/Red Dead Redemption 2/_Unlocker/Open Saves Location.bat",
+				"/home/tony/.local/share/icons/Gruvbox-macOS/index.theme",
+				"/home/tony/.config/hypr/keybinds.md",
+				"/home/tony/Obsidian/.obsidian/appearance.json",
+				"/home/tony/Games/red-dead-redemption-2/drive_c/Red Dead Redemption 2/_Unlocker/readme.txt",
+				"/home/tony/.local/share/caelestia/GEMINI.md",
+				"/home/tony/.config/xsettingsd/xsettingsd.conf",
+				"/run/media/tony/fedora/home/tony/.local/share/fastfetch/presets/6.jsonc",
+				"/run/media/tony/fedora/home/tony/local_coding/one guide to rule them all/flatpaks.txt",
+				"/run/media/tony/fedora/home/tony/local_coding/one guide to rule them all/README.md",
+				"/home/tony/Downloads/New Folder/VOL00010/DATA/VOL00010.DAT",
+				"/home/tony/Downloads/Obey.The.Voice/OneHack.Us.txt",
+				"/home/tony/Downloads/Obey.The.Voice/README.txt",
+				"/home/tony/Downloads/Obey.The.Voice/_INSTALL TUTORIAL.txt",
+				"/home/tony/.cache/kioexec/krun/261951_0/KernelSU_Next_install_log_2026-01-07-16-03-07.log",
+				"/home/tony/Downloads/pdfsam-basic-5.4.1-linux-x64/bin/pdfsam.sh",
+				"/home/tony/Games/MIO Memories in Orbit/RunMe.bat",
+				"/home/tony/Games/MIO Memories in Orbit/RunMeMod.bat",
+				"/home/tony/Downloads/MIO-Memories-in-Orbit-AnkerGames/Run Me!.bat",
+				"/home/tony/Downloads/MIO-Memories-in-Orbit-AnkerGames/Read Me.txt",
+				"/home/tony/Games/Prince-of-Persia-The-Two-Thrones-Ankergames/RUN THIS FIX FIRST.bat",
+				"/home/tony/Downloads/mtp2.txt",
+				"/home/tony/Downloads/keybox.xml",
+				"/home/tony/Games/call-of-duty-black-ops-6/drive_c/users/steamuser/Call of Duty - Black Ops 6/!start_sp24.bat",
+				"/home/tony/Games/call-of-duty-black-ops-6/drive_c/users/steamuser/Call of Duty - Black Ops 6/bootstrapper.log",
+				"/home/tony/Games/call-of-duty-black-ops-6/drive_c/users/steamuser/Call of Duty - Black Ops 6/!README FIRST.txt",
+				"/home/tony/.cache/kioexec/krun/423367_0/keybox.xml",
+				"/home/tony/Games/Buckshot Roulette/drive_c/users/steamuser/Buckshot-Roulette-AnkerGames/OnlineFix.ini",
+				"/home/tony/Games/Buckshot Roulette/drive_c/users/steamuser/Buckshot-Roulette-AnkerGames/steam_settings/steam_appid.txt",
+				"/run/media/tony/fedora/home/tony/Documents/RDR2_backup/readme.md",
+				"/run/media/tony/fedora/home/tony/.zsh_history",
+				"/home/tony/.zsh_history",
+				"/home/tony/Downloads/sine-mods-export.json",
+				"/home/tony/Games/Persona5/drive_c/users/steamuser/Persona 5 Royal/_Redist/fitgirl.md5",
+				"/home/tony/Persona 5 Royal/steam_settings/force_steamid.txt",
+				"/home/tony/Persona 5 Royal/steam_settings/steam_appid.txt",
+				"/home/tony/Persona 5 Royal/OSS_LICENSE_P5R.txt",
+				"/home/tony/Persona 5 Royal/steam_settings/offline.txt",
+				"/home/tony/Downloads/Compressed/Persona-5-Royal-AnkerGames/Read Me.txt",
+				"/run/media/tony/fedora/home/tony/.zshrc"
+			],
+			"find":
+			{
+				"height": 41.0
+			},
+			"find_in_files":
+			{
+				"height": 0.0,
+				"where_history":
+				[
+				]
+			},
+			"find_state":
+			{
+				"case_sensitive": false,
+				"find_history":
+				[
+				],
+				"highlight": true,
+				"in_selection": false,
+				"preserve_case": false,
+				"regex": false,
+				"replace_history":
+				[
+				],
+				"reverse": false,
+				"scrollbar_highlights": true,
+				"show_context": true,
+				"use_buffer2": true,
+				"use_gitignore": true,
+				"whole_word": false,
+				"wrap": true
+			},
+			"groups":
+			[
+				{
+					"sheets":
+					[
+					]
+				}
+			],
+			"incremental_find":
+			{
+				"height": 29.0
+			},
+			"input":
+			{
+				"height": 0.0
+			},
+			"layout":
+			{
+				"cells":
+				[
+					[
+						0,
+						0,
+						1,
+						1
+					]
+				],
+				"cols":
+				[
+					0.0,
+					1.0
+				],
+				"rows":
+				[
+					0.0,
+					1.0
+				]
+			},
+			"menu_visible": true,
+			"output.find_results":
+			{
+				"height": 0.0,
+				"history":
+				[
+				]
+			},
+			"pinned_build_system": "",
+			"position": "0,1,0,0,0,0,0,900,1038,1920,1080,0",
+			"project": "",
+			"replace":
+			{
+				"height": 54.0
+			},
+			"save_all_on_build": true,
+			"select_file":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"select_project":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"select_symbol":
+			{
+				"height": 0.0,
+				"last_filter": "",
+				"selected_items":
+				[
+				],
+				"width": 0.0
+			},
+			"selected_group": 0,
+			"settings":
+			{
+			},
+			"show_minimap": false,
+			"show_open_files": false,
+			"show_tabs": true,
+			"side_bar_visible": false,
+			"side_bar_width": 150.0,
+			"status_bar_visible": true,
+			"template_settings":
+			{
+			},
+			"window_id": 3,
+			"workspace_name": ""
+		}
+	],
+	"workspaces":
+	{
+		"recent_workspaces":
+		[
+		]
+	}
+}
