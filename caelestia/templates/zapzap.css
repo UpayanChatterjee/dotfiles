@@ -1,0 +1,30 @@
+/* Caelestia Elite ZapZap Theme */
+:root {
+    --vspr-bg-base: #{{ surface.hex }};
+    --vspr-bg-subtle: #{{ surfaceContainerLow.hex }};
+    --vspr-bg-subtle-light: #{{ surfaceContainer.hex }};
+    --vspr-fg-base: #{{ onSurface.hex }};
+    --vspr-accent: #{{ primary.hex }};
+}
+
+* {
+    --background-default: var(--vspr-bg-base) !important;
+    --conversation-panel-background: var(--vspr-bg-base) !important;
+    --panel-header-background: var(--vspr-bg-subtle) !important;
+    
+    /* Elite Message Diversity */
+    --incoming-background: var(--vspr-bg-subtle-light) !important;
+    --outgoing-background: #{{ primaryContainer.hex }} !important;
+    
+    /* Selection */
+    --text-selection: #{{ primaryContainer.hex }} !important;
+}
+
+body { background-color: var(--vspr-bg-base) !important; color: var(--vspr-fg-base) !important; }
+
+/* Legible Selection */
+::selection { background-color: #{{ primaryContainer.hex }} !important; color: #{{ onPrimaryContainer.hex }} !important; }
+
+/* Distinct Message Text */
+.message-out ._amk6 { color: #{{ onPrimaryContainer.hex }} !important; }
+.message-in ._amk6 { color: var(--vspr-fg-base) !important; }

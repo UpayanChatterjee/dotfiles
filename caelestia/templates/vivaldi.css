@@ -58,7 +58,7 @@
   z-index: 2 !important; 
 }
 
-/* Gentle hover effect for inactive tabs (avoids the giant stretch bug) */
+/* Gentle hover effect for inactive tabs */
 .tab-position .tab:hover:not(.active) {
   background-color: #{{ surfaceContainerHigh.hex }} !important;
 }
@@ -83,16 +83,35 @@
 /* --- 5. MENUS & DROPDOWNS --- */
 .vivaldi-dropdown,
 .menu-item,
-.Omnibox-result {
+.OmniDropdown,
+.OmniLinkItem {
     background-color: var(--colorWindowBg) !important;
     color: var(--colorFg) !important;
+}
+
+/* OMNIBOX HIGHLIGHT FIX */
+/* Updated Vivaldi Omnibox Classes */
+.OmniLinkItem:hover,
+.OmniLinkItem[data-selected="true"],
+.omni-clickable:hover,
+.omni-clickable.is-selected {
+    background-color: var(--colorHighlightBg) !important;
+    color: var(--colorHighlightFg) !important;
+}
+
+/* Force contrast on all nested text/labels */
+.OmniLinkItem:hover *,
+.OmniLinkItem[data-selected="true"] *,
+.omni-clickable:hover *,
+.omni-clickable.is-selected * {
+    color: var(--colorHighlightFg) !important;
 }
 
 /* Remove debug border */
 #browser { border: none !important; }
 
 /* --- 6. START PAGE (SPEED DIAL) --- */
-/* Strip Vivaldi's default gray overlay and apply the deepest theme color */
+/* Strip Vivaldi default gray overlay and apply deepest theme color */
 .startpage,
 .startpage .startpage-bg-image {
   background-color: #{{ background.hex }} !important;

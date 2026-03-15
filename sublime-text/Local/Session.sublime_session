@@ -1,12 +1,12 @@
 {
 	"file_history":
 	[
+		"/home/tony/.config/nvim/lua/plugins/example.lua",
 		"/home/tony/.zshrc",
 		"/home/tony/.condarc",
 		"/home/tony/fix_howdy.md",
 		"/home/tony/.local/share/hyprsession/default/clients.json",
 		"/home/tony/.local/share/hyprsession/default/exec.conf",
-		"/home/tony/.config/nvim/lua/plugins/example.lua",
 		"/home/tony/Sem10/CoVi/Computer_Vision_Notes.md",
 		"/home/tony/.config/vivaldi/custom_css/theme.css",
 		"/home/tony/.config/vivaldi/custom_css/fix-font.css",
@@ -65,11 +65,11 @@
 	"last_version": 4200,
 	"last_window_id": 3,
 	"log_indexing": false,
-	"next_update_check": 1773394012,
+	"next_update_check": 1773566812,
 	"settings":
 	{
 		"new_window_full_screen": false,
-		"new_window_height": 1024.0,
+		"new_window_height": 1080.0,
 		"new_window_maximized": true,
 		"new_window_position":
 		[
@@ -115,12 +115,12 @@
 			},
 			"file_history":
 			[
+				"/home/tony/.config/nvim/lua/plugins/example.lua",
 				"/home/tony/.zshrc",
 				"/home/tony/.condarc",
 				"/home/tony/fix_howdy.md",
 				"/home/tony/.local/share/hyprsession/default/clients.json",
 				"/home/tony/.local/share/hyprsession/default/exec.conf",
-				"/home/tony/.config/nvim/lua/plugins/example.lua",
 				"/home/tony/Sem10/CoVi/Computer_Vision_Notes.md",
 				"/home/tony/.config/vivaldi/custom_css/theme.css",
 				"/home/tony/.config/vivaldi/custom_css/fix-font.css",
@@ -264,7 +264,7 @@
 			{
 			}
 		},
-		"new_window_width": 906.0
+		"new_window_width": 1920.0
 	},
 	"windows":
 	[
@@ -277,6 +277,189 @@
 			},
 			"buffers":
 			[
+				{
+					"contents": "",
+					"settings":
+					{
+						"buffer_size": 0,
+						"line_ending": "Unix"
+					},
+					"undo_stack":
+					[
+						[
+							1,
+							1,
+							"insert",
+							{
+								"characters": "sudo"
+							},
+							"BAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAACAAAAAAAAAAAAAAACAAAAAAAAAAMAAAAAAAAAAAAAAAMAAAAAAAAABAAAAAAAAAAAAAAA",
+							"BQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8"
+						],
+						[
+							2,
+							1,
+							"insert",
+							{
+								"characters": " apt"
+							},
+							"BAAAAAQAAAAAAAAABQAAAAAAAAAAAAAABQAAAAAAAAAGAAAAAAAAAAAAAAAGAAAAAAAAAAcAAAAAAAAAAAAAAAcAAAAAAAAACAAAAAAAAAAAAAAA",
+							"BQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAEAAAAAAAAAAQAAAAAAAAAAAAAAAAA8L8"
+						],
+						[
+							3,
+							1,
+							"insert",
+							{
+								"characters": " install"
+							},
+							"CAAAAAgAAAAAAAAACQAAAAAAAAAAAAAACQAAAAAAAAAKAAAAAAAAAAAAAAAKAAAAAAAAAAsAAAAAAAAAAAAAAAsAAAAAAAAADAAAAAAAAAAAAAAADAAAAAAAAAANAAAAAAAAAAAAAAANAAAAAAAAAA4AAAAAAAAAAAAAAA4AAAAAAAAADwAAAAAAAAAAAAAADwAAAAAAAAAQAAAAAAAAAAAAAAA",
+							"BQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAIAAAAAAAAAAgAAAAAAAAAAAAAAAAA8L8"
+						],
+						[
+							4,
+							19,
+							"left_delete",
+							null,
+							"EAAAAA8AAAAAAAAADwAAAAAAAAABAAAAbA4AAAAAAAAADgAAAAAAAAABAAAAbA0AAAAAAAAADQAAAAAAAAABAAAAYQwAAAAAAAAADAAAAAAAAAABAAAAdAsAAAAAAAAACwAAAAAAAAABAAAAcwoAAAAAAAAACgAAAAAAAAABAAAAbgkAAAAAAAAACQAAAAAAAAABAAAAaQgAAAAAAAAACAAAAAAAAAABAAAAIAcAAAAAAAAABwAAAAAAAAABAAAAdAYAAAAAAAAABgAAAAAAAAABAAAAcAUAAAAAAAAABQAAAAAAAAABAAAAYQQAAAAAAAAABAAAAAAAAAABAAAAIAMAAAAAAAAAAwAAAAAAAAABAAAAbwIAAAAAAAAAAgAAAAAAAAABAAAAZAEAAAAAAAAAAQAAAAAAAAABAAAAdQAAAAAAAAAAAAAAAAAAAAABAAAAcw",
+							"BQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvwAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAQAAAAAAAAABAAAAAAAAAAAAAAAAAA8L8"
+						],
+						[
+							1,
+							1,
+							"insert",
+							{
+								"characters": "s"
+							},
+							"AQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA",
+							"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvw"
+						],
+						[
+							2,
+							2,
+							"left_delete",
+							null,
+							"AQAAAAAAAAAAAAAAAAAAAAAAAAABAAAAcw",
+							"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAEAAAAAAAAAAQAAAAAAAAAAAAAAAADwvw"
+						],
+						[
+							3,
+							1,
+							"insert",
+							{
+								"characters": "int"
+							},
+							"AwAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAACAAAAAAAAAAAAAAACAAAAAAAAAAMAAAAAAAAAAAAAAA",
+							"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwvw"
+						],
+						[
+							4,
+							1,
+							"insert",
+							{
+								"characters": " main"
+							},
+							"BQAAAAMAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAFAAAAAAAAAAAAAAAFAAAAAAAAAAYAAAAAAAAAAAAAAAYAAAAAAAAABwAAAAAAAAAAAAAABwAAAAAAAAAIAAAAAAAAAAAAAAA",
+							"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAMAAAAAAAAAAwAAAAAAAAAAAAAAAADwvw"
+						],
+						[
+							5,
+							1,
+							"insert",
+							{
+								"characters": " "
+							},
+							"AQAAAAgAAAAAAAAACQAAAAAAAAAAAAAA",
+							"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAgAAAAAAAAACAAAAAAAAAAAAAAAAADwvw"
+						],
+						[
+							6,
+							14,
+							"left_delete",
+							null,
+							"CQAAAAgAAAAAAAAACAAAAAAAAAABAAAAIAcAAAAAAAAABwAAAAAAAAABAAAAbgYAAAAAAAAABgAAAAAAAAABAAAAaQUAAAAAAAAABQAAAAAAAAABAAAAYQQAAAAAAAAABAAAAAAAAAABAAAAbQMAAAAAAAAAAwAAAAAAAAABAAAAIAIAAAAAAAAAAgAAAAAAAAABAAAAdAEAAAAAAAAAAQAAAAAAAAABAAAAbgAAAAAAAAAAAAAAAAAAAAABAAAAaQ",
+							"AwAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8AAAAAAQAAAAkAAAAAAAAACQAAAAAAAAAAAAAAAADwvw"
+						],
+						[
+							1,
+							1,
+							"insert",
+							{
+								"characters": "sdfasdfasdfasdfsd"
+							},
+							"EQAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAACAAAAAAAAAAAAAAACAAAAAAAAAAMAAAAAAAAAAAAAAAMAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAFAAAAAAAAAAAAAAAFAAAAAAAAAAYAAAAAAAAAAAAAAAYAAAAAAAAABwAAAAAAAAAAAAAABwAAAAAAAAAIAAAAAAAAAAAAAAAIAAAAAAAAAAkAAAAAAAAAAAAAAAkAAAAAAAAACgAAAAAAAAAAAAAACgAAAAAAAAALAAAAAAAAAAAAAAALAAAAAAAAAAwAAAAAAAAAAAAAAAwAAAAAAAAADQAAAAAAAAAAAAAADQAAAAAAAAAOAAAAAAAAAAAAAAAOAAAAAAAAAA8AAAAAAAAAAAAAAA8AAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAARAAAAAAAAAAAAAAA",
+							"AgAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/AAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8L8"
+						],
+						[
+							1,
+							1,
+							"left_delete",
+							null,
+							"AQAAABAAAAAAAAAAEAAAAAAAAAABAAAAZA",
+							"AQAAAAAAAAABAAAAEQAAAAAAAAARAAAAAAAAAAAAAAAAAPC/"
+						],
+						[
+							8,
+							1,
+							"delete_word",
+							{
+								"forward": false
+							},
+							"AQAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAc2RmYXNkZmFzZGZhc2Rmcw",
+							"AQAAAAAAAAABAAAAEAAAAAAAAAAQAAAAAAAAAAAAAAAAAPC/"
+						],
+						[
+							9,
+							1,
+							"insert",
+							{
+								"characters": "what"
+							},
+							"BAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAACAAAAAAAAAAAAAAACAAAAAAAAAAMAAAAAAAAAAAAAAAMAAAAAAAAABAAAAAAAAAAAAAAA",
+							"AQAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPC/"
+						],
+						[
+							10,
+							1,
+							"insert",
+							{
+								"characters": " the"
+							},
+							"BAAAAAQAAAAAAAAABQAAAAAAAAAAAAAABQAAAAAAAAAGAAAAAAAAAAAAAAAGAAAAAAAAAAcAAAAAAAAAAAAAAAcAAAAAAAAACAAAAAAAAAAAAAAA",
+							"AQAAAAAAAAABAAAABAAAAAAAAAAEAAAAAAAAAAAAAAAAAPC/"
+						],
+						[
+							11,
+							1,
+							"insert",
+							{
+								"characters": " fuck"
+							},
+							"BQAAAAgAAAAAAAAACQAAAAAAAAAAAAAACQAAAAAAAAAKAAAAAAAAAAAAAAAKAAAAAAAAAAsAAAAAAAAAAAAAAAsAAAAAAAAADAAAAAAAAAAAAAAADAAAAAAAAAANAAAAAAAAAAAAAAA",
+							"AQAAAAAAAAABAAAACAAAAAAAAAAIAAAAAAAAAAAAAAAAAPC/"
+						],
+						[
+							12,
+							1,
+							"insert",
+							{
+								"characters": " "
+							},
+							"AQAAAA0AAAAAAAAADgAAAAAAAAAAAAAA",
+							"AQAAAAAAAAABAAAADQAAAAAAAAANAAAAAAAAAAAAAAAAAPC/"
+						],
+						[
+							13,
+							4,
+							"delete_word",
+							{
+								"forward": false
+							},
+							"AwAAAAkAAAAAAAAACQAAAAAAAAAFAAAAZnVjayAFAAAAAAAAAAUAAAAAAAAABAAAAHRoZSAAAAAAAAAAAAAAAAAAAAAABQAAAHdoYXQg",
+							"AQAAAAAAAAABAAAADgAAAAAAAAAOAAAAAAAAAAAAAAAAAPC/"
+						]
+					]
+				}
 			],
 			"build_system": "",
 			"build_system_choices":
@@ -310,12 +493,12 @@
 			},
 			"file_history":
 			[
+				"/home/tony/.config/nvim/lua/plugins/example.lua",
 				"/home/tony/.zshrc",
 				"/home/tony/.condarc",
 				"/home/tony/fix_howdy.md",
 				"/home/tony/.local/share/hyprsession/default/clients.json",
 				"/home/tony/.local/share/hyprsession/default/exec.conf",
-				"/home/tony/.config/nvim/lua/plugins/example.lua",
 				"/home/tony/Sem10/CoVi/Computer_Vision_Notes.md",
 				"/home/tony/.config/vivaldi/custom_css/theme.css",
 				"/home/tony/.config/vivaldi/custom_css/fix-font.css",
@@ -405,6 +588,36 @@
 				{
 					"sheets":
 					[
+						{
+							"buffer": 0,
+							"selected": true,
+							"semi_transient": false,
+							"settings":
+							{
+								"buffer_size": 0,
+								"regions":
+								{
+								},
+								"selection":
+								[
+									[
+										0,
+										0
+									]
+								],
+								"settings":
+								{
+									"auto_name": "",
+									"syntax": "Packages/Text/Plain text.tmLanguage"
+								},
+								"translation.x": 0.0,
+								"translation.y": 0.0,
+								"zoom_level": 1.0
+							},
+							"stack_index": 0,
+							"stack_multiselect": false,
+							"type": "text"
+						}
 					]
 				}
 			],
@@ -447,7 +660,7 @@
 				]
 			},
 			"pinned_build_system": "",
-			"position": "0,1,0,0,0,0,0,900,1038,1920,1080,0",
+			"position": "0,1,0,0,0,0,0,1807,1018,1920,1080,0",
 			"project": "",
 			"replace":
 			{

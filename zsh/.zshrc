@@ -263,6 +263,7 @@ alias log_out='qdbus org.kde.Shutdown /Shutdown org.kde.Shutdown.logout'
 alias icat="kitten icat"
 alias d="kitten diff"
 alias update=gu-notify.exp
+alias zshrc="vim ~/.config/zsh/.zshrc"
 
 
 # ── 12. Functions ───────────────────────────────────────────────────
@@ -313,3 +314,4 @@ unset KDE_FULL_SESSION
 unset KDE_SESSION_VERSION
 export XDG_CURRENT_DESKTOP=Hyprland
 export LESSCHARSET="utf-8"
+eval "$(atuin init zsh --disable-up-arrow)"

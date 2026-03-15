@@ -1,4 +1,4 @@
-/* Caelestia Obsidian Theme */
+/* Caelestia Obsidian Theme - Harmonized Rainbow Edition */
 .theme-{{ mode }} {
   --background-primary: #{{ surface.hex }};
   --background-primary-alt: #{{ surfaceContainerLow.hex }};
@@ -11,41 +11,53 @@
   --text-faint: #{{ outline.hex }};
   
   --text-accent: #{{ primary.hex }};
-  --text-accent-hover: #{{ primaryDim.hex }};
   
-  --text-selection: #{{ surfaceVariant.hex }};
+  --text-selection: #{{ primaryContainer.hex }};
   
-  /* Headings - Using distinct tonal shifts for legibility */
-  --h1-color: #{{ term1.hex }};
-  --h2-color: #{{ term5.hex }};
-  --h3-color: #{{ term2.hex }};
-  --h4-color: #{{ term4.hex }};
-  --h5-color: #{{ term6.hex }};
-  --h6-color: #{{ term7.hex }};
+  /* Rainbow Headings - Diverse bases harmonized with theme color */
+  --h1-color: #{{ term1.hex }}; /* Red base */
+  --h2-color: #{{ term3.hex }}; /* Yellow base */
+  --h3-color: #{{ term2.hex }}; /* Green base */
+  --h4-color: #{{ term6.hex }}; /* Cyan/Orange base */
+  --h5-color: #{{ term4.hex }}; /* Blue/Purple base */
+  --h6-color: #{{ term5.hex }}; /* Magenta base */
 
-  /* Emphasis & Markdown Elements */
-  --bold-color: #{{ primary.hex }};
-  --italic-color: #{{ secondary.hex }};
-  --blockquote-border-color: #{{ primary.hex }};
-  --nav-item-color-active: #{{ primary.hex }};
-  --nav-item-background-active: #{{ surfaceVariant.hex }};
+  /* Emphasis - Distinct yet coherent */
+  --bold-color: #{{ secondary.hex }};
+  --italic-color: #{{ tertiary.hex }};
   
-  /* Interactive Elements */
-  --interactive-accent: #{{ primary.hex }};
-  --interactive-hover: #{{ primaryDim.hex }};
+  --blockquote-border-color: #{{ primary.hex }};
+  
+  /* Math & Code */
+  --code-normal: #{{ term14.hex }};
+  --math-color: #{{ primary.hex }};
 }
 
-/* Specific Heading Styles for better legibility */
+/* Force Math colors */
+.math, .mjx-chtml, .cm-math {
+  color: var(--math-color) !important;
+}
+
+/* Specific Emphasis styling for Editor & Preview */
+strong, .cm-strong { color: var(--bold-color) !important; }
+em, .cm-em { color: var(--italic-color) !important; font-style: italic; }
+
+/* Heading Font Weights & Borders */
 .markdown-rendered h1, .cm-header-1 { font-weight: 800; border-bottom: 1px solid #{{ outline.hex }}; padding-bottom: 0.2em; }
 .markdown-rendered h2, .cm-header-2 { font-weight: 700; }
 
 /* Legible Selection */
 ::selection {
-  background-color: #{{ surfaceVariant.hex }} !important;
-  color: #{{ onSurface.hex }} !important;
+  background-color: var(--text-selection) !important;
+  color: #{{ onPrimaryContainer.hex }} !important;
 }
 
-/* Active line highlight */
+/* Fix selection in editor (CodeMirror) */
+.cm-selectionBackground, .cm-content ::selection {
+  background-color: var(--text-selection) !important;
+}
+
+/* Active line highlight in editor */
 .cm-active {
   background-color: #{{ surfaceContainerLow.hex }} !important;
 }
