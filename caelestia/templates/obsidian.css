@@ -1,63 +1,158 @@
-/* Caelestia Obsidian Theme - Harmonized Rainbow Edition */
-.theme-{{ mode }} {
-  --background-primary: #{{ surface.hex }};
-  --background-primary-alt: #{{ surfaceContainerLow.hex }};
-  --background-secondary: #{{ surfaceContainer.hex }};
-  --background-secondary-alt: #{{ surfaceContainerHigh.hex }};
-  --background-modifier-border: #{{ outline.hex }};
-  
-  --text-normal: #{{ onSurface.hex }};
-  --text-muted: #{{ onSurfaceVariant.hex }};
-  --text-faint: #{{ outline.hex }};
-  
-  --text-accent: #{{ primary.hex }};
-  
-  --text-selection: #{{ primaryContainer.hex }};
-  
-  /* Rainbow Headings - Diverse bases harmonized with theme color */
-  --h1-color: #{{ term1.hex }}; /* Red base */
-  --h2-color: #{{ term3.hex }}; /* Yellow base */
-  --h3-color: #{{ term2.hex }}; /* Green base */
-  --h4-color: #{{ term6.hex }}; /* Cyan/Orange base */
-  --h5-color: #{{ term4.hex }}; /* Blue/Purple base */
-  --h6-color: #{{ term5.hex }}; /* Magenta base */
+/* Caelestia Obsidian Theme - Comprehensive Material Gruvbox Edition */
 
-  /* Emphasis - Distinct yet coherent */
-  --bold-color: #{{ secondary.hex }};
-  --italic-color: #{{ tertiary.hex }};
-  
-  --blockquote-border-color: #{{ primary.hex }};
-  
-  /* Math & Code */
-  --code-normal: #{{ term14.hex }};
-  --math-color: #{{ primary.hex }};
+.theme-{{ mode }} {
+    /* 1. CORE THEME COLORS (Mapped from Caelestia M3 & ANSI) */
+    --color-red:                     #{{ red.hex }};
+    --color-orange:                  #{{ peach.hex }};
+    --color-yellow:                  #{{ yellow.hex }};
+    --color-green:                   #{{ green.hex }};
+    --color-cyan:                    #{{ sky.hex }};
+    --color-blue:                    #{{ blue.hex }};
+    --color-purple:                  #{{ mauve.hex }};
+    --color-pink:                    #{{ pink.hex }};
+
+    /* 2. BACKGROUNDS & SURFACES */
+    --background-primary:            #{{ surface.hex }};
+    --background-primary-alt:        #{{ surfaceContainerLowest.hex }};
+    --background-secondary:          #{{ surfaceContainer.hex }};
+    --background-secondary-alt:      #{{ surfaceContainerHigh.hex }};
+    --background-modifier-border:    #{{ outlineVariant.hex }};
+    --background-modifier-form-field:#{{ surfaceContainerHighest.hex }};
+    --background-accent:             #{{ primaryContainer.hex }};
+
+    /* 3. TEXT COLORS */
+    --text-normal:                   #{{ onSurface.hex }};
+    --text-muted:                    #{{ onSurfaceVariant.hex }};
+    --text-faint:                    #{{ outline.hex }};
+    --text-error:                    #{{ error.hex }};
+    --text-success:                  #{{ success.hex }};
+
+    /* 4. HEADINGS (Rainbow hues for hierarchy) */
+    --h1-color:                      #{{ red.hex }};
+    --h2-color:                      #{{ peach.hex }};
+    --h3-color:                      #{{ yellow.hex }};
+    --h4-color:                      #{{ green.hex }};
+    --h5-color:                      #{{ sky.hex }};
+    --h6-color:                      #{{ mauve.hex }};
+
+    /* 5. INTERACTIVE & ACCENTS */
+    --text-accent:                   #{{ primary.hex }};
+    --text-accent-hover:             #{{ secondary.hex }};
+    --text-highlight-bg:             #{{ tertiaryContainer.hex }};
+    --text-highlight-fg:             #{{ onTertiaryContainer.hex }};
+    --text-selection:                #{{ primaryContainer.hex }};
+
+    /* 6. FORMATTING (Markdown Elements) */
+    --bold-color:                    #{{ secondary.hex }};
+    --italic-color:                  #{{ tertiary.hex }};
+    --strikethrough-color:           #{{ outline.hex }};
+    
+    --blockquote-border-color:       #{{ primary.hex }};
+    --blockquote-background-color:   #{{ surfaceContainerLow.hex }};
+    
+    --hr-color:                      #{{ outlineVariant.hex }};
+
+    /* 7. CHECKBOXES & LISTS */
+    --checkbox-color:                #{{ primary.hex }};
+    --checkbox-color-hover:          #{{ secondary.hex }};
+    --checkbox-border-color:         #{{ outline.hex }};
+    --checkbox-border-color-hover:   #{{ primary.hex }};
+    --checklist-done-color:          #{{ onSurfaceVariant.hex }};
+    
+    --list-marker-color:             #{{ outline.hex }};
+    --list-marker-color-hover:       #{{ primary.hex }};
+
+    /* 8. TABLES */
+    --table-header-background:       #{{ surfaceContainerHigh.hex }};
+    --table-header-background-hover: #{{ surfaceContainerHighest.hex }};
+    --table-row-odd-background:      #{{ surfaceContainerLow.hex }};
+    --table-row-even-background:     #{{ surface.hex }};
+    --table-row-background-hover:    #{{ surfaceContainer.hex }};
+
+    /* 9. CODE BLOCKS & INLINE CODE */
+    --code-normal:                   #{{ green.hex }};
+    --code-background:               #{{ surfaceContainer.hex }};
+    --math-color:                    #{{ sky.hex }};
+
+    /* 10. UI ELEMENTS (Navigation, File Explorer, Tags) */
+    --tag-color:                     #{{ onSecondaryContainer.hex }};
+    --tag-background:                #{{ secondaryContainer.hex }};
+    --tag-background-hover:          #{{ tertiaryContainer.hex }};
+
+    --nav-item-color-hover:          #{{ primary.hex }};
+    --nav-item-background-hover:     #{{ surfaceContainerHigh.hex }};
+    --nav-item-background-active:    #{{ surfaceContainerHighest.hex }};
+
+    --icon-color:                    #{{ onSurfaceVariant.hex }};
+    --icon-color-hover:              #{{ primary.hex }};
+    --icon-color-focused:            #{{ secondary.hex }};
+
+    --titlebar-text-color-focused:   #{{ primary.hex }};
+    --inline-title-color:            #{{ primary.hex }};
+
+    /* Editor Specific */
+    --cursor-line-background:        #{{ surfaceContainerLow.hex }};
 }
+
+/* --- SPECIFIC OVERRIDES FOR EDITOR/PREVIEW FIDELITY --- */
 
 /* Force Math colors */
 .math, .mjx-chtml, .cm-math {
-  color: var(--math-color) !important;
+    color: var(--math-color) !important;
 }
 
 /* Specific Emphasis styling for Editor & Preview */
-strong, .cm-strong { color: var(--bold-color) !important; }
-em, .cm-em { color: var(--italic-color) !important; font-style: italic; }
+strong, .cm-strong { 
+    color: var(--bold-color) !important; 
+    font-weight: 700;
+}
+em, .cm-em { 
+    color: var(--italic-color) !important; 
+    font-style: italic; 
+}
 
 /* Heading Font Weights & Borders */
-.markdown-rendered h1, .cm-header-1 { font-weight: 800; border-bottom: 1px solid #{{ outline.hex }}; padding-bottom: 0.2em; }
-.markdown-rendered h2, .cm-header-2 { font-weight: 700; }
+.markdown-rendered h1, .cm-header-1 { 
+    font-weight: 800; 
+    border-bottom: 2px solid var(--background-modifier-border); 
+    padding-bottom: 0.3em; 
+}
+.markdown-rendered h2, .cm-header-2 { 
+    font-weight: 700; 
+    border-bottom: 1px solid var(--background-modifier-border);
+    padding-bottom: 0.2em;
+}
+
+/* Blockquotes */
+.markdown-rendered blockquote {
+    border-left: 4px solid var(--blockquote-border-color);
+    background-color: var(--blockquote-background-color);
+    padding: 10px 15px;
+    border-radius: 0 4px 4px 0;
+}
 
 /* Legible Selection */
 ::selection {
-  background-color: var(--text-selection) !important;
-  color: #{{ onPrimaryContainer.hex }} !important;
+    background-color: var(--text-selection) !important;
+    color: #{{ onPrimaryContainer.hex }} !important;
 }
 
 /* Fix selection in editor (CodeMirror) */
 .cm-selectionBackground, .cm-content ::selection {
-  background-color: var(--text-selection) !important;
+    background-color: var(--text-selection) !important;
 }
 
 /* Active line highlight in editor */
 .cm-active {
-  background-color: #{{ surfaceContainerLow.hex }} !important;
+    background-color: var(--cursor-line-background) !important;
+}
+
+/* Better Checkboxes */
+input[type="checkbox"] {
+    border: 2px solid var(--checkbox-border-color);
+    border-radius: 4px;
+}
+input[type="checkbox"]:checked {
+    background-color: var(--checkbox-color);
+    border-color: var(--checkbox-color);
 }

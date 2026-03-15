@@ -51,6 +51,6 @@ require("lazy").setup({
     },
   },
   opts = {
-    colorscheme = "neopywal-dark",
+    colorscheme = nil,
   },
 })

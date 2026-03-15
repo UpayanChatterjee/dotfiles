@@ -30,7 +30,7 @@ location = ""
 [ui]
 album_art = true
 border_style = "rounded"
-progress_style = "line"
+progress_style = "block"
 sidebar_width = 30
 col_index = 4
 col_title = 0
@@ -39,7 +39,7 @@ col_album = 0
 col_duration = 8
 
 [notifications]
-enabled = true
+enabled = false
 timeout_seconds = 5
 format = "{title} — {artist}"
 

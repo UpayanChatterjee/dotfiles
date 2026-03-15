@@ -264,6 +264,11 @@ alias icat="kitten icat"
 alias d="kitten diff"
 alias update=gu-notify.exp
 alias zshrc="vim ~/.config/zsh/.zshrc"
+alias sgc=supergfxctl
+alias wall="sudo ryzenadj --stapm-limit=80000 --fast-limit=80000 --slow-limit=80000 --tctl-temp=96"
+alias battery="sudo ryzenadj --stapm-limit=15000 --fast-limit=15000 --slow-limit=15000"
+alias paru="~/.local/bin/paru-notify.exp"
+alias makex="chmod +x"
 
 
 # ── 12. Functions ───────────────────────────────────────────────────

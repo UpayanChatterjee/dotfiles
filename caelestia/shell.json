@@ -37,7 +37,7 @@
     "logo": "",
     "apps": {
       "terminal": [
-        "foot"
+        "kitty"
       ],
       "audio": [
         "pavucontrol"
@@ -46,7 +46,7 @@
         "mpv"
       ],
       "explorer": [
-        "thunar"
+        "yazi"
       ]
     },
     "idle": {
@@ -450,7 +450,7 @@
     "enabled": true,
     "hideDelay": 2000,
     "enableBrightness": true,
-    "enableMicrophone": false,
+    "enableMicrophone": true,
     "sizes": {
       "sliderWidth": 30,
       "sliderHeight": 150
