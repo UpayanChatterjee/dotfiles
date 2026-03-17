@@ -124,7 +124,7 @@
 # ]
 history_filter = [
     "^ls$",           # Exclude bare 'ls' commands
-    "^cd ",           # Exclude cd commands
+    # "^cd ",           # Exclude cd commands
     "^cat ",          # Exclude cat commands
 ]
 

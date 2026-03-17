@@ -8,5 +8,5 @@ return {
       -- Automatically load the Caelestia theme
       vim.cmd("colorscheme caelestia")
     end,
-  }
+  },
 }

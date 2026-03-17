@@ -16,3 +16,7 @@ ytm-player/auth.json
 google-chrome/**
 viu/**
 youtui/cookie.txt
+zsh/.zcompdump*
+*.zwc
+geminicommit/config.toml
+exercism/user.json

@@ -1,3 +1,7 @@
+export PROFILING_MODE=0
+if [ $PROFILING_MODE -ne 0 ]; then
+    zmodload zsh/zprof
+fi
 # ── 0. Instant Prompt & Cursor (Must be top) ────────────────────────
 # Enable Powerlevel10k instant prompt
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
@@ -5,7 +9,17 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 echo -ne '\e[5 q'
-cat ~/.local/state/caelestia/sequences.txt
+# cat ~/.local/state/caelestia/sequences.txt
+
+
+zsource() {
+  local file=$1
+  local zwc="${file}.zwc"
+  if [[ -f "$file" && (! -f "$zwc" || "$file" -nt "$file") ]]; then
+    zcompile "$file"
+  fi
+  source "$file"
+}
 
 # ── 1. Environment Variables (Early) ────────────────────────────────
 export PYENV_ROOT="$HOME/.pyenv"
@@ -45,12 +59,12 @@ if [[ ! -d $ZINIT_HOME ]]; then
   mkdir -p ${ZINIT_HOME:h}
   git clone --depth=1 https://github.com/zdharma-continuum/zinit.git $ZINIT_HOME
 fi
-source $ZINIT_HOME/zinit.zsh
+zsource $ZINIT_HOME/zinit.zsh
 
 # ── 4. Theme ────────────────────────────────────────────────────────
 zinit ice depth=1
 zinit light romkatv/powerlevel10k
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+[[ -f ~/.p10k.zsh ]] && zsource ~/.p10k.zsh
 
 # ── 5. History Settings ─────────────────────────────────────────────
 HISTSIZE=5000
@@ -60,14 +74,19 @@ setopt appendhistory sharehistory hist_ignore_space hist_ignore_all_dups \
        hist_save_no_dups hist_find_no_dups
 
 # ── 6. Completion System ────────────────────────────────────────────
+# autoload -Uz compinit
+# # Smart compinit: only regenerate once per day
+# if [[ -n ${ZDOTDIR}/.zcompdump(#qNmh+24) ]]; then
+#   compinit
+# else
+#   compinit -C
+# fi
 autoload -Uz compinit
-# Smart compinit: only regenerate once per day
-if [[ -n ${ZDOTDIR}/.zcompdump(#qNmh+24) ]]; then
-  compinit
-else
-  compinit -C
-fi
+ZSH_COMPDUMP="${ZSH}/.zcompdump"
+compinit -C -d "$ZSH_COMPDUMP"
 autoload -U +X bashcompinit && bashcompinit
+alias zcomp-rebuild='rm -f "$ZSH_COMPDUMP" && compinit && echo "Zsh autocomplete cache rebuilt!"'
+zstyle :compinstall filename '/home/tony/.config/zsh/.zshrc'
 
 # Completion styling
 zstyle ':completion:*' use-cache on
@@ -89,7 +108,7 @@ zinit wait lucid light-mode for \
 # FZF initialization (BEFORE syntax-highlighting)
 if command -v fzf >/dev/null; then
   if [[ -f ~/.fzf.zsh ]]; then
-    source ~/.fzf.zsh
+    zsource ~/.fzf.zsh
   else
     eval "$(fzf --zsh)"
   fi
@@ -123,38 +142,38 @@ if [[ -s "$NVM_DIR/nvm.sh" ]]; then
   
   function nvm() {
     unset -f nvm node npm npx gemini geminicommit
-    source "$NVM_DIR/nvm.sh"
-    [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
+    zsource "$NVM_DIR/nvm.sh"
+    [[ -s "$NVM_DIR/bash_completion" ]] && zsource "$NVM_DIR/bash_completion"
     nvm "$@"
   }
   
   function node() {
     unset -f nvm node npm npx gemini geminicommit
-    source "$NVM_DIR/nvm.sh"
+    zsource "$NVM_DIR/nvm.sh"
     node "$@"
   }
   
   function npm() {
     unset -f nvm node npm npx gemini geminicommit
-    source "$NVM_DIR/nvm.sh"
+    zsource "$NVM_DIR/nvm.sh"
     npm "$@"
   }
   
   function npx() {
     unset -f nvm node npm npx gemini geminicommit
-    source "$NVM_DIR/nvm.sh"
+    zsource "$NVM_DIR/nvm.sh"
     npx "$@"
   }
   
   function gemini() {
     unset -f nvm node npm npx gemini geminicommit
-    source "$NVM_DIR/nvm.sh"
+    zsource "$NVM_DIR/nvm.sh"
     gemini "$@"
   }
   
   function geminicommit() {
     unset -f nvm node npm npx gemini geminicommit
-    source "$NVM_DIR/nvm.sh"
+    zsource "$NVM_DIR/nvm.sh"
     geminicommit "$@"
   }
 fi
@@ -190,18 +209,18 @@ bindkey '^[ ' autosuggest-accept
 
 # ── 10. Extra Environment Loaders (Deferred) ────────────────────────
 zinit ice wait"1" lucid atload'
-  [[ -r "$HOME/.opam/opam-init/init.zsh" ]] && source "$HOME/.opam/opam-init/init.zsh" >/dev/null 2>&1
+  [[ -r "$HOME/.opam/opam-init/init.zsh" ]] && zsource "$HOME/.opam/opam-init/init.zsh" >/dev/null 2>&1
 '
 zinit light zdharma-continuum/null
 
 zinit ice wait"1" lucid atload'
-  [[ -f ~/.config/nvim-Lazyman/.lazymanrc ]] && source ~/.config/nvim-Lazyman/.lazymanrc
-  [[ -f ~/.config/nvim-Lazyman/.nvimsbind ]] && source ~/.config/nvim-Lazyman/.nvimsbind
+  [[ -f ~/.config/nvim-Lazyman/.lazymanrc ]] && zsource ~/.config/nvim-Lazyman/.lazymanrc
+  [[ -f ~/.config/nvim-Lazyman/.nvimsbind ]] && zsource ~/.config/nvim-Lazyman/.nvimsbind
 '
 zinit light zdharma-continuum/null
 
 # Modules (only if exists)
-[[ -f /etc/profile.d/modules.sh ]] && source /etc/profile.d/modules.sh
+[[ -f /etc/profile.d/modules.sh ]] && zsource /etc/profile.d/modules.sh
 
 # ── 11. Aliases ─────────────────────────────────────────────────────
 # Directory Listings
@@ -220,7 +239,8 @@ alias fgrep='fgrep --color=auto'
 alias df='df -h'
 alias rm='trash-put'
 alias vim='nvim'
-alias cat='bat'
+# alias cat='bat'
+alias cat='bat --style header --style snip --style changes --style header'
 # alias ff='fastfetch -c ~/.config/fastfetch/config.jsonc'
 alias ff=fastfetch
 alias open_erp='conda run -n mtp --live-stream python ~/iitkgp-erp-login-pypi/examples/open_erp.py'
@@ -320,3 +340,6 @@ unset KDE_SESSION_VERSION
 export XDG_CURRENT_DESKTOP=Hyprland
 export LESSCHARSET="utf-8"
 eval "$(atuin init zsh --disable-up-arrow)"
+if [ $PROFILING_MODE -ne 0 ]; then
+    zprof
+fi

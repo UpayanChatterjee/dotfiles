@@ -208,7 +208,6 @@ _comps=(
 'clang-tidy' '_clang-tidy'
 'clay' '_clay'
 'clear' '_nothing'
-'clone-in-kitty' '_kitty'
 'cloudkitty' '_openstack'
 'clusterdb' '_postgresql'
 'cmake' '_cmake'
@@ -691,6 +690,7 @@ _comps=(
 'htop' '_htop'
 'http' '_httpie'
 'https' '_httpie'
+'hyperfine' '_hyperfine'
 'hyprctl' '_hyprctl'
 'hyprpm' '_hyprpm'
 'ibus' '_ibus'
@@ -778,7 +778,6 @@ _comps=(
 'kinfocenter' '_systemsettings'
 'kioclient' '_kfmclient'
 'kitchen' '_kitchen'
-'kitten' '_kitty'
 'kitty' '_kitty'
 'knock' '_knock'
 'konqueror' '_webbrowser'
@@ -1970,51 +1969,51 @@ bindkey '^[,' _history-complete-newer
 bindkey '^[/' _history-complete-older
 bindkey '^[~' _bash_complete-word
 
-autoload -Uz _kitty _afew _age _android _archlinux-java \
-            _artisan _atach _augmatch _augparse _augprint \
-            _avdmanager _bitcoin-cli _blkid _bower _bundle \
-            _cap _cask _ccache _certbot _cf \
-            _chatblade _chcpu _chmem _choc _chpasswd \
-            _chromium _clang-check _clang-format _clang-tidy _cmake \
-            _coffee _conan _concourse _cppcheck _dad \
-            _dart _dget _dhcpcd _diana _direnv \
-            _diskutil _distro_info _docpad _do-release-upgrade _drush \
-            _ecdsautil _emacs _emulator _envdir _exportfs \
-            _fab _fail2ban-client _fail2ban-regex _fallocate _fast-theme \
-            _ffind _flutter _fwupdmgr _gas _ghc \
-            _gist _git-flow _git-pulls _git-revise _git-wtf \
-            _glances _golang _gpgconf _grpcurl _gtk-launch \
-            _hello _hledger _homestead _httpie _ibus \
-            _include-what-you-use _inxi _ipcmk _ipcrm _ipcs \
-            _jest _jmeter _jmeter-plugins _jonas _jrnl \
-            _kak _kitchen _l3build _language_codes _ldattach \
-            _lilypond _lscpu _lsipc _lslocks _lslogins \
-            _lsmem _lunchy _mc _mcookie _middleman \
-            _mina _mix _mkcert _mssh _mussh \
-            _mvn _nano _nanoc _neo _neofetch \
-            _networkQuality _nftables _node _nvm _openssl \
-            _openvpn3 _optirun _patool _periscope _phing \
-            _pixz _pkcon _pm2 _port _pre-commit \
-            _protoc _pygmentize _qmk _rails _ralio \
-            _rdfind _redis-cli _rev _rfkill _rmlint \
-            _rslsync _rspec _rubocop _sbt _scala \
-            _screencapture _scrub _sdd _sdkmanager _setcap \
-            _shallow-backup _shellcheck _showoff _sox_ng _srm \
-            _sslscan _subliminal _supervisord _svm _swaplabel \
-            _swapoff _swapon _teamocil _textutil _thor \
-            _tmuxinator _tmuxp _tox _tsc _ts-node \
-            _tsx _udisksctl _ufw _uuidd _uuidgen \
-            _uuidparse _vipw _virtualbox _vnstat _wdctl \
-            _wemux _wg-quick _xdg-mime _xsel _yamllint \
-            _yarn _zcash-cli _zinit _zramctl _alacritty \
-            _antigravity _atuin _autorandr _bat _bluetoothctl \
-            _bootctl _busctl _bwrap _cargo _checkupdates \
-            _code _code-insiders _coredumpctl _ctr _curl \
-            _deno _dkms _docker _dolphin _downgrade \
-            _dunst _dunstctl _dunstify _dysk _eza \
-            _fastfetch _fd _firewalld _flameshot _flatpak \
-            _foot _footclient _fuzzel _gh _hatch \
-            _hostnamectl _hyprctl _hyprpm _img2sixel _insmod \
+autoload -Uz _afew _age _android _archlinux-java _artisan \
+            _atach _augmatch _augparse _augprint _avdmanager \
+            _bitcoin-cli _blkid _bower _bundle _cap \
+            _cask _ccache _certbot _cf _chatblade \
+            _chcpu _chmem _choc _chpasswd _chromium \
+            _clang-check _clang-format _clang-tidy _cmake _coffee \
+            _conan _concourse _cppcheck _dad _dart \
+            _dget _dhcpcd _diana _direnv _diskutil \
+            _distro_info _docpad _do-release-upgrade _drush _ecdsautil \
+            _emacs _emulator _envdir _exportfs _fab \
+            _fail2ban-client _fail2ban-regex _fallocate _fast-theme _ffind \
+            _flutter _fwupdmgr _gas _ghc _gist \
+            _git-flow _git-pulls _git-revise _git-wtf _glances \
+            _golang _gpgconf _grpcurl _gtk-launch _hello \
+            _hledger _homestead _httpie _ibus _include-what-you-use \
+            _inxi _ipcmk _ipcrm _ipcs _jest \
+            _jmeter _jmeter-plugins _jonas _jrnl _kak \
+            _kitchen _l3build _language_codes _ldattach _lilypond \
+            _lscpu _lsipc _lslocks _lslogins _lsmem \
+            _lunchy _mc _mcookie _middleman _mina \
+            _mix _mkcert _mssh _mussh _mvn \
+            _nano _nanoc _neo _neofetch _networkQuality \
+            _nftables _node _nvm _openssl _openvpn3 \
+            _optirun _patool _periscope _phing _pixz \
+            _pkcon _pm2 _port _pre-commit _protoc \
+            _pygmentize _qmk _rails _ralio _rdfind \
+            _redis-cli _rev _rfkill _rmlint _rslsync \
+            _rspec _rubocop _sbt _scala _screencapture \
+            _scrub _sdd _sdkmanager _setcap _shallow-backup \
+            _shellcheck _showoff _sox_ng _srm _sslscan \
+            _subliminal _supervisord _svm _swaplabel _swapoff \
+            _swapon _teamocil _textutil _thor _tmuxinator \
+            _tmuxp _tox _tsc _ts-node _tsx \
+            _udisksctl _ufw _uuidd _uuidgen _uuidparse \
+            _vipw _virtualbox _vnstat _wdctl _wemux \
+            _wg-quick _xdg-mime _xsel _yamllint _yarn \
+            _zcash-cli _zinit _zramctl _alacritty _antigravity \
+            _atuin _autorandr _bat _bluetoothctl _bootctl \
+            _busctl _bwrap _cargo _checkupdates _code \
+            _code-insiders _coredumpctl _ctr _curl _deno \
+            _dkms _docker _dolphin _downgrade _dunst \
+            _dunstctl _dunstify _dysk _eza _fastfetch \
+            _fd _firewalld _flameshot _flatpak _foot \
+            _footclient _fuzzel _gh _hatch _hostnamectl \
+            _hyperfine _hyprctl _hyprpm _img2sixel _insmod \
             _journalctl _kdeconnect _kde-inhibit _kernel-install _keyring \
             _kitty _konsole _krunner _kscreen-doctor _libinput \
             _localectl _loginctl _lsmod _luarocks _luarocks-admin \
