@@ -1,16 +1,16 @@
-export PROFILING_MODE=0
-if [ $PROFILING_MODE -ne 0 ]; then
-    zmodload zsh/zprof
-fi
 # ── 0. Instant Prompt & Cursor (Must be top) ────────────────────────
 # Enable Powerlevel10k instant prompt
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-echo -ne '\e[5 q'
-# cat ~/.local/state/caelestia/sequences.txt
+export PROFILING_MODE=0
+if [ $PROFILING_MODE -ne 0 ]; then
+    zmodload zsh/zprof
+fi
 
+# echo -ne '\e[5 q'
+# cat ~/.local/state/caelestia/sequences.txt
 
 zsource() {
   local file=$1
@@ -36,7 +36,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 export SUDO_ASKPASS='/usr/bin/ksshaskpass'
 # Suppress only OpenSSL legacy provider warnings
 export PYTHONWARNINGS="ignore::Warning:importlib._bootstrap"
-
+export ZSH=$(readlink -f $HOME/.config/zsh)
 # ── 2. Path Setup ───────────────────────────────────────────────────
 typeset -U path PATH  # Keep unique entries only
 path=(
@@ -136,46 +136,68 @@ if [[ -d $PYENV_ROOT/bin ]]; then
 fi
 
 # NVM lazy load (creates placeholders for node, npm, npx, nvm, and global npm binaries)
-if [[ -s "$NVM_DIR/nvm.sh" ]]; then
-  # Add NVM's global bin to PATH immediately for globally installed packages
-  export PATH="$NVM_DIR/versions/node/$(ls -t $NVM_DIR/versions/node 2>/dev/null | head -1)/bin:$PATH"
-  
-  function nvm() {
+# if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+#   # Add NVM's global bin to PATH immediately for globally installed packages
+#   export PATH="$NVM_DIR/versions/node/$(ls -t $NVM_DIR/versions/node 2>/dev/null | head -1)/bin:$PATH"
+#
+#   function nvm() {
+#     unset -f nvm node npm npx gemini geminicommit
+#     zsource "$NVM_DIR/nvm.sh"
+#     [[ -s "$NVM_DIR/bash_completion" ]] && zsource "$NVM_DIR/bash_completion"
+#     nvm "$@"
+#   }
+#
+#   function node() {
+#     unset -f nvm node npm npx gemini geminicommit
+#     zsource "$NVM_DIR/nvm.sh"
+#     node "$@"
+#   }
+#
+#   function npm() {
+#     unset -f nvm node npm npx gemini geminicommit
+#     zsource "$NVM_DIR/nvm.sh"
+#     npm "$@"
+#   }
+#
+#   function npx() {
+#     unset -f nvm node npm npx gemini geminicommit
+#     zsource "$NVM_DIR/nvm.sh"
+#     npx "$@"
+#   }
+#
+#   function gemini() {
+#     unset -f nvm node npm npx gemini geminicommit
+#     zsource "$NVM_DIR/nvm.sh"
+#     gemini "$@"
+#   }
+#
+#   function geminicommit() {
+#     unset -f nvm node npm npx gemini geminicommit
+#     zsource "$NVM_DIR/nvm.sh"
+#     geminicommit "$@"
+#   }
+# fi
+
+if [[ -d "$NVM_DIR" ]]; then
+  # Create a shared loader function to avoid repetition
+  _load_nvm() {
     unset -f nvm node npm npx gemini geminicommit
-    zsource "$NVM_DIR/nvm.sh"
+    
+    # Load NVM
+    [[ -s "$NVM_DIR/nvm.sh" ]] && zsource "$NVM_DIR/nvm.sh"
     [[ -s "$NVM_DIR/bash_completion" ]] && zsource "$NVM_DIR/bash_completion"
-    nvm "$@"
+    
+    # Now that NVM is loaded, add the bin path once
+    export PATH="$NVM_DIR/versions/node/$(ls -t $NVM_DIR/versions/node 2>/dev/null | head -1)/bin:$PATH"
   }
-  
-  function node() {
-    unset -f nvm node npm npx gemini geminicommit
-    zsource "$NVM_DIR/nvm.sh"
-    node "$@"
-  }
-  
-  function npm() {
-    unset -f nvm node npm npx gemini geminicommit
-    zsource "$NVM_DIR/nvm.sh"
-    npm "$@"
-  }
-  
-  function npx() {
-    unset -f nvm node npm npx gemini geminicommit
-    zsource "$NVM_DIR/nvm.sh"
-    npx "$@"
-  }
-  
-  function gemini() {
-    unset -f nvm node npm npx gemini geminicommit
-    zsource "$NVM_DIR/nvm.sh"
-    gemini "$@"
-  }
-  
-  function geminicommit() {
-    unset -f nvm node npm npx gemini geminicommit
-    zsource "$NVM_DIR/nvm.sh"
-    geminicommit "$@"
-  }
+
+  # Define the placeholders
+  nvm() { _load_nvm; nvm "$@" }
+  node() { _load_nvm; node "$@" }
+  npm() { _load_nvm; npm "$@" }
+  npx() { _load_nvm; npx "$@" }
+  gemini() { _load_nvm; gemini "$@" }
+  geminicommit() { _load_nvm; geminicommit "$@" }
 fi
 
 # Homebrew lazy load
@@ -239,9 +261,7 @@ alias fgrep='fgrep --color=auto'
 alias df='df -h'
 alias rm='trash-put'
 alias vim='nvim'
-# alias cat='bat'
 alias cat='bat --style header --style snip --style changes --style header'
-# alias ff='fastfetch -c ~/.config/fastfetch/config.jsonc'
 alias ff=fastfetch
 alias open_erp='conda run -n mtp --live-stream python ~/iitkgp-erp-login-pypi/examples/open_erp.py'
 
@@ -255,8 +275,8 @@ alias upal='paru -Syu --noconfirm'
 alias gu='garuda-update'
 
 # SSH Shortcuts
-alias pshaktihome="ssh -p 4422 21ec37031@paramshakti.iitkgp.ac.in"
-alias pshaktikgp="ssh 21ec37031@paramshakti.iitkgp.ac.in"
+# alias pshaktihome="ssh -p 4422 21ec37031@paramshakti.iitkgp.ac.in"
+# alias pshaktikgp="ssh 21ec37031@paramshakti.iitkgp.ac.in"
 
 # Misc
 alias gmc=geminicommit
@@ -321,25 +341,42 @@ function y() {
 	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
 }
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/usr/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/usr/etc/profile.d/conda.sh" ]; then
-        . "/usr/etc/profile.d/conda.sh"
-    else
-        export PATH="/usr/bin:$PATH"
-    fi
-fi
-unset __conda_setup
+# __conda_setup="$('/usr/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/usr/etc/profile.d/conda.sh" ]; then
+#         . "/usr/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/usr/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
 # <<< conda initialize <<<
+
+# Lazy load Conda for MTP work
+conda() {
+  unfunction conda
+  # The original conda init logic goes here
+  __conda_setup="$('/usr/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+  eval "$__conda_setup"
+  unset __conda_setup
+  conda "$@"
+}
+
 unset KDE_FULL_SESSION
 unset KDE_SESSION_VERSION
 export XDG_CURRENT_DESKTOP=Hyprland
 export LESSCHARSET="utf-8"
-eval "$(atuin init zsh --disable-up-arrow)"
+
+zinit ice wait'0' lucid atload'eval "$(atuin init zsh --disable-up-arrow)"'
+zinit light zdharma-continuum/null
+
+
+
 if [ $PROFILING_MODE -ne 0 ]; then
     zprof
 fi
