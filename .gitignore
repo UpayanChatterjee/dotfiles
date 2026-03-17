@@ -12,11 +12,12 @@ clipse/*.log
 clipse/tmp_files/**
 ggshield/**
 github-copilot/**
-ytm-player/auth.json
+ytm-player/**
 google-chrome/**
 viu/**
 youtui/cookie.txt
-zsh/.zcompdump*
+zsh/.zcompdump
 *.zwc
 geminicommit/config.toml
 exercism/user.json
+ytm-player/history.db
