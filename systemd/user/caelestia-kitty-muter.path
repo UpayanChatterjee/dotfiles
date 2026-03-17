@@ -1,0 +1,8 @@
+[Unit]
+Description=Watch for Caelestia Kitty theme changes
+
+[Path]
+PathChanged=/home/tony/.local/state/caelestia/theme/colors-kitty.conf
+
+[Install]
+WantedBy=default.target
