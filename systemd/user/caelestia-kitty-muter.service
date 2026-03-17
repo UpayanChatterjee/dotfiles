@@ -1,6 +1,0 @@
-[Unit]
-Description=Mute Kitty Colors for Caelestia
-
-[Service]
-Type=oneshot
-ExecStart=/home/tony/.config/caelestia/mute_kitty.py
