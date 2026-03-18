@@ -98,14 +98,8 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza -1 --color=always $realpath'
 
 # ── 7. Core Plugins (Optimized Loading) ─────────────────────────────
-# Load autosuggestions BEFORE syntax-highlighting
-zinit wait lucid light-mode for \
-  atload"_zsh_autosuggest_start" \
-    zsh-users/zsh-autosuggestions \
-  blockf atpull'zinit creinstall -q .' \
-    zsh-users/zsh-completions
 
-# FZF initialization (BEFORE syntax-highlighting)
+# FZF initialization
 if command -v fzf >/dev/null; then
   if [[ -f ~/.fzf.zsh ]]; then
     zsource ~/.fzf.zsh
@@ -114,14 +108,21 @@ if command -v fzf >/dev/null; then
   fi
 fi
 
+# FZF-Tab (Must load after compinit, but BEFORE plugins that wrap ZLE)
+zinit ice depth=1 wait lucid
+zinit light Aloxaf/fzf-tab
+
+# Load autosuggestions (AFTER fzf-tab, BEFORE syntax-highlighting)
+zinit wait lucid light-mode for \
+  atload"_zsh_autosuggest_start" \
+    zsh-users/zsh-autosuggestions \
+  blockf atpull'zinit creinstall -q .' \
+    zsh-users/zsh-completions
+
 # Syntax highlighting LAST (after all widgets are created)
 zinit wait lucid light-mode for \
   atinit"zicompinit; zicdreplay" \
     zdharma-continuum/fast-syntax-highlighting
-
-# FZF-Tab (Must load after compinit)
-zinit ice depth=1 wait lucid
-zinit light Aloxaf/fzf-tab
 
 # ── 8. Lazy Tool Loading ────────────────────────────────────────────
 
@@ -266,6 +267,8 @@ alias wall="sudo ryzenadj --stapm-limit=80000 --fast-limit=80000 --slow-limit=80
 alias battery="sudo ryzenadj --stapm-limit=15000 --fast-limit=15000 --slow-limit=15000"
 # alias paru="~/.local/bin/paru-notify.exp"
 alias makex="chmod +x"
+alias lsg="ls | grep"
+alias gmni=gemini
 
 
 # ── 12. Functions ───────────────────────────────────────────────────
@@ -332,7 +335,7 @@ export LESSCHARSET="utf-8"
 zinit ice wait'0' lucid atload'eval "$(atuin init zsh --disable-up-arrow)"'
 zinit light zdharma-continuum/null
 
-source /usr/bin/virtualenvwrapper.sh
+# source /usr/bin/virtualenvwrapper.sh
 
 if [ $PROFILING_MODE -ne 0 ]; then
     zprof

@@ -62,7 +62,12 @@ download = [
 	{ run = "ya emit download --open %S", desc = "Download and open" },
 	{ run = "ya emit download %S",        desc = "Download" },
 ]
-
+okular = [
+    { run = 'okular %s', orphan = true, desc = "Okular" }
+]
+sioyek = [
+    { run = 'sioyek %s', orphan = true, desc = "Sioyek" }
+]
 [open]
 rules = [
 	# Folder
@@ -85,7 +90,10 @@ rules = [
 	# Fallback
 	{ url = "*", use = [ "open", "reveal" ] },
 ]
-
+prepend_rules = [
+    # The first item in the array ("okular") becomes the default for <Enter>
+    { mime = "application/pdf", use = [ "okular", "sioyek" ] }
+]
 [tasks]
 micro_workers    = 10
 macro_workers    = 10
