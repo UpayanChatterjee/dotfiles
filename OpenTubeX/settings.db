@@ -1,6 +1,0 @@
-{"_id":"backendFallback","value":true}
-{"_id":"backendPreference","value":"invidious"}
-{"_id":"bounds","value":{"x":0,"y":0,"width":1920,"height":1080,"maximized":true,"fullScreen":false}}
-{"_id":"defaultInvidiousInstance","value":"https://iv.ggtyler.dev"}
-{"_id":"defaultVideoFormat","value":"dash"}
-{"_id":"proxyVideos","value":true}

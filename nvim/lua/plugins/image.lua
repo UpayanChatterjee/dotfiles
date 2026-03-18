@@ -8,6 +8,7 @@ return {
     config = function()
       require("image").setup({
         backend = "kitty", -- or "ueberzug" or "sixel"
+        kitty_method = "normal",
         processor = "magick_cli", -- or "magick_rock"
         integrations = {
           markdown = {
@@ -47,7 +48,7 @@ return {
           },
         },
         max_width = 100,
-        max_height = 12,
+        max_height = 24,
         max_width_window_percentage = math.huge,
         max_height_window_percentage = math.huge,
         scale_factor = 1.0,

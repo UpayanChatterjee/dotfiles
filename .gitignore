@@ -1,23 +1,112 @@
+# ==============================================================================
+# OS & System Cache/States
+# ==============================================================================
+*.log
+*.bak
+*.swp
+*~
+.DS_Store
+.cache_ggshield/
+dconf/
+pulse/cookie
+pulsemeeter/
+menus/
+plasma-workspace/
+session/
+fcitx/profile
+fcitx5/profile
+kdeconnect/
+wal/
+panel-colorizer/
+
+# ==============================================================================
+# Web Browsers & Electron Apps
+# ==============================================================================
+google-chrome/**
 vivaldi/**
-/.git
-discord/**
-Antigravity/**
-YouTube Music/**
-browsh/**
-Code - Insiders/**
-obsidian/**
 mozilla/**
-clipse/*history.json
-clipse/*.log
-clipse/tmp_files/**
+browsh/**
+FreeTube/**
+OpenTubeX/**
+YouTube Music/**
+
+# ==============================================================================
+# Chat & Communication Apps
+# ==============================================================================
+discord/**
+# If you want to track themes for BetterDiscord/Vencord, we only ignore their state/cache:
+BetterDiscord/data/
+Vencord/settings/
+vesktop/sessionData/
+hexchat/logs/
+hexchat/scrollback/
+
+# ==============================================================================
+# IDEs & Code Editors
+# ==============================================================================
+Code/**
+Code - Insiders/**
+Code - OSS/**
+Electron/**
+opencode/**
+obsidian/**
+
+# Sublime Text state & packages
+sublime-text/Local/
+sublime-text/Log/
+sublime-text/Cache/
+sublime-text/Installed Packages/
+sublime-text/Lib/
+*.sublime_session
+
+# Micro & Kate state
+micro/buffers/
+micro/backups/
+kate/lspclient/
+
+nvim/*lock.json
+
+# ==============================================================================
+# Tooling, CLI & Telemetry
+# ==============================================================================
+go/telemetry/**
 ggshield/**
 github-copilot/**
-ytm-player/**
-google-chrome/**
+garuda-toolbox/Cache/
+garuda-toolbox/blob_storage/
+
+# Clipse
+clipse/tmp_files/**
+clipse/*history.json
+clipse/*.log
+
+# Zsh caches
+zsh/.zcompdump*
+*.zwc
+
+# Specific credentials and configs you likely don't want tracked
+exercism/user.json
+geminicommit/config.toml
+docviewer/**
+
+# Konsave backups/temp states
+konsave/temp/
+konsave/profiles/*/app_layouts/
+konsave/profiles/*/configs/kate/lspclient/
+
+# ==============================================================================
+# Application Specific Data
+# ==============================================================================
+Antigravity/**
+libreoffice/**
+matplotlib/**
+spicetify/Extensions/
 viu/**
 youtui/cookie.txt
-zsh/.zcompdump
-*.zwc
-geminicommit/config.toml
-exercism/user.json
-ytm-player/history.db
+ytm-player/**
+
+# GIMP states & caches
+GIMP/3.0/CrashLog/
+GIMP/3.0/backups/
+GIMP/3.0/tmp/
+GIMP/3.0/environ/

@@ -135,49 +135,6 @@ if [[ -d $PYENV_ROOT/bin ]]; then
   }
 fi
 
-# NVM lazy load (creates placeholders for node, npm, npx, nvm, and global npm binaries)
-# if [[ -s "$NVM_DIR/nvm.sh" ]]; then
-#   # Add NVM's global bin to PATH immediately for globally installed packages
-#   export PATH="$NVM_DIR/versions/node/$(ls -t $NVM_DIR/versions/node 2>/dev/null | head -1)/bin:$PATH"
-#
-#   function nvm() {
-#     unset -f nvm node npm npx gemini geminicommit
-#     zsource "$NVM_DIR/nvm.sh"
-#     [[ -s "$NVM_DIR/bash_completion" ]] && zsource "$NVM_DIR/bash_completion"
-#     nvm "$@"
-#   }
-#
-#   function node() {
-#     unset -f nvm node npm npx gemini geminicommit
-#     zsource "$NVM_DIR/nvm.sh"
-#     node "$@"
-#   }
-#
-#   function npm() {
-#     unset -f nvm node npm npx gemini geminicommit
-#     zsource "$NVM_DIR/nvm.sh"
-#     npm "$@"
-#   }
-#
-#   function npx() {
-#     unset -f nvm node npm npx gemini geminicommit
-#     zsource "$NVM_DIR/nvm.sh"
-#     npx "$@"
-#   }
-#
-#   function gemini() {
-#     unset -f nvm node npm npx gemini geminicommit
-#     zsource "$NVM_DIR/nvm.sh"
-#     gemini "$@"
-#   }
-#
-#   function geminicommit() {
-#     unset -f nvm node npm npx gemini geminicommit
-#     zsource "$NVM_DIR/nvm.sh"
-#     geminicommit "$@"
-#   }
-# fi
-
 if [[ -d "$NVM_DIR" ]]; then
   # Create a shared loader function to avoid repetition
   _load_nvm() {
@@ -307,7 +264,7 @@ alias zshrc="vim ~/.config/zsh/.zshrc"
 alias sgc=supergfxctl
 alias wall="sudo ryzenadj --stapm-limit=80000 --fast-limit=80000 --slow-limit=80000 --tctl-temp=96"
 alias battery="sudo ryzenadj --stapm-limit=15000 --fast-limit=15000 --slow-limit=15000"
-alias paru="~/.local/bin/paru-notify.exp"
+# alias paru="~/.local/bin/paru-notify.exp"
 alias makex="chmod +x"
 
 
@@ -375,7 +332,7 @@ export LESSCHARSET="utf-8"
 zinit ice wait'0' lucid atload'eval "$(atuin init zsh --disable-up-arrow)"'
 zinit light zdharma-continuum/null
 
-
+source /usr/bin/virtualenvwrapper.sh
 
 if [ $PROFILING_MODE -ne 0 ]; then
     zprof
