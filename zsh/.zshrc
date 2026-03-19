@@ -239,7 +239,6 @@ alias gu='garuda-update'
 # Misc
 alias gmc=geminicommit
 alias ts=typestorm
-alias pacsearch="pacman -Ss"
 alias pacinstall="sudo pacman -S"
 alias clearcache="sudo sync; echo 3 | sudo tee /proc/sys/vm/drop_caches"
 alias btop="btop --force-utf"
