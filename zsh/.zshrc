@@ -37,6 +37,7 @@ export SUDO_ASKPASS='/usr/bin/ksshaskpass'
 # Suppress only OpenSSL legacy provider warnings
 export PYTHONWARNINGS="ignore::Warning:importlib._bootstrap"
 export ZSH=$(readlink -f $HOME/.config/zsh)
+# export DRIFT_TIMEOUT=300
 # ── 2. Path Setup ───────────────────────────────────────────────────
 typeset -U path PATH  # Keep unique entries only
 path=(
@@ -268,6 +269,8 @@ alias battery="sudo ryzenadj --stapm-limit=15000 --fast-limit=15000 --slow-limit
 alias makex="chmod +x"
 alias lsg="ls | grep"
 alias gmni=gemini
+alias oc=opencode
+alias se=sudoedit
 
 
 # ── 12. Functions ───────────────────────────────────────────────────
@@ -333,6 +336,9 @@ export LESSCHARSET="utf-8"
 
 zinit ice wait'0' lucid atload'eval "$(atuin init zsh --disable-up-arrow)"'
 zinit light zdharma-continuum/null
+
+# zinit ice wait'0' lucid atload'eval "$(drift shell-init zsh)"'
+# zinit light zdharma-continuum/null
 
 # source /usr/bin/virtualenvwrapper.sh
 

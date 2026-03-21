@@ -1,5 +1,6 @@
 [Common]
 OutlineCloseButton=true
+OutlineEnabled=true
 OutlineIntensity=OutlineMedium
 RoundedCorners=true
 

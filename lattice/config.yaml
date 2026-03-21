@@ -1,0 +1,11 @@
+# Lattice config — edit to customize your dashboard
+# See https://github.com/floatpane/lattice for docs
+
+columns: 2
+modules:
+    - type: greeting
+    - type: clock
+    - type: system
+    - type: github
+    - type: weather
+    - type: uptime

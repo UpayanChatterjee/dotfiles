@@ -65,7 +65,8 @@ unset_alt  = { fg = "#a89984", bg = "#504945" }
 parent  = { reversed = true }
 current = { reversed = true }
 preview = { underline = true }
-padding = { open = "█", close = "█" }
+# padding = { open = "█", close = "█" }
+padding = { open = "", close = "" }
 
 # : }}}
 
