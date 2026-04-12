@@ -24,7 +24,7 @@
       "mediaGifSpeedAdjustment": 300,
       "sessionGifSpeed": 0.7,
       "durations": {
-        "scale": 1
+        "scale": 0.7373284901919867
       }
     },
     "transparency": {
@@ -165,7 +165,7 @@
       "showOnHover": true
     },
     "tray": {
-      "background": false,
+      "background": true,
       "recolour": true,
       "compact": false,
       "iconSubs": [],
@@ -184,7 +184,7 @@
     "clock": {
       "background": true,
       "showDate": true,
-      "showIcon": true
+      "showIcon": false
     },
     "entries": [
       {
