@@ -271,6 +271,7 @@ alias lsg="ls | grep"
 alias gmni=gemini
 alias oc=opencode
 alias se=sudoedit
+alias webcam="mpv av://v4l2:/dev/video0"
 
 
 # ── 12. Functions ───────────────────────────────────────────────────
