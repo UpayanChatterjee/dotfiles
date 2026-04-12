@@ -1,3 +1,3 @@
 [KSplash]
 Engine=KSplashQML
-Theme=Fedora-Minimalistic
+Theme=org.kde.breeze.desktop

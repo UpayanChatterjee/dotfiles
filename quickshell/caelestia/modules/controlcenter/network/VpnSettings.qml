@@ -2,16 +2,16 @@ pragma ComponentBehavior: Bound
 
 import ".."
 import "../components"
-import qs.components
-import qs.components.controls
-import qs.components.containers
-import qs.components.effects
-import qs.services
-import qs.config
-import Quickshell
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Quickshell
+import qs.components
+import qs.components.containers
+import qs.components.controls
+import qs.components.effects
+import qs.services
+import qs.config
 
 ColumnLayout {
     id: root
@@ -82,6 +82,7 @@ ColumnLayout {
                     required property int index
 
                     width: ListView.view ? ListView.view.width : undefined
+                    implicitHeight: 60
                     color: Colours.tPalette.m3surfaceContainerHigh
                     radius: Appearance.rounding.normal
 
@@ -118,37 +119,67 @@ ColumnLayout {
                             icon: modelData.isActive ? "arrow_downward" : "arrow_upward"
                             visible: !modelData.isActive || Config.utilities.vpn.provider.length > 1
                             onClicked: {
-                                if (modelData.isActive && index < Config.utilities.vpn.provider.length - 1) {
+                                const providers = [];
+                                for (let i = 0; i < Config.utilities.vpn.provider.length; i++) {
+                                    const p = Config.utilities.vpn.provider[i];
+                                    const reconstructed = {
+                                        name: p.name,
+                                        displayName: p.displayName,
+                                        interface: p.interface,
+                                        enabled: p.enabled
+                                    };
+                                    if (p.connectCmd && p.connectCmd.length > 0) {
+                                        reconstructed.connectCmd = p.connectCmd;
+                                    }
+                                    if (p.disconnectCmd && p.disconnectCmd.length > 0) {
+                                        reconstructed.disconnectCmd = p.disconnectCmd;
+                                    }
+                                    providers.push(reconstructed);
+                                }
+
+                                if (modelData.isActive && index < providers.length - 1) {
                                     // Move down
-                                    const providers = [...Config.utilities.vpn.provider];
                                     const temp = providers[index];
                                     providers[index] = providers[index + 1];
                                     providers[index + 1] = temp;
-                                    Config.utilities.vpn.provider = providers;
-                                    Config.save();
                                 } else if (!modelData.isActive) {
                                     // Make active (move to top)
-                                    const providers = [...Config.utilities.vpn.provider];
                                     const provider = providers.splice(index, 1)[0];
                                     providers.unshift(provider);
-                                    Config.utilities.vpn.provider = providers;
-                                    Config.save();
                                 }
+
+                                Config.utilities.vpn.provider = providers;
+                                Config.save();
                             }
                         }
 
                         IconButton {
                             icon: "delete"
                             onClicked: {
-                                const providers = [...Config.utilities.vpn.provider];
-                                providers.splice(index, 1);
+                                const providers = [];
+                                for (let i = 0; i < Config.utilities.vpn.provider.length; i++) {
+                                    if (i !== index) {
+                                        const p = Config.utilities.vpn.provider[i];
+                                        const reconstructed = {
+                                            name: p.name,
+                                            displayName: p.displayName,
+                                            interface: p.interface,
+                                            enabled: p.enabled
+                                        };
+                                        if (p.connectCmd && p.connectCmd.length > 0) {
+                                            reconstructed.connectCmd = p.connectCmd;
+                                        }
+                                        if (p.disconnectCmd && p.disconnectCmd.length > 0) {
+                                            reconstructed.disconnectCmd = p.disconnectCmd;
+                                        }
+                                        providers.push(reconstructed);
+                                    }
+                                }
                                 Config.utilities.vpn.provider = providers;
                                 Config.save();
                             }
                         }
                     }
-
-                    implicitHeight: 60
                 }
             }
         }

@@ -1,1 +1,1 @@
-{"last_found_secrets": [{"match": "9a81e6f6fab05422a7446c40ae93850c2d5b894cf3a5d2f51bac5284d24cf6d1", "name": "Generic High Entropy Secret - commit://staged/exercism/user.json"}]}
+{"last_found_secrets": [{"name": "JSON Web Token - commit://staged/sh.cider.genten/update.sig", "match": "6012b2716bbc2ed7eeccf55fb41440bd7a88bf99b1b64a8c540030686170af22"}, {"name": "JSON Web Token - commit://staged/sh.cider.genten/User.jwt", "match": "82a07a5b4278fc6d399e0c7fb35804d1c8f411b25057912bd0cb3ba1e6603d28"}]}

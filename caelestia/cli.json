@@ -8,11 +8,11 @@
         "enable": true,
         "match": [
           {
-            "class": "com.rtosta.zapzap"
+            "class": "com.ktechpit.whatsie"
           }
         ],
         "command": [
-          "zapzap"
+          "whatsie"
         ],
         "move": true
       }

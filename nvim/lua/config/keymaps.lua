@@ -55,6 +55,7 @@ keymap({ "n", "i" }, "<Esc>", function()
   vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
 end, { desc = "Dismiss Noice Message, Remove Highlights & Stop Snippet" })
 vim.keymap.del("n", "<leader>l")
+keymap("n", "-", "<cmd>Oil<CR>", { desc = "Oil" })
 ------
 
 wk.add({

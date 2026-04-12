@@ -1,0 +1,153 @@
+[ColorEffects:Disabled]
+Color=#{{ surfaceContainer.hex }}
+ColorAmount=0.5
+ColorEffect=3
+ContrastAmount=0
+ContrastEffect=0
+IntensityAmount=0
+IntensityEffect=0
+
+[ColorEffects:Inactive]
+ChangeSelectionColor=true
+Color=#{{ surfaceContainerLowest.hex }}
+ColorAmount=0.025
+ColorEffect=0
+ContrastAmount=0.1
+ContrastEffect=0
+Enable=true
+IntensityAmount=0
+IntensityEffect=0
+
+[Colors:Button]
+BackgroundAlternate=#{{ surfaceVariant.hex }}
+BackgroundNormal=#{{ surfaceContainerHigh.hex }}
+DecorationFocus=#{{ primary.hex }}
+DecorationHover=#{{ primary.hex }}
+ForegroundActive=#{{ onSurface.hex }}
+ForegroundInactive=#{{ outline.hex }}
+ForegroundLink=#{{ klink.hex }}
+ForegroundNegative=#{{ knegative.hex }}
+ForegroundNeutral=#{{ kneutral.hex }}
+ForegroundNormal=#{{ onSurface.hex }}
+ForegroundPositive=#{{ kpositive.hex }}
+ForegroundVisited=#{{ kvisited.hex }}
+
+[Colors:Complementary]
+BackgroundAlternate=#{{ surface.hex }}
+BackgroundNormal=#{{ surfaceContainer.hex }}
+DecorationFocus=#{{ primary.hex }}
+DecorationHover=#{{ primary.hex }}
+ForegroundActive=#{{ inverseSurface.hex }}
+ForegroundInactive=#{{ outline.hex }}
+ForegroundLink=#{{ klink.hex }}
+ForegroundNegative=#{{ knegative.hex }}
+ForegroundNeutral=#{{ kneutral.hex }}
+ForegroundNormal=#{{ onSurfaceVariant.hex }}
+ForegroundPositive=#{{ kpositive.hex }}
+ForegroundVisited=#{{ kvisited.hex }}
+
+[Colors:Header]
+BackgroundAlternate=#{{ surfaceContainer.hex }}
+BackgroundNormal=#{{ surfaceContainer.hex }}
+DecorationFocus=#{{ primary.hex }}
+DecorationHover=#{{ primary.hex }}
+ForegroundActive=#{{ inverseSurface.hex }}
+ForegroundInactive=#{{ outline.hex }}
+ForegroundLink=#{{ klink.hex }}
+ForegroundNegative=#{{ knegative.hex }}
+ForegroundNeutral=#{{ kneutral.hex }}
+ForegroundNormal=#{{ onSurfaceVariant.hex }}
+ForegroundPositive=#{{ kpositive.hex }}
+ForegroundVisited=#{{ kvisited.hex }}
+
+[Colors:Header][Inactive]
+BackgroundAlternate=#{{ surfaceContainer.hex }}
+BackgroundNormal=#{{ surfaceContainer.hex }}
+DecorationFocus=#{{ primary.hex }}
+DecorationHover=#{{ primary.hex }}
+ForegroundActive=#{{ inverseSurface.hex }}
+ForegroundInactive=#{{ outline.hex }}
+ForegroundLink=#{{ klink.hex }}
+ForegroundNegative=#{{ knegative.hex }}
+ForegroundNeutral=#{{ kneutral.hex }}
+ForegroundNormal=#{{ onSurfaceVariant.hex }}
+ForegroundPositive=#{{ kpositive.hex }}
+ForegroundVisited=#{{ kvisited.hex }}
+
+[Colors:Selection]
+BackgroundAlternate=#{{ primary.hex }}
+BackgroundNormal=#{{ primary.hex }}
+DecorationFocus=#{{ primary.hex }}
+DecorationHover=#{{ secondary.hex }}
+ForegroundActive=#{{ onPrimary.hex }}
+ForegroundInactive=#{{ onPrimary.hex }}
+ForegroundLink=#{{ klinkSelection.hex }}
+ForegroundNegative=#{{ knegativeSelection.hex }}
+ForegroundNeutral=#{{ kneutralSelection.hex }}
+ForegroundNormal=#{{ onPrimary.hex }}
+ForegroundPositive=#{{ kpositiveSelection.hex }}
+ForegroundVisited=#{{ kvisitedSelection.hex }}
+
+[Colors:Tooltip]
+BackgroundAlternate=#{{ surfaceVariant.hex }}
+BackgroundNormal=#{{ surfaceContainer.hex }}
+DecorationFocus=#{{ primary.hex }}
+DecorationHover=#{{ primary.hex }}
+ForegroundActive=#{{ onSurface.hex }}
+ForegroundInactive=#{{ outline.hex }}
+ForegroundLink=#{{ klink.hex }}
+ForegroundNegative=#{{ knegative.hex }}
+ForegroundNeutral=#{{ kneutral.hex }}
+ForegroundNormal=#{{ onSurface.hex }}
+ForegroundPositive=#{{ kpositive.hex }}
+ForegroundVisited=#{{ kvisited.hex }}
+
+[Colors:View]
+BackgroundAlternate=#{{ surfaceContainer.hex }}
+BackgroundNormal=#{{ surfaceDim.hex }}
+DecorationFocus=#{{ primary.hex }}
+DecorationHover=#{{ inversePrimary.hex }}
+ForegroundActive=#{{ inverseSurface.hex }}
+ForegroundInactive=#{{ outline.hex }}
+ForegroundLink=#{{ klink.hex }}
+ForegroundNegative=#{{ knegative.hex }}
+ForegroundNeutral=#{{ kneutral.hex }}
+ForegroundNormal=#{{ onSurface.hex }}
+ForegroundPositive=#{{ kpositive.hex }}
+ForegroundVisited=#{{ kvisited.hex }}
+
+[Colors:Window]
+BackgroundAlternate=#{{ surfaceVariant.hex }}
+BackgroundNormal=#{{ surfaceContainer.hex }}
+DecorationFocus=#{{ primary.hex }}
+DecorationHover=#{{ primary.hex }}
+ForegroundActive=#{{ klink.hex }}
+ForegroundInactive=#{{ outline.hex }}
+ForegroundLink=#{{ klink.hex }}
+ForegroundNegative=#{{ knegative.hex }}
+ForegroundNeutral=#{{ kneutral.hex }}
+ForegroundNormal=#{{ onSurfaceVariant.hex }}
+ForegroundPositive=#{{ kpositive.hex }}
+ForegroundVisited=#{{ kvisited.hex }}
+
+[General]
+fixed=JetBrainsMono Nerd Font,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+font=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+menuFont=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+smallestReadableFont=Inter,8,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+toolBarFont=Inter,9,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+
+[Icons]
+Theme=Papirus-Dark
+
+[KDE]
+contrast=4
+widgetStyle=qt6ct-style
+
+[WM]
+activeBackground=#{{ surfaceContainerHighest.hex }}
+activeBlend=#{{ onSurface.hex }}
+activeForeground=#{{ onSurface.hex }}
+inactiveBackground=#{{ secondaryContainer.hex }}
+inactiveBlend=#{{ onSecondaryContainer.hex }}
+inactiveForeground=#{{ onSecondaryContainer.hex }}

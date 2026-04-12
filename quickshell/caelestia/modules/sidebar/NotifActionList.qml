@@ -1,19 +1,19 @@
 pragma ComponentBehavior: Bound
 
+import QtQuick
+import QtQuick.Layouts
+import Quickshell
+import Quickshell.Widgets
 import qs.components
 import qs.components.containers
 import qs.components.effects
 import qs.services
 import qs.config
-import Quickshell
-import Quickshell.Widgets
-import QtQuick
-import QtQuick.Layouts
 
 Item {
     id: root
 
-    required property Notifs.Notif notif
+    required property NotifData notif
 
     Layout.fillWidth: true
     implicitHeight: flickable.contentHeight
@@ -101,7 +101,7 @@ Item {
                     {
                         isClose: true
                     },
-                    ...root.notif.actions,
+                    ...(root.notif?.actions ?? []),
                     {
                         isCopy: true
                     }
@@ -150,7 +150,7 @@ Item {
                         id: actionInner
 
                         anchors.centerIn: parent
-                        sourceComponent: action.modelData.isClose || action.modelData.isCopy ? iconBtn : root.notif.hasActionIcons ? iconComp : textComp
+                        sourceComponent: action.modelData.isClose || action.modelData.isCopy ? iconBtn : root.notif?.hasActionIcons ? iconComp : textComp
                     }
 
                     Component {
@@ -167,6 +167,7 @@ Item {
                         id: iconComp
 
                         IconImage {
+                            asynchronous: true
                             source: Quickshell.iconPath(action.modelData.identifier)
                         }
                     }

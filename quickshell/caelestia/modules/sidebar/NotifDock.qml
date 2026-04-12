@@ -1,21 +1,21 @@
 pragma ComponentBehavior: Bound
 
+import QtQuick
+import QtQuick.Layouts
+import Quickshell.Widgets
 import qs.components
-import qs.components.controls
 import qs.components.containers
+import qs.components.controls
 import qs.components.effects
 import qs.services
 import qs.config
-import Quickshell
-import Quickshell.Widgets
-import QtQuick
-import QtQuick.Layouts
+import qs.utils
 
 Item {
     id: root
 
     required property Props props
-    required property var visibilities
+    required property DrawerVisibilities visibilities
     readonly property int notifCount: Notifs.list.reduce((acc, n) => n.closed ? acc : acc + 1, 0)
 
     anchors.fill: parent
@@ -86,6 +86,7 @@ Item {
         color: "transparent"
 
         Loader {
+            asynchronous: true
             anchors.centerIn: parent
             active: opacity > 0
             opacity: root.notifCount > 0 ? 0 : 1
@@ -95,7 +96,7 @@ Item {
 
                 Image {
                     asynchronous: true
-                    source: Qt.resolvedUrl(`${Quickshell.shellDir}/assets/dino.png`)
+                    source: Paths.absolutePath(Config.paths.noNotifsPic)
                     fillMode: Image.PreserveAspectFit
                     sourceSize.width: clipRect.width * 0.8
 
@@ -150,22 +151,30 @@ Item {
         id: clearTimer
 
         repeat: true
-        interval: 50
+        triggeredOnStart: true
+        interval: Math.max(15, Math.min(80, 69.8 - 12.3 * Math.log(Notifs.notClosed.length)))
         onTriggered: {
-            let next = null;
-            for (let i = 0; i < notifList.repeater.count; i++) {
-                next = notifList.repeater.itemAt(i);
-                if (!next?.closed)
-                    break;
-            }
-            if (next)
-                next.closeAll();
-            else
+            const first = Notifs.notClosed[0];
+            if (!first) {
                 stop();
+                return;
+            }
+
+            const appName = first.appName;
+            let cleared = 0;
+            for (const n of Notifs.notClosed.filter(n => n.appName === appName)) {
+                n.close();
+                cleared++;
+                if (cleared > 30) {
+                    interval = 5;
+                    return;
+                }
+            }
         }
     }
 
     Loader {
+        asynchronous: true
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: Appearance.padding.normal
