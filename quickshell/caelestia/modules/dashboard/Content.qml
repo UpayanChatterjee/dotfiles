@@ -24,6 +24,16 @@ Item {
     required property DashboardState dashState
     required property FileDialog facePicker
 
+    readonly property bool menuOpen: {
+        const count = repeater.count;
+        for (let i = 0; i < count; i++) {
+            const item = repeater.itemAt(i) as Loader;
+            if (item?.sourceComponent === mediaComponent && (item?.item as MediaWrapper)?.menuOpen)
+                return true;
+        }
+        return false;
+    }
+
     readonly property var dashboardTabs: {
         const allTabs = [
             {

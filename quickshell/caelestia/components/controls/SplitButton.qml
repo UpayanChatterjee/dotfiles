@@ -145,20 +145,20 @@ Row {
         Menu {
             id: menu
 
-            states: State {
-                when: root.menuOnTop
+            property point menuPos: Qt.point(0, 0)
 
-                AnchorChanges {
-                    target: menu
-                    anchors.top: undefined
-                    anchors.bottom: expandBtn.top
-                }
+            function updateMenuPos(): void {
+                const p = expandBtn.mapToItem(root.Window.contentItem, 0, expandBtn.height);
+                menuPos = root.menuOnTop ? Qt.point(p.x, p.y - expandBtn.height - implicitHeight - Appearance.spacing.small) : Qt.point(p.x, p.y + Appearance.spacing.small);
             }
 
-            anchors.top: parent.bottom
-            anchors.right: parent.right
-            anchors.topMargin: Appearance.spacing.small
-            anchors.bottomMargin: Appearance.spacing.small
+            parent: root.Window.contentItem
+            x: menuPos.x + expandBtn.width - implicitWidth
+            y: menuPos.y
+
+            onImplicitHeightChanged: updateMenuPos()
+            onImplicitWidthChanged: updateMenuPos()
+            Component.onCompleted: updateMenuPos()
         }
     }
 }

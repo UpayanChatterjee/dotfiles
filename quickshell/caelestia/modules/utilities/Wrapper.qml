@@ -13,6 +13,7 @@ Item {
     required property DrawerVisibilities visibilities
     required property Sidebar.Wrapper sidebar
     required property BarPopouts.Wrapper popouts
+    readonly property bool menuOpen: (content.item as Content)?.menuOpen ?? false
     property real horizontalStretch
 
     readonly property PersistentProperties props: PersistentProperties {

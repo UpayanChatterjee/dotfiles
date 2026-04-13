@@ -17,6 +17,7 @@ Item {
 
     required property DrawerVisibilities visibilities
     readonly property bool needsKeyboard: lyricMenuOpen
+    readonly property bool playerSelectorExpanded: playerSelector.expanded
 
     readonly property real nonAnimHeight: Math.max(cover.implicitHeight + Config.dashboard.sizes.mediaVisualiserSize * 2, lyricMenuOpen ? lyricMenu.implicitHeight : details.implicitHeight, bongocat.implicitHeight) + Appearance.padding.large * 2
     readonly property real detailsHeightWithoutLyrics: details.implicitHeight - lyricsViewInDetails.implicitHeight

@@ -13,6 +13,7 @@ Item {
 
     required property DrawerVisibilities visibilities
     readonly property bool needsKeyboard: (content.item as Content)?.needsKeyboard ?? false
+    readonly property bool menuOpen: (content.item as Content)?.menuOpen ?? false
     readonly property DashboardState dashState: DashboardState {
         reloadableId: "dashboardState"
     }

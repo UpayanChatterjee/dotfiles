@@ -72,10 +72,10 @@ CustomMouseArea {
                 root.panels.osd.hovered = false;
             }
 
-            if (!dashboardShortcutActive)
+            if (!dashboardShortcutActive && !panels.dashboard.menuOpen)
                 visibilities.dashboard = false;
 
-            if (!utilitiesShortcutActive)
+            if (!utilitiesShortcutActive && !panels.utilities.menuOpen)
                 visibilities.utilities = false;
 
             if (!popouts.currentName.startsWith("traymenu") || ((popouts.current as StackView)?.depth ?? 0) <= 1) {
@@ -198,7 +198,7 @@ CustomMouseArea {
         }
 
         // Show utilities on hover
-        const showUtilities = inBottomPanel(panels.utilities, x, y, true);
+        const showUtilities = inBottomPanel(panels.utilities, x, y) || panels.utilities.menuOpen;
 
         // Always update visibility based on hover if not in shortcut mode
         if (!utilitiesShortcutActive) {
