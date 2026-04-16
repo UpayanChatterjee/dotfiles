@@ -12,7 +12,28 @@ Singleton {
     id: root
 
     readonly property list<MprisPlayer> list: Mpris.players.values
-    readonly property MprisPlayer active: props.manualActive ?? list.find(p => getIdentity(p) === Config.services.defaultPlayer) ?? list[0] ?? null
+    readonly property MprisPlayer active: {
+        if (props.manualActive && list.indexOf(props.manualActive) !== -1)
+            return props.manualActive;
+        const playing = list.find(p => p.playbackState === MprisPlaybackState.Playing);
+        if (playing) return playing;
+        if (lastActive && list.indexOf(lastActive) !== -1)
+            return lastActive;
+        const def = list.find(p => getIdentity(p) === Config.services.defaultPlayer);
+        if (def) return def;
+        return list[0] ?? null;
+    }
+
+    property MprisPlayer lastActive
+
+    Connections {
+        target: root
+        function onActiveChanged() {
+            if (root.active)
+                root.lastActive = root.active;
+        }
+    }
+
     property alias manualActive: props.manualActive
 
     function getIdentity(player: MprisPlayer): string {
