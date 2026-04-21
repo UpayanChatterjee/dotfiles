@@ -140,7 +140,7 @@ fi
 if [[ -d "$NVM_DIR" ]]; then
   # Create a shared loader function to avoid repetition
   _load_nvm() {
-    unset -f nvm node npm npx gemini geminicommit
+    unset -f nvm node npm npx gemini geminicommit codex
     
     # Load NVM
     [[ -s "$NVM_DIR/nvm.sh" ]] && zsource "$NVM_DIR/nvm.sh"
@@ -157,6 +157,8 @@ if [[ -d "$NVM_DIR" ]]; then
   npx() { _load_nvm; npx "$@" }
   gemini() { _load_nvm; gemini "$@" }
   geminicommit() { _load_nvm; geminicommit "$@" }
+  codex() { _load_nvm; codex "$@" }
+
 fi
 
 # Homebrew lazy load
