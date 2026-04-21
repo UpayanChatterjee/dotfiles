@@ -7,16 +7,17 @@ import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Wayland
 import Caelestia.Blobs
+import Caelestia.Config
 import qs.components
 import qs.components.containers
 import qs.services
-import qs.config
 import qs.modules.bar
 
 StyledWindow {
     id: root
 
     readonly property alias bar: bar
+    readonly property alias interactionWrapper: interactions
 
     readonly property HyprlandMonitor monitor: Hypr.monitorFor(screen)
     readonly property bool hasSpecialWorkspace: (monitor?.lastIpcObject.specialWorkspace?.name.length ?? 0) > 0
@@ -30,9 +31,9 @@ StyledWindow {
         }
         return monitor?.activeWorkspace?.toplevels.values.some(t => t.lastIpcObject.fullscreen > 1) ?? false;
     }
-    property real borderThickness: hasFullscreen ? 0 : Config.border.thickness
-    readonly property real borderLayoutThickness: hasFullscreen ? 0 : Config.border.thickness
-    property real borderRounding: hasFullscreen ? 0 : Config.border.rounding
+    property real borderThickness: hasFullscreen ? 0 : contentItem.Config.border.thickness
+    readonly property real borderLayoutThickness: hasFullscreen ? 0 : contentItem.Config.border.thickness
+    property real borderRounding: hasFullscreen ? 0 : contentItem.Config.border.rounding
     property real shadowOpacity: hasFullscreen ? 0 : 0.7
 
     readonly property int dragMaskPadding: {
@@ -44,8 +45,8 @@ StyledWindow {
 
         const thresholds = [];
         for (const panel of ["dashboard", "launcher", "session", "sidebar"])
-            if (Config[panel].enabled)
-                thresholds.push(Config[panel].dragThreshold);
+            if (contentItem.Config[panel].enabled)
+                thresholds.push(contentItem.Config[panel].dragThreshold);
         return Math.max(...thresholds);
     }
 
@@ -73,32 +74,26 @@ StyledWindow {
 
     Behavior on borderThickness {
         Anim {
-            duration: Appearance.anim.durations.expressiveDefaultSpatial
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+            type: Anim.DefaultSpatial
         }
     }
 
     Behavior on borderRounding {
         Anim {
-            duration: Appearance.anim.durations.expressiveDefaultSpatial
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+            type: Anim.DefaultSpatial
         }
     }
 
     Behavior on shadowOpacity {
         Anim {
-            duration: Appearance.anim.durations.expressiveDefaultSpatial
-            easing.type: Easing.BezierSpline
-            easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+            type: Anim.DefaultSpatial
         }
     }
 
     HyprlandFocusGrab {
         id: focusGrab
 
-        active: (visibilities.launcher && Config.launcher.enabled) || (visibilities.session && Config.session.enabled) || (visibilities.sidebar && Config.sidebar.enabled) || (!Config.dashboard.showOnHover && visibilities.dashboard && Config.dashboard.enabled) || (panels.popouts.currentName.startsWith("traymenu") && (panels.popouts.current as StackView)?.depth > 1)
+        active: (visibilities.launcher && root.contentItem.Config.launcher.enabled) || (visibilities.session && root.contentItem.Config.session.enabled) || (visibilities.sidebar && root.contentItem.Config.sidebar.enabled) || (!root.contentItem.Config.dashboard.showOnHover && visibilities.dashboard && root.contentItem.Config.dashboard.enabled) || (panels.popouts.currentName.startsWith("traymenu") && (panels.popouts.current as StackView)?.depth > 1)
         windows: [root]
         onCleared: {
             visibilities.launcher = false;
@@ -134,6 +129,7 @@ StyledWindow {
             id: blobGroup
 
             color: Colours.palette.m3surface
+            smoothing: root.contentItem.Config.border.smoothing
 
             Behavior on color {
                 CAnim {}
@@ -221,8 +217,7 @@ StyledWindow {
 
             Behavior on extraWidth {
                 Anim {
-                    duration: Appearance.anim.durations.expressiveDefaultSpatial
-                    easing.bezierCurve: Appearance.anim.curves.expressiveDefaultSpatial
+                    type: Anim.DefaultSpatial
                 }
             }
         }
@@ -235,6 +230,8 @@ StyledWindow {
     }
 
     Interactions {
+        id: interactions
+
         screen: root.screen
         popouts: panels.popouts
         visibilities: visibilities
@@ -252,6 +249,7 @@ StyledWindow {
             borderThickness: root.borderThickness
 
             utilities.horizontalStretch: (sidebarBg.rawDeformMatrix.m11 - 1) / 2 + 1
+            utilities.deformMatrix: utilsBg.rawDeformMatrix
 
             dashboard.transform: Matrix4x4 {
                 matrix: dashBg.deformMatrix
@@ -304,7 +302,7 @@ StyledWindow {
         y: panel.y + root.borderThickness
         implicitWidth: panel.width
         implicitHeight: panel.height
-        radius: Config.border.rounding
-        deformScale: deformAmount / 10000
+        radius: Tokens.rounding.large
+        deformScale: (deformAmount * Config.appearance.deformScale) / 10000
     }
 }

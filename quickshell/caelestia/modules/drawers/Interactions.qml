@@ -1,9 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import Quickshell
+import Caelestia.Config
 import qs.components
 import qs.components.controls
-import qs.config
 import qs.modules.bar as Bar
 import qs.modules.bar.popouts as BarPopouts
 
@@ -72,10 +72,10 @@ CustomMouseArea {
                 root.panels.osd.hovered = false;
             }
 
-            if (!dashboardShortcutActive && !panels.dashboard.menuOpen)
+            if (!dashboardShortcutActive)
                 visibilities.dashboard = false;
 
-            if (!utilitiesShortcutActive && !panels.utilities.menuOpen)
+            if (!utilitiesShortcutActive)
                 visibilities.utilities = false;
 
             if (!popouts.currentName.startsWith("traymenu") || ((popouts.current as StackView)?.depth ?? 0) <= 1) {
@@ -198,7 +198,7 @@ CustomMouseArea {
         }
 
         // Show utilities on hover
-        const showUtilities = inBottomPanel(panels.utilities, x, y) || panels.utilities.menuOpen;
+        const showUtilities = inBottomPanel(panels.utilities, x, y, true);
 
         // Always update visibility based on hover if not in shortcut mode
         if (!utilitiesShortcutActive) {

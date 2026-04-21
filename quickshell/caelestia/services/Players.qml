@@ -5,39 +5,18 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Mpris
 import Caelestia
+import Caelestia.Config
 import qs.components.misc
-import qs.config
 
 Singleton {
     id: root
 
     readonly property list<MprisPlayer> list: Mpris.players.values
-    readonly property MprisPlayer active: {
-        if (props.manualActive && list.indexOf(props.manualActive) !== -1)
-            return props.manualActive;
-        const playing = list.find(p => p.playbackState === MprisPlaybackState.Playing);
-        if (playing) return playing;
-        if (lastActive && list.indexOf(lastActive) !== -1)
-            return lastActive;
-        const def = list.find(p => getIdentity(p) === Config.services.defaultPlayer);
-        if (def) return def;
-        return list[0] ?? null;
-    }
-
-    property MprisPlayer lastActive
-
-    Connections {
-        target: root
-        function onActiveChanged() {
-            if (root.active)
-                root.lastActive = root.active;
-        }
-    }
-
+    readonly property MprisPlayer active: props.manualActive ?? list.find(p => getIdentity(p) === GlobalConfig.services.defaultPlayer) ?? list[0] ?? null
     property alias manualActive: props.manualActive
 
     function getIdentity(player: MprisPlayer): string {
-        const alias = Config.services.playerAliases.find(a => a.from === player.identity);
+        const alias = GlobalConfig.services.playerAliases.find(a => a.from === player.identity);
         return alias?.to ?? player.identity;
     }
 
@@ -58,7 +37,7 @@ Singleton {
 
     Connections {
         function onPostTrackChanged() {
-            if (!Config.utilities.toasts.nowPlaying) {
+            if (!GlobalConfig.utilities.toasts.nowPlaying) {
                 return;
             }
             if (root.active.trackArtist != "" && root.active.trackTitle != "") {
