@@ -39,6 +39,7 @@ layers:
       f2: tap-hold-next f2; toggle-layer arrows ; 300
       f3: tap-hold-next f3; toggle-layer kitty  ; 300
       capslock: tap-hold-next esc ; toggle-layer leftM ; 300
+      space: tap-hold space ; leftmeta ; 200
       # leftctrl: tap-hold leftctrl ; toggle-layer krohnkite_ctrl ; 1000
       # esc: capslock
       # rightshift+leftshift: capslock
