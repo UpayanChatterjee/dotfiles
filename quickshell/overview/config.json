@@ -46,7 +46,7 @@
     "columns": 5,
     "scale": 0.16,
     "enable": true,
-    "hideEmptyRows": true,
+    "hideEmptyRows": false,
     "useWorkspaceMap": false,
     "workspaceMap": [
       0,
