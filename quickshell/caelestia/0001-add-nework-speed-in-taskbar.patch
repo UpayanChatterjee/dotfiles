@@ -1,0 +1,345 @@
+From ebfc37193ff78c7dea88e8f972b022ead8b6bf9d Mon Sep 17 00:00:00 2001
+From: Abhishek Kumar <gwydionmaranio@gmail.com>
+Date: Wed, 22 Apr 2026 21:15:33 +0530
+Subject: [PATCH] add nework speed in taskbar
+
+---
+ modules/bar/components/StatusIcons.qml |  76 +++++++++-
+ modules/bar/popouts/Content.qml        |   7 +
+ modules/bar/popouts/NetworkSpeed.qml   | 192 +++++++++++++++++++++++++
+ 3 files changed, 274 insertions(+), 1 deletion(-)
+ create mode 100644 modules/bar/popouts/NetworkSpeed.qml
+
+diff --git a/modules/bar/components/StatusIcons.qml b/modules/bar/components/StatusIcons.qml
+index 900e557..eae4516 100644
+--- a/modules/bar/components/StatusIcons.qml
++++ b/modules/bar/components/StatusIcons.qml
+@@ -1,7 +1,9 @@
++//StatusIcons.qml
+ pragma ComponentBehavior: Bound
+ 
+ import QtQuick
+ import QtQuick.Layouts
++import QtQuick.Controls
+ import Quickshell
+ import Quickshell.Bluetooth
+ import Quickshell.Services.UPower
+@@ -9,6 +11,8 @@ import Caelestia.Config
+ import qs.components
+ import qs.services
+ import qs.utils
++import Caelestia.Internal
++import qs.components.misc
+ 
+ StyledRect {
+     id: root
+@@ -19,7 +23,7 @@ StyledRect {
+     color: Colours.tPalette.m3surfaceContainer
+     radius: Tokens.rounding.full
+ 
+-    clip: true
++    // clip: true
+     implicitWidth: Tokens.sizes.bar.innerWidth
+     implicitHeight: iconColumn.implicitHeight + Tokens.padding.normal * 2 - (Config.bar.status.showLockStatus && !Hypr.capsLock && !Hypr.numLock ? iconColumn.spacing : 0)
+ 
+@@ -103,6 +107,53 @@ StyledRect {
+             }
+         }
+ 
++        // network speed
++        WrappedLoader {
++            // Note: Make sure "name" matches whatever string your PopoutManager uses to route the Network popup!
++            name: "netSpeed"
++            active: Config.bar.status.showNetSpeed
++
++            sourceComponent: Item {
++                implicitWidth: Tokens.sizes.bar.innerWidth
++                implicitHeight: netCol.implicitHeight
++
++                Ref {
++                    service: NetworkUsage
++                }
++
++                // Compact bar display (FIXED: One line text, less cramped)
++                ColumnLayout {
++                    id: netCol
++                    anchors.horizontalCenter: parent.horizontalCenter
++                    spacing: 2
++
++                    StyledText {
++                        Layout.alignment: Qt.AlignHCenter
++                        text: {
++                            const f = NetworkUsage.formatBytes(NetworkUsage.downloadSpeed ?? 0);
++                            // Formats as "16K" instead of stacking awkwardly
++                            return f ? `${f.value.toFixed(0)}${f.unit[0]}` : "0B";
++                        }
++                        font.pixelSize: 12
++                        font.family: Tokens.font.family.mono
++                        font.weight: Font.Bold
++                        color: Colours.palette.m3tertiary
++                    }
++
++                    MaterialIcon {
++                        Layout.alignment: Qt.AlignHCenter
++                        text: "south"
++                        color: Colours.palette.m3tertiary
++                        font.pixelSize: 12
++                    }
++
++                    Item {
++                        implicitHeight: 4
++                    }
++                }
++            }
++        }
++
+         // Audio icon
+         WrappedLoader {
+             name: "audio"
+@@ -268,4 +319,27 @@ StyledRect {
+         Layout.alignment: Qt.AlignHCenter
+         visible: active
+     }
++
++    component CardHeader: RowLayout {
++        property string icon
++        property string title
++        property color accentColor: Colours.palette.m3primary
++
++        Layout.fillWidth: true
++        spacing: Tokens.spacing.small
++
++        MaterialIcon {
++            text: parent.icon
++            fill: 1
++            color: parent.accentColor
++            font.pointSize: Tokens.spacing.large
++        }
++
++        StyledText {
++            Layout.fillWidth: true
++            text: parent.title
++            font.pointSize: Tokens.font.size.normal
++            elide: Text.ElideRight
++        }
++    }
+ }
+diff --git a/modules/bar/popouts/Content.qml b/modules/bar/popouts/Content.qml
+index 42c5a76..8c79387 100644
+--- a/modules/bar/popouts/Content.qml
++++ b/modules/bar/popouts/Content.qml
+@@ -116,6 +116,13 @@ Item {
+             }
+         }
+ 
++        Popout {
++            name: "netSpeed"
++            sourceComponent: NetworkSpeed {
++                popouts: root.popouts
++            }
++        }
++
+         Popout {
+             name: "kblayout"
+             sourceComponent: KbLayout {}
+diff --git a/modules/bar/popouts/NetworkSpeed.qml b/modules/bar/popouts/NetworkSpeed.qml
+new file mode 100644
+index 0000000..f94d0b5
+--- /dev/null
++++ b/modules/bar/popouts/NetworkSpeed.qml
+@@ -0,0 +1,192 @@
++//popouts/NetworkSpeed.qml
++pragma ComponentBehavior: Bound
++
++import QtQuick
++import QtQuick.Layouts
++import Quickshell
++import Caelestia.Config
++import qs.components
++import qs.services
++import qs.utils
++import Caelestia.Internal
++import qs.components.misc
++
++Item {
++    id: root
++
++    // Matches audio.qml - allows interaction with the master popup manager
++    required property PopoutState popouts
++
++    implicitWidth: layout.implicitWidth + Tokens.padding.normal * 2
++    implicitHeight: layout.implicitHeight + Tokens.padding.normal * 2
++
++    Ref {
++        service: NetworkUsage
++    }
++
++    ColumnLayout {
++        id: layout
++        anchors.left: parent.left
++        anchors.verticalCenter: parent.verticalCenter
++        spacing: Tokens.spacing.normal
++
++        // Title mimicking audio.qml style
++        StyledText {
++            text: qsTr("Network")
++            font.weight: 500
++        }
++
++        // Sparkline graph
++        Item {
++            Layout.fillWidth: true
++            Layout.preferredHeight: 48
++            Layout.minimumWidth: 220 // Ensure the popup has a nice minimum width
++
++            SparklineItem {
++                id: sparkline
++
++                property real targetMax: 1024
++                property real smoothMax: targetMax
++
++                anchors.fill: parent
++                line1: NetworkUsage.uploadBuffer // qmllint disable missing-type
++                line1Color: Colours.palette.m3secondary
++                line1FillAlpha: 0.15
++                line2: NetworkUsage.downloadBuffer // qmllint disable missing-type
++                line2Color: Colours.palette.m3tertiary
++                line2FillAlpha: 0.2
++                maxValue: smoothMax
++                historyLength: NetworkUsage.historyLength
++
++                Connections {
++                    function onValuesChanged(): void {
++                        sparkline.targetMax = Math.max(NetworkUsage.downloadBuffer.maximum, NetworkUsage.uploadBuffer.maximum, 1024);
++                        slideAnim.restart();
++                    }
++                    target: NetworkUsage.downloadBuffer
++                }
++
++                NumberAnimation {
++                    id: slideAnim
++                    target: sparkline
++                    property: "slideProgress"
++                    from: 0
++                    to: 1
++                    duration: GlobalConfig.dashboard.resourceUpdateInterval
++                }
++
++                Behavior on smoothMax {
++                    Anim {
++                        type: Anim.StandardLarge
++                    }
++                }
++            }
++
++            // "No data" placeholder
++            StyledText {
++                anchors.centerIn: parent
++                text: qsTr("Collecting data...")
++                font.pointSize: Tokens.font.size.small
++                color: Colours.palette.m3onSurfaceVariant
++                visible: NetworkUsage.downloadBuffer.count < 2
++                opacity: 0.6
++            }
++        }
++
++        // Download row
++        RowLayout {
++            Layout.fillWidth: true
++            spacing: Tokens.spacing.normal
++
++            MaterialIcon {
++                text: "download"
++                color: Colours.palette.m3tertiary
++                font.pointSize: Tokens.font.size.normal
++            }
++
++            StyledText {
++                text: qsTr("Download")
++                font.pointSize: Tokens.font.size.small
++                color: Colours.palette.m3onSurfaceVariant
++            }
++
++            Item {
++                Layout.fillWidth: true
++            }
++
++            StyledText {
++                text: {
++                    const fmt = NetworkUsage.formatBytes(NetworkUsage.downloadSpeed ?? 0);
++                    return fmt ? `${fmt.value.toFixed(1)} ${fmt.unit}` : "0.0 B/s";
++                }
++                font.pointSize: Tokens.font.size.normal
++                font.weight: Font.Medium
++                color: Colours.palette.m3tertiary
++            }
++        }
++
++        // Upload row
++        RowLayout {
++            Layout.fillWidth: true
++            spacing: Tokens.spacing.normal
++
++            MaterialIcon {
++                text: "upload"
++                color: Colours.palette.m3secondary
++                font.pointSize: Tokens.font.size.normal
++            }
++
++            StyledText {
++                text: qsTr("Upload")
++                font.pointSize: Tokens.font.size.small
++                color: Colours.palette.m3onSurfaceVariant
++            }
++
++            Item {
++                Layout.fillWidth: true
++            }
++
++            StyledText {
++                text: {
++                    const fmt = NetworkUsage.formatBytes(NetworkUsage.uploadSpeed ?? 0);
++                    return fmt ? `${fmt.value.toFixed(1)} ${fmt.unit}` : "0.0 B/s";
++                }
++                font.pointSize: Tokens.font.size.normal
++                font.weight: Font.Medium
++                color: Colours.palette.m3secondary
++            }
++        }
++
++        // Session totals
++        RowLayout {
++            Layout.fillWidth: true
++            spacing: Tokens.spacing.normal
++
++            MaterialIcon {
++                text: "history"
++                color: Colours.palette.m3onSurfaceVariant
++                font.pointSize: Tokens.font.size.normal
++            }
++
++            StyledText {
++                text: qsTr("Total")
++                font.pointSize: Tokens.font.size.small
++                color: Colours.palette.m3onSurfaceVariant
++            }
++
++            Item {
++                Layout.fillWidth: true
++            }
++
++            StyledText {
++                text: {
++                    const down = NetworkUsage.formatBytesTotal(NetworkUsage.downloadTotal ?? 0);
++                    const up = NetworkUsage.formatBytesTotal(NetworkUsage.uploadTotal ?? 0);
++                    return (down && up) ? `↓${down.value.toFixed(1)}${down.unit} ↑${up.value.toFixed(1)}${up.unit}` : "↓0.0B ↑0.0B";
++                }
++                font.pointSize: Tokens.font.size.small
++                color: Colours.palette.m3onSurfaceVariant
++            }
++        }
++    }
++}
+-- 
+2.53.0
+

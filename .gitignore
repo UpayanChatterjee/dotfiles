@@ -117,3 +117,6 @@ zen/**
 org.keshavnrj.ubuntu/**
 xfce4/**
 okularrc
+qBittorrent/**
+mimeapps.list
+partitionmanagerrc

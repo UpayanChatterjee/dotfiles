@@ -139,7 +139,7 @@
             ],
             "iconSubs": [
             ],
-            "recolour": true
+            "recolour": false
         },
         "workspaces": {
             "activeIndicator": true,
