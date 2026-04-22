@@ -117,6 +117,13 @@ Item {
         }
 
         Popout {
+            name: "netSpeed"
+            sourceComponent: NetworkSpeed {
+                popouts: root.popouts
+            }
+        }
+
+        Popout {
             name: "kblayout"
             sourceComponent: KbLayout {}
         }
