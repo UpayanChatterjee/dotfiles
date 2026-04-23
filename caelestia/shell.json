@@ -127,7 +127,7 @@
             "showBattery": true,
             "showBluetooth": true,
             "showKbLayout": false,
-            "showLockStatus": true,
+            "showLockStatus": false,
             "showMicrophone": true,
             "showNetwork": true,
             "showWifi": true
@@ -139,7 +139,7 @@
             ],
             "iconSubs": [
             ],
-            "recolour": false
+            "recolour": true
         },
         "workspaces": {
             "activeIndicator": true,

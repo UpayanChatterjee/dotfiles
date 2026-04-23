@@ -120,3 +120,6 @@ okularrc
 qBittorrent/**
 mimeapps.list
 partitionmanagerrc
+QtProject.conf
+gtk-3.0/bookmarks
+gwenviewrc
