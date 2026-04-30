@@ -123,3 +123,6 @@ partitionmanagerrc
 QtProject.conf
 gtk-3.0/bookmarks
 gwenviewrc
+onlyoffice/**
+peazip/**
+DisplayCAL/**
