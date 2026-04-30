@@ -2,4 +2,9 @@
 count=0
 
 [Session: saved at previous logout]
-count=0
+clientId1=10d5e5d7d7000177758462400000052700000
+count=1
+program1=zen
+restartCommand1=/opt/zen-browser-bin/zen,--sm-client-id,10d5e5d7d7000177758462400000052700000
+restartStyleHint1=0
+userId1=tony

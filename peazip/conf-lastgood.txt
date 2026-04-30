@@ -12,8 +12,8 @@ clWindowText
 0
 [language]
 default.txt
-0
-[0: always keep open task window for inspection of reports 1: (default) keep open only for errors, list, test operations 2: keep open only for errors, list 3: never keep open for inspection]
+
+[reporting: 0 always keep open task window for inspection of logs, 1 keep open only for errors, list, test operations (default), 2 keep open only for errors, list, 3 never keep open for inspection]
 2
 
 [open output directory when task ends]
@@ -26,7 +26,7 @@ default.txt
 0
 
 [Initial dir for file/archive browser]
-/home/tony/Downloads/Compressed/
+/run/media/tony/fedora/home/tony/Downloads/Black_Myth_Wukong_--_fitgirl-repacks.site/
 
 [default archiving format]
 18
@@ -55,8 +55,8 @@ default.txt
 [show password field in clear]
 0
 
-[UNUSED ask for password on extract/list/test operations from system's menus]
-3
+[process mode: 0 pass command line (default) 1 pass separate parameters]
+0
 
 [archive browser style]
 0
@@ -70,11 +70,11 @@ default.txt
 [ignore archived path structure when performing extraction of selected objects]
 0
 
-[archive browser speed optimization: 0 no optimization 1 unused, 2,3 slow and medium optimization (3 default) 4 fast, pre-parse (with medium optimization) only if errors are detected 5 do not pre-parse archives: 4,5 may non correctly list some out of standard archives]
+[archive browser speed optimization: 0 no optimization 1,2,3 better optimizations (3 default) 4 fast mode, 5 do not pre-parse archives. 4, 5 may non correctly list some archives with TOC issues]
 3
 
-[(obsolete) don't pre-parse archives over this in-memory size]
-192
+[icons rendering interpolation style: 0 native (default) 1 sharp 2 soft
+0
 
 [overwrite / skip policy using 7z binary]
 0
@@ -111,7 +111,7 @@ default.txt
 1
 
 [maximized status]
-0
+1
 
 [left]
 82
@@ -208,14 +208,14 @@ Deflate
 [desktop path]
 /home/tony/Desktop/
 
-[scripts encoding, legacy parameter (now always UTF-8) ]
-0
+[UNUSED]
+
 
 [archived object's name encoding]
 1
 
 [last output path]
-
+/home/tony/Desktop/
 
 [height of the navigation's splitter]
 220
@@ -236,7 +236,7 @@ PeaZip
 0
 13
 1
-360
+499
 108
 108
 108
@@ -287,7 +287,7 @@ PeaZip
 180
 
 [status of navigation groups]
-0
+1
 0
 1
 0
@@ -320,8 +320,8 @@ PeaZip
 [encrypt also filenames, if the feature is supported by the format]
 0
 
-[ignore archived path structure when performing custom drag and drop extraction]
-0
+[UNUSED]
+
 
 [swap position of Toolbar and Address bar]
 0
@@ -409,8 +409,8 @@ PeaZip
 0
 
 [save history of recent directories]
+/run/media/tony/fedora/home/tony/Downloads/Black_Myth_Wukong_--_fitgirl-repacks.site/
 /home/tony/Downloads/Compressed/
-
 
 
 
@@ -427,7 +427,7 @@ PeaZip
 [default max threads option for 7z]
 1
 
-[default deletion mode for delete after extraction / delete after archiving option: 0 recycle (Windows) 1 quick 2 zero 3 secure]
+[default deletion mode for delete after extraction / archiving option: 0 recycle (if supported) 1 quick 2 zero 3 secure]
 1
 
 [status of function branch in run group]
@@ -436,25 +436,25 @@ PeaZip
 [remove redundant intermediate directory (a single directory in output root) on "Extract to new folder" operations]
 1
 
-[verbose confirmation at each archive conversion step 1=yes, 0=no (default)]
+[verbose confirmation at each archive conversion step 1 yes, 0 no (default)]
 0
 
-[Free Software compliance 0 = permissive (default) 1 = allow only Free Software components 2 = allow only Free Software components and open archive formats; 1 and 2 modes can be hardcoded at compile time]
+[Free Software compliance 0 permissive (default), 1  allow only Free Software components, 2 allow only Free Software components and open archive formats; 1 and 2 modes can be hardcoded at compile time]
 0
 
 [non-verbose output log from 7z / p7zip, faster (especially when many small files are involved), but less informative 1=yes (default) 0=no]
 1
 
-[timestamp style: 0 (default) name.date.time, 1 name.date, 2 date.time.name, 3 date.name]
+[timestamp style: 0 name.date.time (default), 1 name.date, 2 date.time.name, 3 date.name]
 0
 
-[use 7z / p7zip implementation of UNRAR5 (even if RarLab's UNRAR5 plugin is installed) 1=yes (default) 0=no NOTE: overridden by Free Software compliance setting if > 0]
+[use 7z / p7zip implementation of UNRAR5 (even if RarLab's UNRAR5 plugin is installed) 1 yes (default), 0 no; NOTE: overridden by Free Software compliance setting if > 0]
 1
 
-[sort files by type for 7z solid compression 1 = on, usually better compression (default) 0 = off, faster on NTFS filesystem]
+[sort files by type for 7z solid compression 1 on, usually better compression, 0 off (default) faster on most filesystems]
 1
 
-[always start file browser from 0 last browserd directory(default) 1 computer's root 2 home 3 desktop 4 custom, defined below]
+[always start file browser from 0 last browserd directory(default), 1 computer's root, 2 home, 3 desktop, 4 custom, defined below]
 0
 
 
@@ -462,16 +462,16 @@ PeaZip
 0
 0
 
-[add timestamp suffix when creating archives: 0 no (default) 1 yes]
+[add timestamp suffix when creating archives: 0 no (default), 1 yes]
 0
 
-[add ".enc" suffix before extension when creating encrypted archives: 0 no (default) 1 yes]
+[add ".enc" suffix before extension when creating encrypted archives: 0 no (default), 1 yes]
 0
 
 [tab bar]
 0
 
-[privacy_mode directive 0 = none 1 = ask for password or keyfile when application starts, skippable 2 = non skippable]
+[privacy_mode directive 0 none (default), 1 ask for password or keyfile when application starts, skippable, 2 non skippable]
 0
 
 [manage NT security information]
@@ -480,7 +480,7 @@ PeaZip
 [manage NTFS alternate data streams]
 1
 
-[change password during conversion 1=yes, 0=no (default)]
+[change password during conversion 1 yes, 0 no (default)]
 0
 
 [show volatile options]
@@ -498,7 +498,7 @@ PeaZip
 [custom working directory]
 
 
-[encryption algorithm for ZIP 0 AES 1 ZipCrypto (legacy)]
+[encryption algorithm for ZIP 0 AES (default), 1 ZipCrypto (legacy)]
 0
 
 [use native drag and drop on Windows]
@@ -576,7 +576,7 @@ PeaZip
 [default Rar.exe compression level]
 3
 
-[1 create RAR5 (default) 0 create legacy RAR4]
+[1 create RAR5 (default), 0 create legacy RAR4]
 1
 
 [RAR5 dictionary size
@@ -618,17 +618,17 @@ PeaZip
 [close PeaZip after extraction if no browsing actions took place]
 0
 
-[protect drag and drop target window during operation: 0 no protection 1 lock 2 hide 3 lock and hide]
+[protect drag and drop target window during operation: 0 no protection, 1 lock, 2 hide, 3 lock and hide]
 1
 
-[extract everything for special file types in archive: 0 never 1 ask 2 always; 0 entire archive, 1 displayed items only]
+[extract everything for special file types in archive: 0 never, 1 ask, 2 always; 0 entire archive, 1 displayed items only]
 2
 0
 
 [custom code page for ZIP files, when -mcp option is used]
 1252
 
-[update archive tree when browsing: 0 no 1 simple 2 full, keep visited nodes]
+[update archive tree when browsing: 0 no, 1 simple, 2 full, keep visited nodes]
 2
 
 [use system 7z]
@@ -662,7 +662,7 @@ PeaZip
 [enable "Extract and open with" submenu]
 0
 
-[(Windows) use integrated Extrac32 to unpack CAB 1=yes (default) 0=no NOTE: overridden by Free Software compliance setting if > 0]
+[(Windows) use integrated Extrac32 to unpack CAB 1 yes (default), 0 no NOTE: overridden by Free Software compliance setting if > 0]
 0
 
 [store Created and Last access timestamps in archive types supporting it]
@@ -759,8 +759,8 @@ CRC32 CRC64 MD5 RIPEMD160 SHA1 BLAKE2S SHA256 SHA3_256
 [7z / p7zip exclude empty folders]
 0
 
-[enlarge file browser icons (unused)]
-0
+[UNUSED]
+
 
 [use quick deduplication routine]
 1
@@ -771,7 +771,7 @@ CRC32 CRC64 MD5 RIPEMD160 SHA1 BLAKE2S SHA256 SHA3_256
 [swap position of Tab and Address bar]
 0
 
-[try to edit non-canonical archive formats as derivate of 0 ZIP 1 7Z 2 TAR 3 WIM]
+[try to edit non-canonical archive formats as derivate of 0 ZIP, 1 7Z, 2 TAR, 3 WIM]
 0
 
 [toolbar style]
@@ -790,7 +790,7 @@ CRC32 CRC64 MD5 RIPEMD160 SHA1 BLAKE2S SHA256 SHA3_256
 [side bar]
 0
 
-[7z / p7zip use stdin / stdout pipe for tar and untar on compressed TAR archives: 0 no (default) 1 yes]
+[7z / p7zip use stdin / stdout pipe for tar and untar on compressed TAR archives: 0 no (default), 1 yes]
 0
 0
 
@@ -809,23 +809,23 @@ CRC32 CRC64 MD5 RIPEMD160 SHA1 BLAKE2S SHA256 SHA3_256
 [max size of TAR file to be automatically opened for browsing in compressed TAR archives]
 1
 
-[do not run following file types without confirmation 1 from archives 2 from filesystem 3 both 3 do not check]
+[do not run following file types without confirmation 1 from archives, 2 from filesystem, 3 both, 4 do not check]
 0
 sh
 
 [show hidden files and folders in the filesystem]
 1
 
-[dynamically set file browser in virtual mode over 0 4K items, 1 8K items, 2 16Kitems, 3 never]
+[dynamically set file browser in virtual mode over 0 4 K items, 1 8 K items, 2 16 K items, 3 never]
 0
 
-[default zpaq threads, 0 = auto, generic multithreading]
+[default zpaq threads, 0 auto, generic multithreading]
 0
 
-[Zstd backend keep extracted files if errors are detected 0 no (default) 1 yes]
+[Zstd backend keep extracted files if errors are detected 0 no (default), 1 yes]
 0
 
-[compact mode for task window 0 no (default) 1 yes]
+[compact mode for task window 0 no (default), 1 yes]
 0
 
 [multivolume RAR create recovery volumes]
@@ -839,3 +839,9 @@ sh
 
 [keep log of tasks]
 0
+
+[limit keyfile size to first 100MB]
+1
+
+[middle mouse button click action: 0 Up, 1 Back, 2 Rename, 3 Open in a new tab, 4 Open in a new window
+3
