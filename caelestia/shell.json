@@ -128,7 +128,7 @@
             "showBluetooth": true,
             "showKbLayout": false,
             "showLockStatus": false,
-            "showMicrophone": true,
+            "showMicrophone": false,
             "showNetwork": true,
             "showWifi": true
         },
@@ -477,7 +477,7 @@
         "useFahrenheitPerformance": false,
         "useTwelveHourClock": false,
         "visualiserBars": 45,
-        "weatherLocation": "Kharagpur"
+        "weatherLocation": "Baruipur"
     },
     "session": {
         "commands": {

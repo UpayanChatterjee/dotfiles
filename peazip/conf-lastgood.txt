@@ -215,7 +215,7 @@ Deflate
 1
 
 [last output path]
-/home/tony/Desktop/
+/home/tony/Downloads/bmw/
 
 [height of the navigation's splitter]
 220
@@ -315,7 +315,7 @@ PeaZip
 0
 
 [last successful extraction path]
-/home/tony/Downloads/Compressed/
+/home/tony/Downloads/bmw/
 
 [encrypt also filenames, if the feature is supported by the format]
 0
