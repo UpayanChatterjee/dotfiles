@@ -187,19 +187,19 @@ rules = [
 
   # Text / code
   { mime = "text/*", fg = "#A7C080" },
-  { name = "*.toml", fg = "#A7C080" },
-  { name = "*.yaml", fg = "#A7C080" },
-  { name = "*.yml", fg = "#A7C080" },
-  { name = "*.json", fg = "#A7C080" },
-  { name = "*.md", fg = "#D699B6" },
-  { name = "*.rs", fg = "#7FBBB3" },
-  { name = "*.py", fg = "#7FBBB3" },
-  { name = "*.lua", fg = "#7FBBB3" },
-  { name = "*.js", fg = "#7FBBB3" },
-  { name = "*.ts", fg = "#7FBBB3" },
-  { name = "*.go", fg = "#7FBBB3" },
-  { name = "*.c", fg = "#7FBBB3" },
-  { name = "*.cpp", fg = "#7FBBB3" },
+  { url = "*.toml", fg = "#A7C080" },
+  { url = "*.yaml", fg = "#A7C080" },
+  { url = "*.yml", fg = "#A7C080" },
+  { url = "*.json", fg = "#A7C080" },
+  { url = "*.md", fg = "#D699B6" },
+  { url = "*.rs", fg = "#7FBBB3" },
+  { url = "*.py", fg = "#7FBBB3" },
+  { url = "*.lua", fg = "#7FBBB3" },
+  { url = "*.js", fg = "#7FBBB3" },
+  { url = "*.ts", fg = "#7FBBB3" },
+  { url = "*.go", fg = "#7FBBB3" },
+  { url = "*.c", fg = "#7FBBB3" },
+  { url = "*.cpp", fg = "#7FBBB3" },
 
   # Images
   { mime = "image/*", fg = "#D699B6" },
@@ -215,12 +215,12 @@ rules = [
   { mime = "application/{pdf,doc,rtf,vnd.*}", fg = "#7FBBB3" },
 
   # Binaries / executables
-  { name = "*.exe", fg = "#E67E80" },
-  { name = "*.bin", fg = "#E67E80" },
+  { url = "*.exe", fg = "#E67E80" },
+  { url = "*.bin", fg = "#E67E80" },
   { mime = "application/x-executable", fg = "#E67E80" },
 
   # Hidden / dotfiles (dimmer for less clutter)
-  { name = ".*", fg = "#859289" },
+  { url = ".*", fg = "#859289" },
 
   # General fallback
   { url = "*", fg = "#D3C6AA" },
