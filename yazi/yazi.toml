@@ -156,6 +156,13 @@ spotters = [
   { url = "*", run = "file" },
 ]
 preloaders = [
+  # duckdb
+  { url = "*.csv", run = "duckdb", multi = false },  
+  { url = "*.tsv", run = "duckdb", multi = false },  
+  { url = "*.json", run = "duckdb", multi = false },  
+  { url = "*.parquet", run = "duckdb", multi = false },
+  { url = "*.txt", run = "duckdb", multi = false },  
+  { url = "*.xlsx", run = "duckdb", multi = false },
   # Image
   { mime = "image/{avif,hei?,jxl}", run = "magick" },
   { mime = "image/svg+xml", run = "svg" },
@@ -169,7 +176,20 @@ preloaders = [
   { mime = "application/ms-opentype", run = "font" },
 ]
 previewers = [
-  {url = "*.ipynb", run = "nbpreview"},
+  # duckdb
+  { url = "*.csv", run = "duckdb" },  
+  { url = "*.tsv", run = "duckdb" },  
+  { url = "*.json", run = "duckdb" },  
+  { url = "*.parquet", run = "duckdb" },  
+  { url = "*.txt", run = "duckdb" },  
+  { url = "*.xlsx", run = "duckdb" },  
+  { url = "*.db", run = "duckdb" },
+  { url = "*.duckdb", run = "duckdb" },
+  # torrent
+  { mime = "applciation/bittorrent", run = "torrent-preview"},
+  # jupyter notebooks
+  { url = "*.ipynb", run = "nbpreview"},
+
   { url = "*/", run = "folder" },
   # Code
   { mime = "text/*", run = "code" },
@@ -222,10 +242,10 @@ create_title = ["Create:", "Create (dir):"]
 create_origin = "top-center"
 create_offset = [0, 2, 50, 3]
 
-# rename
-rename_title = "Rename:"
-rename_origin = "hovered"
-rename_offset = [0, 1, 50, 3]
+# reurl
+reurl_title = "Reurl:"
+reurl_origin = "hovered"
+reurl_offset = [0, 1, 50, 3]
 
 # filter
 filter_title = "Filter:"
