@@ -6,6 +6,7 @@ PersistentProperties {
     property bool session
     property bool launcher
     property bool dashboard
+    property int dashboardTab: 0
     property bool utilities
     property bool sidebar
 }

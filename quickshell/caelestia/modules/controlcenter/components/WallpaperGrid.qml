@@ -72,7 +72,7 @@ GridView {
                 path: modelData.path
                 anchors.fill: parent
                 fillMode: Image.PreserveAspectCrop
-                cache: true
+                cache: false
                 visible: opacity > 0
                 antialiasing: true
                 smooth: true
@@ -96,7 +96,7 @@ GridView {
                 source: fallbackTimer.triggered && cachingImage.status !== Image.Ready ? modelData.path : ""
                 asynchronous: true
                 fillMode: Image.PreserveAspectCrop
-                cache: true
+                cache: false
                 visible: opacity > 0
                 antialiasing: true
                 smooth: true

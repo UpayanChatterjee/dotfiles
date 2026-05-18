@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import os
+import sqlite3
 import sys
 import tomllib
 from pathlib import Path
@@ -72,6 +73,7 @@ class GameLauncher:
             config_path = script_dir.parent.parent / "config.toml"
 
         self.config_path = Path(config_path)
+        self.favorites_file = self.config_path.parent / "favorites.json"
         self.config = self.load_config()
 
         cache_dir = self.config_path.parent / "cache"
@@ -82,6 +84,32 @@ class GameLauncher:
 
         # Detect Heroic installation once at startup
         self._heroic_bin: Optional[str] = self._detect_heroic()
+        # Detect Lutris installation once at startup
+        self._lutris_bin: Optional[str] = self._detect_lutris()
+
+    # ── Lutris detection ───────────────────────────────────────────────────
+
+    def _detect_lutris(self) -> Optional[str]:
+        import shutil
+        if shutil.which("lutris"):
+            return "lutris"
+
+        # Flatpak
+        flatpak_paths = [
+            Path("/var/lib/flatpak/app/net.lutris.Lutris"),
+            Path.home() / ".local/share/flatpak/app/net.lutris.Lutris",
+        ]
+        for p in flatpak_paths:
+            if p.exists():
+                return "flatpak run net.lutris.Lutris"
+
+        return None
+
+    def get_lutris_exec(self, game_id: int) -> str:
+        url = f"lutris:rungameid/{game_id}"
+        if self._lutris_bin is None:
+            return f"xdg-open {url}"
+        return f"{self._lutris_bin} {url}"
 
     # ── Heroic detection ───────────────────────────────────────────────────
 
@@ -134,6 +162,34 @@ class GameLauncher:
         # AppImage and native binary accept the URL as argument
         # Flatpak command already contains all tokens
         return f"{self._heroic_bin} {url}"
+
+    # ── Favorites ──────────────────────────────────────────────────────────
+
+    def load_favorites(self) -> set:
+        try:
+            with open(self.favorites_file, 'r') as f:
+                return set(json.load(f))
+        except Exception:
+            return set()
+
+    def save_favorites(self, favorites: set):
+        try:
+            with open(self.favorites_file, 'w') as f:
+                json.dump(sorted(favorites), f, indent=2)
+        except Exception as e:
+            print(f"Error saving favorites: {e}", file=sys.stderr)
+
+    def toggle_favorite(self, name: str, source: str):
+        key = f"{name}:{source}"
+        favorites = self.load_favorites()
+        if key in favorites:
+            favorites.discard(key)
+            is_fav = False
+        else:
+            favorites.add(key)
+            is_fav = True
+        self.save_favorites(favorites)
+        print(json.dumps({"ok": True, "favorite": is_fav}), flush=True)
 
     # ── Config ─────────────────────────────────────────────────────────────
 
@@ -848,6 +904,64 @@ class GameLauncher:
 
         return games
 
+    # ── Lutris ─────────────────────────────────────────────────────────────
+
+    def scan_lutris_library(self) -> List[Dict[str, Any]]:
+        games = []
+        if not self.config.get("lutris", {}).get("enabled", False):
+            return games
+
+        db_path = self.expand_path(
+            self.config.get("lutris", {}).get("db_path", "~/.local/share/lutris/pga.db")
+        )
+        if not db_path.exists():
+            return games
+
+        coverart_dir = self.expand_path("~/.local/share/lutris/coverart")
+        try:
+            con = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+            con.row_factory = sqlite3.Row
+            cur = con.cursor()
+            cur.execute(
+                "SELECT id, name, slug, runner, lastplayed, installed "
+                "FROM games WHERE installed = 1"
+            )
+            rows = cur.fetchall()
+            con.close()
+        except Exception as e:
+            print(f"[lutris] Error reading database: {e}", file=sys.stderr)
+            return games
+
+        for row in rows:
+            name = row["name"] or ""
+            if not name:
+                continue
+
+            slug = row["slug"] or ""
+            game_id = row["id"]
+
+            # Cover art: check jpg then png
+            image_path = ""
+            for ext in ("jpg", "jpeg", "png"):
+                candidate = coverart_dir / f"{slug}.{ext}"
+                if candidate.exists():
+                    image_path = str(candidate)
+                    break
+
+            games.append({
+                "name":        name,
+                "exec":        self.get_lutris_exec(game_id),
+                "image":       image_path,
+                "category":    "lutris",
+                "favorite":    False,
+                "source":      "lutris",
+                "last_played": row["lastplayed"] or 0,
+                "appid":       str(game_id),
+                "logo":        "",
+            })
+
+        return games
+
     # ── Manual / config entries ────────────────────────────────────────────
 
     def load_manual_games(self) -> List[Dict[str, Any]]:
@@ -924,11 +1038,57 @@ class GameLauncher:
             return False
         return True
 
+    # Source priority for exec/launch command (higher = preferred)
+    _SOURCE_PRIORITY = {"steam": 4, "epic": 3, "gog": 3, "amazon": 3, "heroic": 3, "lutris": 2, "desktop": 1, "manual": 5}
+
+    def _metadata_score(self, game: Dict[str, Any]) -> int:
+        score = 0
+        if game.get("image"):
+            score += 3
+        if game.get("last_played", 0) > 0:
+            score += 2
+        if game.get("appid"):
+            score += 1
+        if game.get("logo"):
+            score += 1
+        return score
+
+    def _deduplicate_games(self, games: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Group games by normalized name, merge duplicates keeping best metadata."""
+        groups: Dict[str, List[Dict[str, Any]]] = {}
+        for game in games:
+            key = game.get("name", "").strip().lower()
+            groups.setdefault(key, []).append(game)
+
+        result = []
+        for entries in groups.values():
+            if len(entries) == 1:
+                result.append(entries[0])
+                continue
+
+            # Sort by source priority desc, then metadata score desc
+            entries.sort(key=lambda g: (
+                self._SOURCE_PRIORITY.get(g.get("source", ""), 0),
+                self._metadata_score(g)
+            ), reverse=True)
+
+            # Start from the highest-priority entry and fill gaps from others
+            merged = dict(entries[0])
+            for other in entries[1:]:
+                for field in ("image", "logo", "last_played", "appid"):
+                    if not merged.get(field) and other.get(field):
+                        merged[field] = other[field]
+
+            result.append(merged)
+
+        return result
+
     def merge_games(self) -> List[Dict[str, Any]]:
         steam_games     = self.scan_steam_library()
         steam_shortcuts = self.scan_steam_shortcuts()
         desktop_games   = self.scan_desktop_files()
         heroic_games    = self.scan_heroic_library()
+        lutris_games    = self.scan_lutris_library()
         manual_games    = self.load_manual_games()
         config_entries  = self.load_config_entries()
 
@@ -936,40 +1096,47 @@ class GameLauncher:
 
         for game in steam_games:
             if self.should_include_game(game):
-                games_dict[game["name"]] = game
+                games_dict[f"steam:{game['name']}"] = game
         for game in steam_shortcuts:
             if self.should_include_game(game):
-                if game["name"] in games_dict:
-                    games_dict[game["name"]].update(game)
+                key = f"steam:{game['name']}"
+                if key in games_dict:
+                    games_dict[key].update(game)
                 else:
-                    games_dict[game["name"]] = game
+                    games_dict[key] = game
         for game in heroic_games:
             if self.should_include_game(game):
-                if game["name"] in games_dict:
-                    games_dict[game["name"]].update(game)
-                else:
-                    games_dict[game["name"]] = game
+                games_dict[f"heroic:{game['name']}"] = game
+        for game in lutris_games:
+            if self.should_include_game(game):
+                games_dict[f"lutris:{game['name']}"] = game
         for game in config_entries:
             if self.should_include_game(game):
-                if game["name"] in games_dict:
-                    games_dict[game["name"]].update(game)
-                else:
-                    games_dict[game["name"]] = game
+                games_dict[f"config:{game['name']}"] = game
         for game in desktop_games:
             if self.should_include_game(game):
-                if game["name"] not in games_dict:
-                    games_dict[game["name"]] = game
+                key = f"desktop:{game['name']}"
+                if key not in games_dict:
+                    games_dict[key] = game
         for game in manual_games:
-            if game["name"] in games_dict:
-                games_dict[game["name"]].update(game)
+            # Manual entries override by name across all sources
+            matched = [k for k in games_dict if k.endswith(f":{game['name']}")]
+            if matched:
+                for k in matched:
+                    games_dict[k].update(game)
             else:
-                games_dict[game["name"]] = game
+                games_dict[f"manual:{game['name']}"] = game
 
-        games = list(games_dict.values())
+        games = self._deduplicate_games(list(games_dict.values()))
 
         sgdb_config = self.config.get("steamgriddb", {})
         if sgdb_config.get("enabled", False) and sgdb_config.get("parallel_requests", True):
             games = self.fetch_images_parallel(games)
+
+        favorites = self.load_favorites()
+        for game in games:
+            key = f"{game.get('name', '')}:{game.get('source', '')}"
+            game['favorite'] = key in favorites
 
         return games
 
@@ -1020,8 +1187,14 @@ class GameLauncher:
 
 
 def main():
-    launcher = GameLauncher()
-    launcher.output_json()
+    if len(sys.argv) >= 3 and sys.argv[1] == "toggle":
+        name = sys.argv[2]
+        source = sys.argv[3] if len(sys.argv) > 3 else ""
+        launcher = GameLauncher()
+        launcher.toggle_favorite(name, source)
+    else:
+        launcher = GameLauncher()
+        launcher.output_json()
 
 
 if __name__ == "__main__":

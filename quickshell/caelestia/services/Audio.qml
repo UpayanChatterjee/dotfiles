@@ -7,6 +7,7 @@ import Quickshell.Services.Pipewire
 import Caelestia
 import Caelestia.Config
 import Caelestia.Services
+import qs.components.misc
 
 Singleton {
     id: root
@@ -30,6 +31,19 @@ Singleton {
     readonly property alias cava: cava
     readonly property alias beatTracker: beatTracker
 
+    signal volumeAdjustAttempted()
+    signal sourceVolumeAdjustAttempted()
+
+    function toggleMute(): void {
+        if (sink?.ready && sink?.audio)
+            sink.audio.muted = !sink.audio.muted;
+    }
+
+    function toggleSourceMute(): void {
+        if (source?.ready && source?.audio)
+            source.audio.muted = !source.audio.muted;
+    }
+
     function setVolume(newVolume: real): void {
         if (sink?.ready && sink?.audio) {
             sink.audio.muted = false;
@@ -38,10 +52,12 @@ Singleton {
     }
 
     function incrementVolume(amount: real): void {
+        volumeAdjustAttempted();
         setVolume(volume + (amount || GlobalConfig.services.audioIncrement));
     }
 
     function decrementVolume(amount: real): void {
+        volumeAdjustAttempted();
         setVolume(volume - (amount || GlobalConfig.services.audioIncrement));
     }
 
@@ -53,10 +69,12 @@ Singleton {
     }
 
     function incrementSourceVolume(amount: real): void {
+        sourceVolumeAdjustAttempted();
         setSourceVolume(sourceVolume + (amount || GlobalConfig.services.audioIncrement));
     }
 
     function decrementSourceVolume(amount: real): void {
+        sourceVolumeAdjustAttempted();
         setSourceVolume(sourceVolume - (amount || GlobalConfig.services.audioIncrement));
     }
 
@@ -179,5 +197,37 @@ Singleton {
         }
 
         target: "audio"
+    }
+
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "volumeUp"
+        description: "Increase volume"
+        onPressed: root.incrementVolume()
+    }
+
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "volumeDown"
+        description: "Decrease volume"
+        onPressed: root.decrementVolume()
+    }
+
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "volumeMute"
+        description: "Toggle mute"
+        onPressed: root.toggleMute()
+    }
+
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "micMute"
+        description: "Toggle microphone mute"
+        onPressed: root.toggleSourceMute()
     }
 }

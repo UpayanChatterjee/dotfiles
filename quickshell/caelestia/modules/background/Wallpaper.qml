@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Caelestia.Config
 import qs.components
+import qs.components.effects
 import qs.components.filedialog
 import qs.components.images
 import qs.services
@@ -12,22 +13,25 @@ Item {
     id: root
 
     property string source: Wallpapers.current
-    property Image current: one
     property bool completed
+    property bool isRevealing: false
+    property real revealProgress: 0
 
     onSourceChanged: {
-        if (!source)
-            current = null;
-        else if (current === one)
-            two.update();
-        else
-            one.update();
+        if (!source) return;
+        if (!completed) {
+            // FileView loaded after onCompleted — set base image directly
+            baseImage.path = source;
+            completed = true;
+            return;
+        }
+        overlayImage.path = source;
     }
 
     Component.onCompleted: {
         if (source)
             Qt.callLater(() => {
-                one.update();
+                baseImage.path = source;
                 completed = true;
             });
     }
@@ -99,49 +103,81 @@ Item {
         }
     }
 
-    Img {
-        id: one
-    }
-
-    Img {
-        id: two
-    }
-
-    component Img: CachingImage {
-        id: img
-
-        function update(): void {
-            if (path === root.source)
-                root.current = this;
-            else
-                path = root.source;
-        }
-
+    // Base layer — always visible, holds the committed wallpaper
+    CachingImage {
+        id: baseImage
         anchors.fill: parent
+    }
 
-        opacity: 0
-        scale: Wallpapers.showPreview ? 1 : 0.8
+    // Overlay — new wallpaper revealed through an expanding circle mask
+    Item {
+        id: overlayContainer
+        anchors.fill: parent
+        visible: root.isRevealing
 
-        onStatusChanged: {
-            if (status === Image.Ready)
-                root.current = this;
+        layer.enabled: true
+        layer.effect: OpacityMask {
+            maskSource: circleMask
         }
 
-        states: State {
-            name: "visible"
-            when: root.current === img
+        CachingImage {
+            id: overlayImage
+            anchors.fill: parent
 
-            PropertyChanges {
-                img.opacity: 1
-                img.scale: 1
+            onStatusChanged: {
+                if (status === Image.Ready
+                        && path === root.source
+                        && root.completed
+                        && path !== baseImage.path) {
+                    root.isRevealing = true;
+                    revealAnim.restart();
+                }
             }
         }
+    }
 
-        transitions: Transition {
-            Anim {
-                target: img
-                properties: "opacity,scale"
+    // Mask: a white circle that grows from the screen centre outward
+    Item {
+        id: circleMask
+        anchors.fill: parent
+        layer.enabled: true
+        visible: false
+
+        Canvas {
+            id: circleCanvas
+            anchors.fill: parent
+            onPaint: {
+                var ctx = getContext("2d");
+                ctx.clearRect(0, 0, width, height);
+                if (root.revealProgress <= 0) return;
+                var maxR = Math.sqrt(width * width + height * height);
+                ctx.fillStyle = "white";
+                ctx.beginPath();
+                ctx.arc(width * 0.5, height * 0.5, maxR * root.revealProgress, 0, Math.PI * 2);
+                ctx.fill();
             }
+        }
+    }
+
+    Connections {
+        target: root
+        function onRevealProgressChanged() { circleCanvas.requestPaint(); }
+    }
+
+    NumberAnimation {
+        id: revealAnim
+        target: root
+        property: "revealProgress"
+        from: 0; to: 1
+        duration: 1100
+        easing.type: Easing.OutCubic
+
+        onFinished: {
+            baseImage.path = overlayImage.path;
+            Qt.callLater(() => {
+                root.isRevealing = false;
+                root.revealProgress = 0;
+            });
         }
     }
 }

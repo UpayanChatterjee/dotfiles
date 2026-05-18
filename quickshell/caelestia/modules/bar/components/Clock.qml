@@ -55,7 +55,7 @@ StyledRect {
 
             width: parent.width * 0.8
             color: root.colour
-            opacity: 0.2
+            opacity: 0.35
         }
 
         StyledText {

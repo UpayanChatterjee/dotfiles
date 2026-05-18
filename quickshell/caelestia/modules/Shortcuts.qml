@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Caelestia
+import Caelestia.Config
 import qs.components.misc
 import qs.services
 import qs.modules.controlcenter
@@ -11,6 +12,31 @@ Scope {
 
     property bool launcherInterrupted
     readonly property bool hasFullscreen: Hypr.focusedWorkspace?.toplevels.values.some(t => t.lastIpcObject.fullscreen > 1) ?? false
+
+    function tabIndex(name: string): int {
+        const tabs = [
+            { name: "dashboard",   enabled: Config.dashboard.showDashboard },
+            { name: "media",       enabled: Config.dashboard.showMedia },
+            { name: "performance", enabled: Config.dashboard.showPerformance && (Config.dashboard.performance.showCpu || Config.dashboard.performance.showGpu || Config.dashboard.performance.showMemory || Config.dashboard.performance.showStorage || Config.dashboard.performance.showNetwork || Config.dashboard.performance.showBattery) },
+            { name: "weather",     enabled: Config.dashboard.showWeather }
+        ];
+        return tabs.filter(t => t.enabled).findIndex(t => t.name === name);
+    }
+
+    function toggleDashboardTab(name: string): void {
+        if (root.hasFullscreen)
+            return;
+        const v = Visibilities.getForActive();
+        const idx = root.tabIndex(name);
+        if (idx === -1)
+            return;
+        if (v.dashboard && v.dashboardTab === idx)
+            v.dashboard = false;
+        else {
+            v.dashboardTab = idx;
+            v.dashboard = true;
+        }
+    }
 
     // qmllint disable unresolved-type
     CustomShortcut {
@@ -105,6 +131,44 @@ Scope {
                 return;
             const visibilities = Visibilities.getForActive();
             visibilities.utilities = !visibilities.utilities;
+        }
+    }
+
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "dashboardMedia"
+        description: "Toggle dashboard on Media tab"
+        onPressed: root.toggleDashboardTab("media")
+    }
+
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "dashboardPerformance"
+        description: "Toggle dashboard on Performance tab"
+        onPressed: root.toggleDashboardTab("performance")
+    }
+
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "dashboardWeather"
+        description: "Toggle dashboard on Weather tab"
+        onPressed: root.toggleDashboardTab("weather")
+    }
+
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "mediaNextPlayer"
+        description: "Cycle to next media player"
+        onPressed: {
+            const list = Players.list;
+            if (!list.length)
+                return;
+            const idx = list.indexOf(Players.active);
+            Players.manualActive = list[(idx + 1) % list.length];
         }
     }
 

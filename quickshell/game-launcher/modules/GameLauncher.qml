@@ -25,6 +25,12 @@ Rectangle {
     property int spacing: config?.display?.spacing ?? 20
 
     property int sidebarWidth: 68
+    property int favoriteCount: {
+        var n = 0
+        for (var i = 0; i < gamesData.length; i++)
+            if (gamesData[i] && gamesData[i].favorite) n++
+        return n
+    }
 
     width: sidebarWidth + spacing + (itemWidth * gridColumns) + (spacing * (gridColumns + 1))
     height: (itemHeight * gridRows) + (spacing * (gridRows + 1)) + 60 + 44 + spacing
@@ -110,6 +116,8 @@ Rectangle {
             navigateUp(); event.accepted = true
         } else if (event.key === Qt.Key_Down && !searchField.activeFocus) {
             navigateDown(); event.accepted = true
+        } else if (event.key === Qt.Key_F && (event.modifiers & Qt.AltModifier) && !searchField.activeFocus) {
+            toggleFavorite(null); event.accepted = true
         } else if (event.key === Qt.Key_Backspace && !searchField.activeFocus) {
             if (searchText.length > 0) {
                 searchText = searchText.slice(0, -1)
@@ -154,7 +162,9 @@ Rectangle {
 
     function filterGames() {
         let result = gamesData.slice()
-        if (selectedSource !== "all")
+        if (selectedSource === "favorites")
+            result = result.filter(g => g.favorite)
+        else if (selectedSource !== "all")
             result = result.filter(g => (g.source || "") === selectedSource)
         if (searchText.trim() !== "") {
             const q = searchText.toLowerCase()
@@ -187,19 +197,66 @@ Rectangle {
         launchGame(filteredGames[selectedIndex])
     }
     function navigateSource(direction) {
-        var sources = ["all"].concat(availableSources)
+        var sources = ["all"]
+        if (favoriteCount > 0) sources.push("favorites")
+        sources = sources.concat(availableSources)
         var current = sources.indexOf(selectedSource)
+        if (current < 0) current = 0
         if (direction === "up")
             current = (current - 1 + sources.length) % sources.length
         else
             current = (current + 1) % sources.length
         selectedSource = sources[current]
-        selectedIndex = 0  // reset la sélection au changement de filtre
+        selectedIndex = 0
+    }
+
+    function toggleFavorite(game) {
+        if (!game) {
+            if (filteredGames.length === 0) return
+            game = filteredGames[selectedIndex]
+        }
+        var newFav = !game.favorite
+        // Optimistic local update
+        var updated = []
+        for (var i = 0; i < gamesData.length; i++) {
+            if (gamesData[i].name === game.name && gamesData[i].source === game.source) {
+                var copy = {}
+                for (var k in gamesData[i]) copy[k] = gamesData[i][k]
+                copy.favorite = newFav
+                updated.push(copy)
+            } else {
+                updated.push(gamesData[i])
+            }
+        }
+        gamesData = updated
+        // If we just removed the last favorite while on the favorites tab, go back to "all"
+        if (selectedSource === "favorites" && !newFav) {
+            var stillHasFav = false
+            for (var j = 0; j < gamesData.length; j++)
+                if (gamesData[j].favorite) { stillHasFav = true; break }
+            if (!stillHasFav) selectedSource = "all"
+        }
+        filterGames()
+        // Persist to file
+        toggleFavoriteProcess.command = [
+            "python3",
+            Qt.resolvedUrl("service/backend.py").toString().replace("file://", ""),
+            "toggle",
+            game.name,
+            game.source || ""
+        ]
+        toggleFavoriteProcess.running = true
     }
 
     Process {
         id: launchProcess
         running: false
+    }
+
+    Process {
+        id: toggleFavoriteProcess
+        running: false
+        stdout: SplitParser { onRead: data => {} }
     }
 
     function launchGame(game, cardItem) {
@@ -265,6 +322,9 @@ Rectangle {
                     break
                 case "down":
                     navigateSource("down")
+                    break
+                case "favorite":
+                    toggleFavorite(null)
                     break
             }
         }
@@ -354,6 +414,74 @@ Rectangle {
 
                 // Séparateur
                 Rectangle {
+                    width: parent.width * 0.6
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    height: 1
+                    color: Qt.rgba(1, 1, 1, 0.1)
+                }
+
+                // Bouton Favoris — visible uniquement si au moins 1 favori
+                Rectangle {
+                    visible: launcher.favoriteCount > 0
+                    width: parent.width
+                    height: width
+                    radius: 22
+                    color: launcher.selectedSource === "favorites"
+                        ? Qt.rgba(
+                            parseInt((colors.color5||"#73ff00").slice(1,3),16)/255,
+                            parseInt((colors.color5||"#73ff00").slice(3,5),16)/255,
+                            parseInt((colors.color5||"#73ff00").slice(5,7),16)/255,
+                            0.22)
+                        : (favSrcMouse.containsMouse ? Qt.rgba(1,1,1,0.07) : "transparent")
+                    border.color: launcher.selectedSource === "favorites" ? (colors.color5 || "#73ff00") : "transparent"
+                    border.width: 2
+                    Behavior on color { ColorAnimation { duration: 150 } }
+
+                    Column {
+                        anchors.centerIn: parent
+                        spacing: 3
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: ""
+                            font.family: "Font Awesome 7 Free Solid"
+                            font.pixelSize: 18
+                            color: launcher.selectedSource === "favorites" ? (colors.color5||"#73ff00") : (colors.foreground||"#ffffff")
+                            opacity: launcher.selectedSource === "favorites" ? 1.0 : 0.45
+                            Behavior on color { ColorAnimation { duration: 150 } }
+                        }
+                        Text {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: "Favs"
+                            font.pixelSize: 9
+                            font.bold: launcher.selectedSource === "favorites"
+                            font.family: "Open Sans Regular"
+                            color: launcher.selectedSource === "favorites" ? (colors.color5||"#73ff00") : (colors.foreground||"#ffffff")
+                            opacity: launcher.selectedSource === "favorites" ? 1.0 : 0.4
+                            Behavior on color { ColorAnimation { duration: 150 } }
+                        }
+                    }
+
+                    Rectangle {
+                        visible: launcher.selectedSource === "favorites"
+                        anchors.top: parent.top; anchors.right: parent.right
+                        anchors.topMargin: -3; anchors.rightMargin: -3
+                        width: 18; height: 18; radius: 9
+                        color: colors.color5 || "#73ff00"
+                        Text { anchors.centerIn: parent; text: launcher.favoriteCount; font.pixelSize: 8; font.bold: true; color: "#1a1a1a" }
+                    }
+
+                    MouseArea {
+                        id: favSrcMouse
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: { launcher.selectedSource = "favorites"; launcher.forceActiveFocus() }
+                    }
+                }
+
+                // Séparateur favs / sources (visible si favoris présents)
+                Rectangle {
+                    visible: launcher.favoriteCount > 0
                     width: parent.width * 0.6
                     anchors.horizontalCenter: parent.horizontalCenter
                     height: 1
@@ -570,6 +698,7 @@ Rectangle {
                         Behavior on opacity { NumberAnimation { duration: 200 } }
                         onClicked: { gamesCarouselH.currentIndex = index; launcher.forceActiveFocus() }
                         onLaunchRequested: { launchGame(modelData, this) }
+                        onFavoriteToggled: toggleFavorite(modelData)
                     }
 
                     Rectangle {
@@ -602,7 +731,8 @@ Rectangle {
                         }
                     }
                     Text { anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter; text: filteredGames.length > 0 ? (selectedIndex + 1) + " / " + filteredGames.length : "0"; font.pixelSize: 12; color: colors.foreground||"#ffffff"; opacity: 0.6 }
-                    Text { anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter; text: "← → Navigate  ⏎ Launch  Esc Close"; font.pixelSize: 11; color: colors.foreground||'#15ff00'; opacity: 0.5 }
+                    Text { anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter; text: "← → Navigate | ⏎ Launch | 'ALT+F' Favorite | Esc Close"; font.pixelSize: 11; color: colors.foreground||'#15ff00'; opacity: 0.5 }
+                }
                 }
             }
 
@@ -650,6 +780,7 @@ Rectangle {
                         Behavior on opacity { NumberAnimation { duration: 200 } }
                         onClicked: { gamesCarouselV.currentIndex = index; launcher.forceActiveFocus() }
                         onLaunchRequested: { launchGame(modelData, this) }
+                        onFavoriteToggled: toggleFavorite(modelData)
                     }
                 }
 
@@ -694,369 +825,5 @@ Rectangle {
     LaunchOverlay {
         id: launchOverlay
         onDone: Qt.quit()
-    }
-}
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Effects
-import QtMultimedia
-
-Rectangle {
-    id: card
-
-    property string gameName: "Game"
-    property string gameImage: ""
-    property string gameCategory: ""
-    property string gameSource: ""  // steam, manual, config
-    property bool isFavorite: false
-    property bool isSelected: false
-    property var gameColors: ({})
-    property int lastPlayed: 0  // Unix timestamp
-    property real glowStrength: 0.8
-    property real glowBlur: 12
-    property bool isWebM: gameImage.toLowerCase().endsWith(".webm")
-
-    signal clicked()
-    signal launchRequested()
-
-    width: 220
-    height: 300
-    radius: 16
-
-    color: gameColors.background || "#1a1a1a"
-    border.color: isSelected ? (gameColors.color5 || "#00ffff") : "transparent"
-    border.width: isSelected ? 3 : 0
-
-    // Scale animation on selection
-    scale: isSelected ? 1.05 : 1.0
-
-    Behavior on scale {
-        NumberAnimation {
-            duration: 200
-            easing.type: Easing.OutCubic
-        }
-    }
-
-    Behavior on border.color {
-        ColorAnimation { duration: 200 }
-    }
-
-    // Glow + Shadow effect
-    layer.enabled: true
-    layer.effect: MultiEffect {
-        shadowEnabled: true
-        shadowColor: isSelected ? (gameColors.color5 || "#00ffff") : "#80000000"
-        shadowOpacity: isSelected ? 0.8 : 0.5
-        shadowBlur: isSelected ? 1.0 : 0.4
-        shadowVerticalOffset: isSelected ? 8 : 4
-        shadowHorizontalOffset: 0
-    }
-
-    // Breathing animation when selected
-    SequentialAnimation {
-        running: isSelected
-        loops: Animation.Infinite
-
-        NumberAnimation {
-            target: card.layer.effect
-            from: isSelected ? 0.8 : 0.4
-            to: isSelected ? 1.2 : 0.4
-            duration: 1500
-            easing.type: Easing.InOutSine
-        }
-
-        NumberAnimation {
-            target: card.layer.effect
-            from: isSelected ? 1.2 : 0.4
-            to: isSelected ? 0.8 : 0.4
-            duration: 1500
-            easing.type: Easing.InOutSine
-        }
-    }
-
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        cursorShape: Qt.PointingHandCursor
-        focus: false  // Don't steal focus from launcher
-
-        onClicked: card.clicked()
-        onDoubleClicked: card.launchRequested()
-    }
-
-    Column {
-        anchors.fill: parent
-        anchors.margins: 5
-        spacing: 0
-
-        // Cover Image
-        Rectangle {
-            width: parent.width
-            height: parent.height - 60
-            radius: card.radius
-            color: "#2a2a2a"
-            clip: true
-
-            // Image / WebP animé / WebM
-            AnimatedImage {
-                id: coverImage
-                anchors.fill: parent
-                anchors.margins: 2
-                visible: !card.isWebM
-                source: card.isWebM ? "" : gameImage
-                fillMode: Image.PreserveAspectCrop
-                asynchronous: true
-                smooth: true
-                // N'anime que quand la carte est sélectionnée
-                playing: isSelected
-                paused: !isSelected
-
-                layer.enabled: true
-                layer.effect: MultiEffect {
-                    maskEnabled: true
-                    maskThresholdMin: 0.5
-                    maskSource: ShaderEffectSource {
-                        sourceItem: Rectangle {
-                            width: coverImage.width
-                            height: coverImage.height
-                            radius: card.radius
-                        }
-                    }
-                }
-
-                // Fallback for missing images
-                Rectangle {
-                    anchors.fill: parent
-                    visible: !card.isWebM && (coverImage.status === Image.Error || coverImage.status === Image.Null)
-                    color: gameColors.color8 || "#333333"
-
-                    Text {
-                        anchors.centerIn: parent
-                        text: gameName.substring(0, 2).toUpperCase()
-                        font.pixelSize: 48
-                        font.bold: true
-                        font.capitalization: Font.Capitalize
-                        font.family: "Open Sans Regular"
-                        color: gameColors.foreground || "#ffffff"
-                        opacity: 0.5
-                    }
-                }
-            }
-
-            // Vidéo WebM animée
-            VideoOutput {
-                id: videoOutput
-                anchors.fill: parent
-                anchors.margins: 2
-                visible: card.isWebM
-                layer.enabled: card.isWebM
-                layer.effect: MultiEffect {
-                    maskEnabled: true
-                    maskThresholdMin: 0.5
-                    maskSource: ShaderEffectSource {
-                        sourceItem: Rectangle {
-                            width: videoOutput.width
-                            height: videoOutput.height
-                            radius: card.radius
-                        }
-                    }
-                }
-            }
-
-            MediaPlayer {
-                id: videoPlayer
-                source: card.isWebM ? gameImage : ""
-                videoOutput: videoOutput
-                loops: MediaPlayer.Infinite
-                autoPlay: card.isWebM
-            }
-
-            // Status badges (NOUVEAU/RÉCENT)
-            Rectangle {
-                id: statusBadge
-                visible: lastPlayed === 0 || isRecent()
-                height: 22
-                width: badgeText.width + 12
-                radius: 11
-                color: lastPlayed === 0 ? "#ff3366" : "#33ff66"
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.margins: 8
-                opacity: 0.95
-
-                function isRecent() {
-                    if (lastPlayed === 0) return false
-                    const now = Date.now() / 1000  // Convert to seconds
-                    const daysSince = (now - lastPlayed) / 86400
-                    return daysSince < 2  // Last 2 days
-                }
-
-                Text {
-                    id: badgeText
-                    anchors.centerIn: parent
-                    text: lastPlayed === 0 ? "NEW" : "RECENT"
-                    font.pixelSize: 9
-                    font.capitalization: Font.Capitalize
-                    font.family: "Open Sans Regular"
-                    font.bold: true
-                    color: "#1a1a1a"
-                }
-
-                // Pulse animation for NEW badge
-                SequentialAnimation {
-                    running: lastPlayed === 0
-                    loops: Animation.Infinite
-
-                    NumberAnimation {
-                        target: statusBadge
-                        property: "scale"
-                        from: 1.0
-                        to: 1.1
-                        duration: 800
-                        easing.type: Easing.InOutSine
-                    }
-
-                    NumberAnimation {
-                        target: statusBadge
-                        property: "scale"
-                        from: 1.1
-                        to: 1.0
-                        duration: 800
-                        easing.type: Easing.InOutSine
-                    }
-                }
-            }
-
-            // Favorite star
-            Rectangle {
-                visible: isFavorite
-                width: 32
-                height: 32
-                radius: 16
-                color: gameColors.color3 || "#ffaa00"
-                anchors.top: parent.top
-                anchors.right: parent.right
-                anchors.margins: 8
-
-                Text {
-                    anchors.centerIn: parent
-                    text: "★"
-                    font.pixelSize: 20
-                    color: "#1a1a1a"
-                }
-            }
-
-            // Platform badge (bottom-left)
-            Rectangle {
-                visible: gameSource !== ""
-                height: 28
-                width: 28
-                radius: 14
-                color: getPlatformColor()
-                opacity: 0.95
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                anchors.margins: 8
-
-                function getPlatformColor() {
-                    if (gameSource === "steam") return gameColors.color8 || "#5A1E80"
-                    if (gameSource === "epic") return gameColors.color10 || "#040000"
-                    if (gameSource === "gog") return gameColors.color9 || "#7828AA"
-                    if (gameSource === "amazon") return gameColors.color11 || "#92502D"
-                    if (gameSource === "heroic") return gameColors.color13 || "#C8A46E"
-                    if (gameSource === "config") return gameColors.color13 || "#C8A46E"
-                    if (gameSource === "manual") return gameColors.color9 || "#7828AA"
-                    return gameColors.color5 || "#967B53"
-                }
-
-                Text {
-                    anchors.centerIn: parent
-                    text: getPlatformIcon()
-                    font.pixelSize: 14
-                    font.family: getPlatformFont()
-                    color: gameSource === "epic" ? "#ffffff" : (gameColors.background || '#ef2c2c2c')
-
-                    function getPlatformFont() {
-                        // Steam and Amazon use Brands font
-                        if (gameSource === "steam" || gameSource === "amazon") {
-                            return "Font Awesome 7 Brands"
-                        }
-                        return "Font Awesome 7 Free Solid"
-                    }
-
-                    function getPlatformIcon() {
-                        if (gameSource === "steam") return "\uf1b6"     // fa-steam
-                        if (gameSource === "epic") return "\uf794"      // fa-shopping-cart (store)
-                        if (gameSource === "gog") return "\uf520"       // fa-compact-disc
-                        if (gameSource === "amazon") return "\uf270"    // fa-amazon
-                        if (gameSource === "heroic") return "\uf6d7"    // fa-dragon (Heroic)
-                        if (gameSource === "config") return "\uf135"    // fa-rocket (launcher)
-                        if (gameSource === "manual") return "\uf11b"    // fa-gamepad
-                        return "\uf11b"  // fa-gamepad (default)
-                    }
-                }
-            }
-
-            // Category badge (bottom-right if platform exists, otherwise bottom-left)
-            Rectangle {
-                visible: gameCategory !== ""
-                height: 24
-                width: categoryText.width + 16
-                radius: 12
-                color: gameColors.color14 || "#555555"
-                opacity: 0.9
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                anchors.margins: 8
-
-                Text {
-                    id: categoryText
-                    anchors.centerIn: parent
-                    text: gameCategory
-                    font.pixelSize: 12
-                    font.capitalization: Font.Capitalize
-                    font.family: "Open Sans Regular"
-                    font.bold: true
-                    color: gameColors.color1 || "#ffffff"
-                }
-            }
-        }
-
-        // Game Name
-        Rectangle {
-            width: parent.width
-            height: 60
-            radius: card.radius
-            color: "transparent"
-
-            Text {
-                anchors.fill: parent
-                anchors.margins: 12
-                text: gameName
-                font.pixelSize: 14
-                font.family: "Open Sans Regular"
-                font.capitalization: Font.Capitalize
-                font.bold: true
-                color: gameColors.foreground || "#ffffff"
-                wrapMode: Text.WordWrap
-                elide: Text.ElideRight
-                maximumLineCount: 2
-                verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignHCenter
-            }
-        }
-    }
-
-    // Hover effect
-    Rectangle {
-        anchors.fill: parent
-        radius: card.radius
-        color: gameColors.color1 || "#00ffff"
-        opacity: mouseArea.containsMouse ? 0.1 : 0
-
-        Behavior on opacity {
-            NumberAnimation { duration: 150 }
-        }
     }
 }

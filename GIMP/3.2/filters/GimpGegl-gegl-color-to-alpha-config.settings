@@ -1,0 +1,22 @@
+# settings
+
+(GimpGegl-gegl-color-to-alpha-config "2026-01-20 02:38:34"
+    (time 1768856914)
+    (color
+        (color "R'G'B'A float" 16 "\0\0\200\77\0\0\200\77\0\0\200\77\0\0\200\77" 0))
+    (transparency-threshold 0)
+    (opacity-threshold 1))
+(GimpGegl-gegl-color-to-alpha-config "2026-01-20 02:37:23"
+    (time 1768856843)
+    (color
+        (color "HSV float" 12 "\0\0\0\0\0\0\0\0\0\0\200\77" 0))
+    (transparency-threshold 0)
+    (opacity-threshold 1))
+(GimpGegl-gegl-color-to-alpha-config "2026-01-20 02:36:47"
+    (time 1768856807)
+    (color
+        (color "R'G'B'A float" 16 "\0\0\200\77\0\0\200\77\0\0\200\77\0\0\200\77" 0))
+    (transparency-threshold 0)
+    (opacity-threshold 1))
+
+# end of settings

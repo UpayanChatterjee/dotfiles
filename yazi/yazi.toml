@@ -64,6 +64,7 @@ okular = [{ run = 'okular %s', orphan = true, desc = "Okular" }]
 sioyek = [{ run = 'sioyek %s', orphan = true, desc = "Sioyek" }]
 vlc = [{ run = 'vlc %s', orphan = true, desc = "VLC Media Player" }]
 mpv = [{ run = 'mpv %s', orphan = true, desc = "mpv Player" }]
+wallpaper = [{ run = 'caelestia wallpaper -f %s1', desc = "Set as wallpaper", for = "linux" }]
 
 [open]
 rules = [
@@ -81,6 +82,7 @@ rules = [
   # Image
   { mime = "image/*", use = [
     "open",
+    "wallpaper",
     "reveal",
   ] },
   # Media

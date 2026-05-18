@@ -1,0 +1,320 @@
+# flavor.toml
+# Caelestia Dynamic - Generated from wallpaper via Material Design 3
+# Mirrors the structural comprehensiveness of the everforest-dark flavor
+
+[theme]
+name = "caelestia"
+author = "caelestia"
+version = "1.0.0"
+description = "Dynamic Material You theme — colors extracted from current wallpaper"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Manager (file list, cwd, find, markers, borders)
+# ─────────────────────────────────────────────────────────────────────────────
+[manager]
+cwd = { fg = "#{{ primary.hex }}", bold = true }
+
+# Hovered row
+hovered         = { bg = "#{{ surfaceContainerHigh.hex }}", bold = true }
+preview_hovered = { underline = true }
+
+# Find / search
+find_keyword = { fg = "#{{ green.hex }}", bold = true, italic = true, underline = true }
+find_position = { fg = "#{{ peach.hex }}", bg = "reset", bold = true, italic = true }
+
+# Symlink
+symlink_target = { fg = "#{{ teal.hex }}", italic = true }
+
+# Markers & counts
+# Using MD3 semantic roles (error, success) which are hue-anchored regardless
+# of wallpaper — error is always red-based, success is always neutral green.
+# Catppuccin harmonized colors are avoided here because heavy hue harmonization
+# can make them all converge to the same primary hue.
+marker_copied   = { fg = "#{{ success.hex }}",  bg = "#{{ success.hex }}" }
+marker_cut      = { fg = "#{{ error.hex }}",     bg = "#{{ error.hex }}" }
+marker_marked   = { fg = "#{{ tertiary.hex }}",  bg = "#{{ tertiary.hex }}" }
+marker_selected = { fg = "#{{ onSurface.hex }}", bg = "#{{ onSurface.hex }}" }
+
+count_copied   = { fg = "#{{ surface.hex }}", bg = "#{{ success.hex }}",  bold = true }
+count_cut      = { fg = "#{{ surface.hex }}", bg = "#{{ error.hex }}",    bold = true }
+count_selected = { fg = "#{{ surface.hex }}", bg = "#{{ onSurface.hex }}", bold = true }
+
+# Border
+border_symbol = "│"
+border_style  = { fg = "#{{ outlineVariant.hex }}" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Tabs
+# ─────────────────────────────────────────────────────────────────────────────
+[tabs]
+active   = { fg = "#{{ onPrimaryContainer.hex }}", bg = "#{{ primaryContainer.hex }}", bold = true }
+inactive = { fg = "#{{ onSurfaceVariant.hex }}",   bg = "#{{ surfaceContainerHigh.hex }}" }
+
+sep_inner = { open = "", close = "" }
+sep_outer = { open = "", close = "" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Mode (NOR / SEL / UNS etc.)
+# ─────────────────────────────────────────────────────────────────────────────
+[mode]
+normal_main = { fg = "#{{ surface.hex }}", bg = "#{{ primary.hex }}",   bold = true }
+normal_alt  = { fg = "#{{ onSurfaceVariant.hex }}", bg = "#{{ surfaceContainerHigh.hex }}" }
+
+select_main = { fg = "#{{ surface.hex }}", bg = "#{{ secondary.hex }}", bold = true }
+select_alt  = { fg = "#{{ onSurfaceVariant.hex }}", bg = "#{{ surfaceContainerHigh.hex }}" }
+
+unset_main  = { fg = "#{{ surface.hex }}", bg = "#{{ red.hex }}",       bold = true }
+unset_alt   = { fg = "#{{ onSurfaceVariant.hex }}", bg = "#{{ surfaceContainerHigh.hex }}" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Indicator (hovered / parent / preview)
+# ─────────────────────────────────────────────────────────────────────────────
+[indicator]
+parent  = { reversed = true }
+current = { reversed = true }
+preview = { underline = true }
+padding = { open = "", close = "" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Status bar
+# ─────────────────────────────────────────────────────────────────────────────
+[status]
+overall = { fg = "#{{ onSurface.hex }}", bg = "#{{ surfaceContainerLowest.hex }}" }
+
+sep_left  = { open = "", close = "" }
+sep_right = { open = "", close = "" }
+
+# Permissions (right side) — each uses a semantically distinct catppuccin hue
+perm_sep   = { fg = "#{{ outlineVariant.hex }}" }
+perm_type  = { fg = "#{{ sky.hex }}" }
+perm_read  = { fg = "#{{ green.hex }}" }
+perm_write = { fg = "#{{ yellow.hex }}" }
+perm_exec  = { fg = "#{{ peach.hex }}" }
+
+# Progress
+progress_label  = { fg = "#{{ onSurface.hex }}", bold = true }
+progress_normal = { fg = "#{{ primary.hex }}",   bg = "#{{ surfaceContainerLowest.hex }}" }
+progress_error  = { fg = "#{{ red.hex }}",        bg = "#{{ surfaceContainerLowest.hex }}" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Which (key hints)
+# ─────────────────────────────────────────────────────────────────────────────
+[which]
+cols            = 3
+mask            = { bg = "#{{ surfaceContainer.hex }}" }
+cand            = { fg = "#{{ primary.hex }}" }
+rest            = { fg = "#{{ outline.hex }}" }
+desc            = { fg = "#{{ peach.hex }}" }
+separator       = "  "
+separator_style = { fg = "#{{ outlineVariant.hex }}" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Confirm dialog
+# ─────────────────────────────────────────────────────────────────────────────
+[confirm]
+border     = { fg = "#{{ primary.hex }}" }
+title      = { fg = "#{{ primary.hex }}", bold = true }
+body       = { fg = "#{{ onSurface.hex }}" }
+list       = { fg = "#{{ onSurface.hex }}" }
+btn_yes    = { reversed = true, fg = "#{{ green.hex }}" }
+btn_no     = { reversed = true, fg = "#{{ red.hex }}" }
+btn_labels = ["  [Y]es  ", "  (N)o  "]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Spot (table / preview pane)
+# ─────────────────────────────────────────────────────────────────────────────
+[spot]
+border   = { fg = "#{{ primary.hex }}" }
+title    = { fg = "#{{ primary.hex }}", bold = true }
+tbl_col  = { fg = "#{{ secondary.hex }}" }
+tbl_cell = { fg = "#{{ yellow.hex }}", reversed = true }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Notification
+# ─────────────────────────────────────────────────────────────────────────────
+[notify]
+title_info    = { fg = "#{{ green.hex }}",  bold = true }
+title_warn    = { fg = "#{{ yellow.hex }}", bold = true }
+title_error   = { fg = "#{{ red.hex }}",    bold = true }
+content_info  = { fg = "#{{ onSurface.hex }}" }
+content_warn  = { fg = "#{{ onSurface.hex }}" }
+content_error = { fg = "#{{ onSurface.hex }}" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Pick (selection menu)
+# ─────────────────────────────────────────────────────────────────────────────
+[pick]
+border   = { fg = "#{{ primary.hex }}" }
+active   = { fg = "#{{ surface.hex }}", bg = "#{{ primary.hex }}", bold = true }
+inactive = { fg = "#{{ onSurface.hex }}" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Input (search / rename / etc.)
+# ─────────────────────────────────────────────────────────────────────────────
+[input]
+border   = { fg = "#{{ primary.hex }}" }
+title    = { fg = "#{{ onSurface.hex }}", bold = true }
+value    = { fg = "#{{ onSurface.hex }}" }
+selected = { reversed = true, fg = "#{{ surface.hex }}", bg = "#{{ primaryContainer.hex }}" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Completion (cmp)
+# ─────────────────────────────────────────────────────────────────────────────
+[cmp]
+border   = { fg = "#{{ primary.hex }}" }
+active   = { reversed = true, fg = "#{{ primary.hex }}" }
+inactive = { fg = "#{{ onSurface.hex }}" }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Tasks
+# ─────────────────────────────────────────────────────────────────────────────
+[tasks]
+border  = { fg = "#{{ outlineVariant.hex }}" }
+title   = { fg = "#{{ onSurface.hex }}" }
+hovered = { underline = true }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Help
+# ─────────────────────────────────────────────────────────────────────────────
+[help]
+on        = { fg = "#{{ primary.hex }}" }
+run       = { fg = "#{{ mauve.hex }}" }
+desc      = { fg = "#{{ onSurface.hex }}" }
+hovered   = { reversed = true, bold = true }
+footer    = { fg = "#{{ surface.hex }}", bg = "#{{ primary.hex }}", bold = true }
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Filetype rules
+# Semantic color assignments follow the same logic as everforest-dark:
+#   dirs       → primary (bold)
+#   config     → green  (data/config files feel like "living" content)
+#   markup/doc → mauve  (prose, structured text)
+#   code       → teal   (source files — calming, distinct from config)
+#   images     → pink   (visual/media)
+#   audio/vid  → peach  (warm, media)
+#   archives   → yellow (attention — packed contents)
+#   exec/bin   → red    (caution — runnable)
+#   dotfiles   → outline (dimmed — infrastructure, not content)
+#   fallback   → onSurface
+# ─────────────────────────────────────────────────────────────────────────────
+[filetype]
+rules = [
+  # Directories
+  { url = "*/", fg = "#{{ primary.hex }}", bold = true },
+
+  # Config & data
+  { mime = "text/*",    fg = "#{{ green.hex }}" },
+  { url = "*.toml",     fg = "#{{ green.hex }}" },
+  { url = "*.yaml",     fg = "#{{ green.hex }}" },
+  { url = "*.yml",      fg = "#{{ green.hex }}" },
+  { url = "*.json",     fg = "#{{ green.hex }}" },
+  { url = "*.jsonc",    fg = "#{{ green.hex }}" },
+  { url = "*.env",      fg = "#{{ green.hex }}" },
+  { url = "*.ini",      fg = "#{{ green.hex }}" },
+  { url = "*.conf",     fg = "#{{ green.hex }}" },
+  { url = "*.config",   fg = "#{{ green.hex }}" },
+  { url = "*.xml",      fg = "#{{ green.hex }}" },
+  { url = "*.csv",      fg = "#{{ green.hex }}" },
+  { url = "*.tsv",      fg = "#{{ green.hex }}" },
+
+  # Markup / prose / docs
+  { url = "*.md",       fg = "#{{ mauve.hex }}" },
+  { url = "*.mdx",      fg = "#{{ mauve.hex }}" },
+  { url = "*.org",      fg = "#{{ mauve.hex }}" },
+  { url = "*.rst",      fg = "#{{ mauve.hex }}" },
+  { url = "*.tex",      fg = "#{{ mauve.hex }}" },
+  { url = "*.txt",      fg = "#{{ mauve.hex }}" },
+
+  # Source code — teal family
+  { url = "*.rs",       fg = "#{{ teal.hex }}" },
+  { url = "*.py",       fg = "#{{ teal.hex }}" },
+  { url = "*.lua",      fg = "#{{ teal.hex }}" },
+  { url = "*.js",       fg = "#{{ teal.hex }}" },
+  { url = "*.mjs",      fg = "#{{ teal.hex }}" },
+  { url = "*.cjs",      fg = "#{{ teal.hex }}" },
+  { url = "*.ts",       fg = "#{{ teal.hex }}" },
+  { url = "*.tsx",      fg = "#{{ teal.hex }}" },
+  { url = "*.jsx",      fg = "#{{ teal.hex }}" },
+  { url = "*.go",       fg = "#{{ teal.hex }}" },
+  { url = "*.c",        fg = "#{{ teal.hex }}" },
+  { url = "*.h",        fg = "#{{ teal.hex }}" },
+  { url = "*.cpp",      fg = "#{{ teal.hex }}" },
+  { url = "*.cc",       fg = "#{{ teal.hex }}" },
+  { url = "*.hpp",      fg = "#{{ teal.hex }}" },
+  { url = "*.cs",       fg = "#{{ teal.hex }}" },
+  { url = "*.java",     fg = "#{{ teal.hex }}" },
+  { url = "*.kt",       fg = "#{{ teal.hex }}" },
+  { url = "*.swift",    fg = "#{{ teal.hex }}" },
+  { url = "*.zig",      fg = "#{{ teal.hex }}" },
+  { url = "*.nix",      fg = "#{{ teal.hex }}" },
+  { url = "*.sh",       fg = "#{{ teal.hex }}" },
+  { url = "*.bash",     fg = "#{{ teal.hex }}" },
+  { url = "*.zsh",      fg = "#{{ teal.hex }}" },
+  { url = "*.fish",     fg = "#{{ teal.hex }}" },
+  { url = "*.vim",      fg = "#{{ teal.hex }}" },
+  { url = "*.el",       fg = "#{{ teal.hex }}" },
+  { url = "*.rb",       fg = "#{{ teal.hex }}" },
+  { url = "*.php",      fg = "#{{ teal.hex }}" },
+  { url = "*.r",        fg = "#{{ teal.hex }}" },
+  { url = "*.R",        fg = "#{{ teal.hex }}" },
+  { url = "*.dart",     fg = "#{{ teal.hex }}" },
+  { url = "*.ex",       fg = "#{{ teal.hex }}" },
+  { url = "*.exs",      fg = "#{{ teal.hex }}" },
+  { url = "*.ipynb",    fg = "#{{ teal.hex }}" },
+  { url = "*.qml",      fg = "#{{ teal.hex }}" },
+  { url = "*.css",      fg = "#{{ teal.hex }}" },
+  { url = "*.scss",     fg = "#{{ teal.hex }}" },
+  { url = "*.sass",     fg = "#{{ teal.hex }}" },
+  { url = "*.less",     fg = "#{{ teal.hex }}" },
+  { url = "*.html",     fg = "#{{ teal.hex }}" },
+  { url = "*.htm",      fg = "#{{ teal.hex }}" },
+  { url = "*.svelte",   fg = "#{{ teal.hex }}" },
+  { url = "*.vue",      fg = "#{{ teal.hex }}" },
+  { url = "*.sql",      fg = "#{{ teal.hex }}" },
+
+  # Images — pink (visual, creative)
+  { mime = "image/*",   fg = "#{{ pink.hex }}" },
+  { url = "*.svg",      fg = "#{{ pink.hex }}" },
+
+  # Audio / Video — peach (warm, media)
+  { mime = "{audio,video}/*", fg = "#{{ peach.hex }}" },
+
+  # Archives / compressed — yellow (attention, packed)
+  { mime = "application/*zip",                                           fg = "#{{ yellow.hex }}" },
+  { mime = "application/x-{tar,bzip*,7z-compressed,xz,rar,gz,zstd}",   fg = "#{{ yellow.hex }}" },
+  { url = "*.tar",      fg = "#{{ yellow.hex }}" },
+  { url = "*.gz",       fg = "#{{ yellow.hex }}" },
+  { url = "*.xz",       fg = "#{{ yellow.hex }}" },
+  { url = "*.zst",      fg = "#{{ yellow.hex }}" },
+  { url = "*.bz2",      fg = "#{{ yellow.hex }}" },
+  { url = "*.7z",       fg = "#{{ yellow.hex }}" },
+  { url = "*.rar",      fg = "#{{ yellow.hex }}" },
+  { url = "*.zip",      fg = "#{{ yellow.hex }}" },
+
+  # Documents (PDF, office) — sky (calm, readable)
+  { mime = "application/{pdf,doc,rtf,vnd.*}", fg = "#{{ sky.hex }}" },
+  { url = "*.pdf",      fg = "#{{ sky.hex }}" },
+
+  # Binaries / executables — red (caution, runnable)
+  { mime = "application/x-executable",        fg = "#{{ red.hex }}" },
+  { mime = "application/x-sharedlib",         fg = "#{{ red.hex }}" },
+  { url = "*.exe",      fg = "#{{ red.hex }}" },
+  { url = "*.bin",      fg = "#{{ red.hex }}" },
+  { url = "*.AppImage", fg = "#{{ red.hex }}" },
+  { url = "*.deb",      fg = "#{{ red.hex }}" },
+  { url = "*.rpm",      fg = "#{{ red.hex }}" },
+
+  # Hidden / dotfiles — muted (infrastructure, not content)
+  { url = ".*", fg = "#{{ outline.hex }}" },
+
+  # General fallback
+  { url = "*", fg = "#{{ onSurface.hex }}" },
+]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Icon fallbacks
+# ─────────────────────────────────────────────────────────────────────────────
+[icon]
+fallback = { fg = "#{{ outline.hex }}" }
+dir      = { fg = "#{{ primary.hex }}" }
+file     = { fg = "#{{ onSurface.hex }}" }

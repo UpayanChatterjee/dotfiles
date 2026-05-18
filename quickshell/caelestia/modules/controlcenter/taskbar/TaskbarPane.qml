@@ -30,6 +30,7 @@ Item {
     property bool showAudio: Config.bar.status.showAudio ?? true
     property bool showMicrophone: Config.bar.status.showMicrophone ?? true
     property bool showKbLayout: Config.bar.status.showKbLayout ?? false
+    property bool showNetSpeed: BarExtras.showNetSpeed
     property bool showNetwork: Config.bar.status.showNetwork ?? true
     property bool showWifi: Config.bar.status.showWifi ?? true
     property bool showBluetooth: Config.bar.status.showBluetooth ?? true
@@ -65,6 +66,7 @@ Item {
         GlobalConfig.bar.status.showAudio = root.showAudio;
         GlobalConfig.bar.status.showMicrophone = root.showMicrophone;
         GlobalConfig.bar.status.showKbLayout = root.showKbLayout;
+        BarExtras.showNetSpeed = root.showNetSpeed;
         GlobalConfig.bar.status.showNetwork = root.showNetwork;
         GlobalConfig.bar.status.showWifi = root.showWifi;
         GlobalConfig.bar.status.showBluetooth = root.showBluetooth;
@@ -218,6 +220,14 @@ Item {
                                 propertyName: "showKbLayout",
                                 onToggled: function (checked) {
                                     root.showKbLayout = checked;
+                                    root.saveConfig();
+                                }
+                            },
+                            {
+                                label: qsTr("Net Speed"),
+                                propertyName: "showNetSpeed",
+                                onToggled: function (checked) {
+                                    root.showNetSpeed = checked;
                                     root.saveConfig();
                                 }
                             },

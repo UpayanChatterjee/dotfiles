@@ -23,6 +23,8 @@ Singleton {
     readonly property real windSpeed: cc?.windSpeed ?? 0
     readonly property string sunrise: cc ? Qt.formatDateTime(new Date(cc.sunrise), GlobalConfig.services.useTwelveHourClock ? "h:mm A" : "h:mm") : "--:--"
     readonly property string sunset: cc ? Qt.formatDateTime(new Date(cc.sunset), GlobalConfig.services.useTwelveHourClock ? "h:mm A" : "h:mm") : "--:--"
+    readonly property int windDirection: cc?.windDirection ?? 0
+    readonly property int uvIndex: forecast.length > 0 ? (forecast[0]?.uvIndex ?? 0) : 0
 
     readonly property var cachedCities: new Map()
 
@@ -37,10 +39,10 @@ Singleton {
                 fetchCoordsFromCity(configLocation);
             }
         } else if (!loc || timer.elapsed() > 900) {
-            Requests.get("https://ipinfo.io/json", text => {
+            Requests.get("https://ipwho.is/", text => {
                 const response = JSON.parse(text);
-                if (response.loc) {
-                    loc = response.loc;
+                if (response.success && response.latitude) {
+                    loc = response.latitude + "," + response.longitude;
                     city = response.city ?? "";
                     timer.restart();
                 }
@@ -120,6 +122,7 @@ Singleton {
                 feelsLikeF: Math.round(toFahrenheit(json.current.apparent_temperature)),
                 humidity: json.current.relative_humidity_2m,
                 windSpeed: json.current.wind_speed_10m,
+                windDirection: json.current.wind_direction_10m,
                 isDay: json.current.is_day,
                 sunrise: json.daily.sunrise[0].replace("T", " "),
                 sunset: json.daily.sunset[0].replace("T", " ")
@@ -134,7 +137,9 @@ Singleton {
                     minTempC: Math.round(json.daily.temperature_2m_min[i]),
                     minTempF: Math.round(toFahrenheit(json.daily.temperature_2m_min[i])),
                     weatherCode: json.daily.weather_code[i],
-                    icon: Icons.getWeatherIcon(json.daily.weather_code[i])
+                    icon: Icons.getWeatherIcon(json.daily.weather_code[i]),
+                    precipProbability: json.daily.precipitation_probability_max?.[i] ?? 0,
+                    uvIndex: json.daily.uv_index_max?.[i] ?? 0
                 });
             forecast = forecastList;
 
@@ -169,7 +174,7 @@ Singleton {
 
         const [lat, lon] = loc.split(",").map(s => s.trim());
         const baseUrl = "https://api.open-meteo.com/v1/forecast";
-        const params = ["latitude=" + lat, "longitude=" + lon, "hourly=weather_code,temperature_2m", "daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset", "current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m", "timezone=auto", "forecast_days=7"];
+        const params = ["latitude=" + lat, "longitude=" + lon, "hourly=weather_code,temperature_2m", "daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max,uv_index_max", "current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_direction_10m", "timezone=auto", "forecast_days=7"];
 
         return baseUrl + "?" + params.join("&");
     }

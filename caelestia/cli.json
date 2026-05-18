@@ -1,4 +1,7 @@
 {
+  "theme": {
+    "postHook": "~/.config/caelestia/post-theme-hook.sh"
+  },
   "toggles": {
     "communication": {
       "discord": {

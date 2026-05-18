@@ -71,6 +71,14 @@ Item {
             root.sourceVolume = Audio.sourceVolume;
         }
 
+        function onVolumeAdjustAttempted(): void {
+            root.show();
+        }
+
+        function onSourceVolumeAdjustAttempted(): void {
+            root.show();
+        }
+
         target: Audio
     }
 
@@ -78,6 +86,10 @@ Item {
         function onBrightnessChanged(): void {
             root.show();
             root.brightness = root.monitor?.brightness ?? 0;
+        }
+
+        function onAdjustAttempted(): void {
+            root.show();
         }
 
         target: root.monitor

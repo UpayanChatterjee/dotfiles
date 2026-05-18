@@ -171,6 +171,7 @@ Singleton {
         readonly property bool isAppleDisplay: root.appleDisplayPresent && modelData.model.startsWith("StudioDisplay")
         property real brightness
         property real queuedBrightness: NaN
+        signal adjustAttempted()
 
         readonly property Process initProc: Process {
             stdout: StdioCollector {
@@ -199,6 +200,7 @@ Singleton {
         function setBrightness(value: real): void {
             value = Math.max(0, Math.min(1, value));
             const rounded = Math.round(value * 100);
+            adjustAttempted();
             if (Math.round(brightness * 100) === rounded)
                 return;
 

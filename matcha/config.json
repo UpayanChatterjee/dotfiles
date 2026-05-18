@@ -1,0 +1,16 @@
+{
+  "accounts": [
+    {
+      "id": "5bf74b5f-e788-4e47-8870-dffee08b4ed7",
+      "name": "Upayan Chatterjee",
+      "email": "upayanc9@gmail.com",
+      "service_provider": "gmail",
+      "fetch_email": "upayanc9@gmail.com",
+      "catch_all": true,
+      "auth_method": "oauth2",
+      "protocol": "imap",
+      "pop3_port": 995
+    }
+  ],
+  "theme": "caelestia"
+}

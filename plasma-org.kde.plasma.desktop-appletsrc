@@ -172,9 +172,6 @@ plugin=org.kde.plasma.networkmanagement
 immutability=1
 plugin=org.kde.plasma.mediacontroller
 
-[Containments][2][Applets][7][Applets][27][Configuration]
-PreloadWeight=0
-
 [Containments][2][Applets][7][Applets][28]
 immutability=1
 plugin=org.kde.plasma.weather
@@ -410,6 +407,15 @@ DialogWidth=810
 Image=file:///home/tony/Wallpapers/gruvbox/dark-bench.png
 SlidePaths=/home/tony/.local/share/wallpapers/,/home/tony/.local/share/wallpapers/,/usr/share/wallpapers/
 
+[Containments][85]
+activityId=cc9456dc-58c7-470b-84a3-648bc3382c74
+formfactor=0
+immutability=1
+lastScreen=1
+location=0
+plugin=org.kde.plasma.folder
+wallpaperplugin=org.kde.image
+
 [ScreenMapping]
 itemsOnDisabledScreens=
-screenMapping=
+screenMapping=desktop:/Eye-CareU.desktop,0,cc9456dc-58c7-470b-84a3-648bc3382c74,desktop:/Eye-CareU.lnk,0,cc9456dc-58c7-470b-84a3-648bc3382c74

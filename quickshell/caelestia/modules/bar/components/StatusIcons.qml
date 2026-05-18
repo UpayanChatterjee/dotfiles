@@ -111,45 +111,33 @@ StyledRect {
         WrappedLoader {
             // Note: Make sure "name" matches whatever string your PopoutManager uses to route the Network popup!
             name: "netSpeed"
-            active: Config.bar.status.showNetSpeed
+            active: BarExtras.showNetSpeed
 
             sourceComponent: Item {
                 implicitWidth: Tokens.sizes.bar.innerWidth
-                implicitHeight: netCol.implicitHeight
+                implicitHeight: netText.implicitHeight
 
                 Ref {
                     service: NetworkUsage
                 }
 
-                // Compact bar display (FIXED: One line text, less cramped)
-                ColumnLayout {
-                    id: netCol
+                StyledText {
+                    id: netText
                     anchors.horizontalCenter: parent.horizontalCenter
-                    spacing: 2
-
-                    StyledText {
-                        Layout.alignment: Qt.AlignHCenter
-                        text: {
-                            const f = NetworkUsage.formatBytes(NetworkUsage.downloadSpeed ?? 0);
-                            // Formats as "16K" instead of stacking awkwardly
-                            return f ? `${f.value.toFixed(0)}${f.unit[0]}` : "0B";
-                        }
-                        font.pixelSize: 12
-                        font.family: Tokens.font.family.mono
-                        font.weight: Font.Bold
-                        color: Colours.palette.m3tertiary
+                    text: {
+                        const dSpeed = NetworkUsage.downloadSpeed ?? 0;
+                        const uSpeed = NetworkUsage.uploadSpeed ?? 0;
+                        const d = dSpeed >= 1024 ? NetworkUsage.formatBytes(dSpeed) : null;
+                        const u = uSpeed >= 1024 ? NetworkUsage.formatBytes(uSpeed) : null;
+                        const uStr = u ? `${u.value.toFixed(0)}${u.unit[0]}` : "0";
+                        const dStr = d ? `${d.value.toFixed(0)}${d.unit[0]}` : "0";
+                        return `↑${uStr}\n↓${dStr}`;
                     }
-
-                    MaterialIcon {
-                        Layout.alignment: Qt.AlignHCenter
-                        text: "south"
-                        color: Colours.palette.m3tertiary
-                        font.pixelSize: 12
-                    }
-
-                    Item {
-                        implicitHeight: 4
-                    }
+                    font.pixelSize: 10
+                    font.family: Tokens.font.family.mono
+                    font.weight: Font.Bold
+                    color: Colours.palette.m3tertiary
+                    horizontalAlignment: Text.AlignHCenter
                 }
             }
         }
@@ -168,7 +156,7 @@ StyledRect {
 
         // Microphone icon
         WrappedLoader {
-            name: "audio"
+            name: "microphone"
             active: Config.bar.status.showMicrophone
 
             sourceComponent: MaterialIcon {
@@ -289,53 +277,6 @@ StyledRect {
             sourceComponent: ColumnLayout {
                 spacing: 0
 
-                /*
-                // 1. Percentage Text (Added)
-                StyledText {
-                    Layout.alignment: Qt.AlignHCenter
-                    visible: UPower.displayDevice.isLaptopBattery
-
-                    // Convert 0.85 -> 85%
-                    text: Math.floor(UPower.displayDevice.percentage * 100) + "%"
-
-                    // Small font to fit inside the vertical bar
-                    font.pixelSize: 10
-                    font.bold: true
-
-                    // Match color logic with the icon
-                    color: !UPower.onBattery || UPower.displayDevice.percentage > 0.2 ? root.colour : Colours.palette.m3error
-                }
-
-                // 2. Original Battery Icon
-                MaterialIcon {
-                    Layout.alignment: Qt.AlignHCenter
-                    animate: true
-                    text: {
-                        if (!UPower.displayDevice.isLaptopBattery) {
-                            if (PowerProfiles.profile === PowerProfile.PowerSaver)
-                                return "energy_savings_leaf";
-                            if (PowerProfiles.profile === PowerProfile.Performance)
-                                return "rocket_launch";
-                            return "balance";
-                        }
-
-                        const perc = UPower.displayDevice.percentage;
-                        const charging = [UPowerDeviceState.Charging, UPowerDeviceState.FullyCharged, UPowerDeviceState.PendingCharge].includes(UPower.displayDevice.state);
-                        if (perc === 1)
-                            return charging ? "battery_charging_full" : "battery_full";
-                        let level = Math.floor(perc * 7);
-                        if (charging && (level === 4 || level === 1))
-                            level--;
-                        return charging ? `battery_charging_${(level + 3) * 10}` : `battery_${level}_bar`;
-                    }
-                    color: !UPower.onBattery || UPower.displayDevice.percentage > 0.2 ? root.colour : Colours.palette.m3error
-                    fill: 1
-                }
-                */
-
-                // ####################################################################
-                // # ADDED: Battery percentage and icon with safety checks            #
-                // ####################################################################
                 // 1. Percentage Text
                 StyledText {
                     Layout.alignment: Qt.AlignHCenter
@@ -377,7 +318,6 @@ StyledRect {
                     color: !UPower.onBattery || (UPower.displayDevice && UPower.displayDevice.percentage > 0.2) ? root.colour : Colours.palette.m3error
                     fill: 1
                 }
-                // ####################################################################
             }
         }
     }

@@ -165,8 +165,8 @@
         }
     },
     "border": {
-        "rounding": 11,
-        "thickness": 3
+        "rounding": 10,
+        "thickness": 4
     },
     "dashboard": {
         "dragThreshold": 50,
@@ -340,6 +340,32 @@
             },
             {
                 "command": [
+                    "kitty",
+                    "--",
+                    "bash",
+                    "/home/tony/user_scripts/arch_setup_scripts/scripts/365_cache_purge.sh"
+                ],
+                "dangerous": false,
+                "description": "Remove package caches and reclaim storage",
+                "enabled": true,
+                "icon": "delete_sweep",
+                "name": "Purge Cache"
+            },
+            {
+                "command": [
+                    "kitty",
+                    "--",
+                    "bash",
+                    "/home/tony/user_scripts/tts_stt/dusky_kokoro/tui/kokoro_tui.sh"
+                ],
+                "dangerous": false,
+                "description": "Configure Kokoro TTS voice, speed and engine settings",
+                "enabled": true,
+                "icon": "tune",
+                "name": "TTS Settings"
+            },
+            {
+                "command": [
                     "systemctl",
                     "poweroff"
                 ],
@@ -409,9 +435,11 @@
             }
         ],
         "dragThreshold": 50,
-        "enableDangerousActions": false,
+        "enableDangerousActions": true,
         "enabled": true,
         "favouriteApps": [
+            "cider",
+            "net.lutris.Lutris"
         ],
         "hiddenApps": [
         ],
@@ -456,7 +484,7 @@
         "mediaGif": "root:/assets/bongocat.gif",
         "noNotifsPic": "root:/assets/dino.png",
         "sessionGif": "root:/assets/portal-rick-and-morty.gif",
-        "wallpaperDir": "/home/tony/Wallpapers"
+        "wallpaperDir": "/home/tony/walls"
     },
     "services": {
         "audioIncrement": 0.1,
@@ -544,6 +572,22 @@
             {
                 "enabled": false,
                 "id": "vpn"
+            },
+            {
+                "enabled": true,
+                "id": "shazam"
+            },
+            {
+                "enabled": true,
+                "id": "mono"
+            },
+            {
+                "enabled": true,
+                "id": "stt"
+            },
+            {
+                "enabled": true,
+                "id": "tts"
             }
         ],
         "toasts": {

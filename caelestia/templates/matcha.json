@@ -1,0 +1,16 @@
+{
+  "name": "caelestia",
+  "accent": "#{{ primary.hex }}",
+  "accent_dark": "#{{ outlineVariant.hex }}",
+  "accent_text": "#{{ onPrimary.hex }}",
+  "secondary": "#{{ secondary.hex }}",
+  "subtle_text": "#{{ onSurfaceVariant.hex }}",
+  "muted_text": "#{{ outline.hex }}",
+  "dim_text": "#{{ onSurface.hex }}",
+  "danger": "#{{ error.hex }}",
+  "warning": "#{{ peach.hex }}",
+  "tip": "#{{ yellow.hex }}",
+  "link": "#{{ teal.hex }}",
+  "directory": "#{{ tertiary.hex }}",
+  "contrast": "#{{ surface.hex }}"
+}

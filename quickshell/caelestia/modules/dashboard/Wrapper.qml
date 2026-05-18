@@ -44,6 +44,22 @@ Item {
         }
     }
 
+    Connections {
+        target: root.visibilities
+        function onDashboardTabChanged(): void {
+            if (dashState.currentTab !== root.visibilities.dashboardTab)
+                dashState.currentTab = root.visibilities.dashboardTab;
+        }
+    }
+
+    Connections {
+        target: dashState
+        function onCurrentTabChanged(): void {
+            if (root.visibilities.dashboardTab !== dashState.currentTab)
+                root.visibilities.dashboardTab = dashState.currentTab;
+        }
+    }
+
     Loader {
         id: content
 

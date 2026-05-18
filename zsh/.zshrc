@@ -67,6 +67,20 @@ zinit ice depth=1
 zinit light romkatv/powerlevel10k
 [[ -f ~/.p10k.zsh ]] && zsource ~/.p10k.zsh
 
+# Caelestia p10k live reload — re-sources colors and reloads p10k on theme change
+_caelestia_p10k_mtime=0
+function _caelestia_p10k_check() {
+    local f="${HOME}/.local/state/caelestia/theme/p10k-colors.zsh"
+    local mtime
+    mtime=$(stat -c %Y "$f" 2>/dev/null) || return
+    if [[ $mtime != $_caelestia_p10k_mtime ]]; then
+        _caelestia_p10k_mtime=$mtime
+        p10k reload 2>/dev/null
+    fi
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _caelestia_p10k_check
+
 # ── 5. History Settings ─────────────────────────────────────────────
 HISTSIZE=5000
 SAVEHIST=$HISTSIZE

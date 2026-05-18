@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(journalctl --user -u quickshell -n 100 --no-pager)",
+      "Bash(journalctl -n 100 --no-pager)",
+      "Read(//home/tony/.local/share/caelestia/hypr/**)",
+      "Bash(quickshell --help)",
+      "Bash(quickshell)",
+      "Bash(kill %1)",
+      "Bash(quickshell -c caelestia)",
+      "Bash(grep -v \"^$\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d.get\\('wallpaper', {}\\)\\)\")",
+      "Read(//home/tony/.local/state/caelestia/wallpaper/**)",
+      "Read(//home/tony/walls/**)",
+      "Bash(hyprctl monitors *)",
+      "Bash(pacman -Ql caelestia)",
+      "Bash(pacman -Q)",
+      "Bash(pacman -Ql caelestia-shell-git)"
+    ]
+  }
+}

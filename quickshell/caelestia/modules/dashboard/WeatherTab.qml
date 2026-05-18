@@ -9,6 +9,27 @@ Item {
 
     readonly property var today: Weather.forecast && Weather.forecast.length > 0 ? Weather.forecast[0] : null
 
+    function formatHour(hour) {
+        if (GlobalConfig.services.useTwelveHourClock) {
+            const h = hour % 12 || 12;
+            return h + (hour >= 12 ? "PM" : "AM");
+        }
+        return (hour < 10 ? "0" : "") + hour + ":00";
+    }
+
+    function getWindDir(degrees) {
+        const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+        return dirs[Math.round(degrees / 45) % 8];
+    }
+
+    function getUVLabel(uv) {
+        if (uv <= 2) return uv + " · Low";
+        if (uv <= 5) return uv + " · Mod";
+        if (uv <= 7) return uv + " · High";
+        if (uv <= 10) return uv + " · V.High";
+        return uv + " · Extreme";
+    }
+
     implicitWidth: layout.implicitWidth > 800 ? layout.implicitWidth : 840
     implicitHeight: layout.implicitHeight
     Component.onCompleted: Weather.reload()
@@ -125,8 +146,85 @@ Item {
             DetailCard {
                 icon: "air"
                 label: "Wind"
-                value: Weather.windSpeed ? Weather.windSpeed + " km/h" : "--"
+                value: Weather.windSpeed ? Weather.windSpeed + " km/h · " + root.getWindDir(Weather.windDirection) : "--"
                 colour: Colours.palette.m3tertiary
+            }
+
+            DetailCard {
+                icon: "wb_sunny"
+                label: "UV Index"
+                value: root.getUVLabel(Weather.uvIndex)
+                colour: Colours.palette.m3secondary
+            }
+        }
+
+        StyledText {
+            Layout.topMargin: Tokens.spacing.normal
+            Layout.leftMargin: Tokens.padding.normal
+            visible: Weather.hourlyForecast.length > 0
+            text: qsTr("Hourly Forecast")
+            font.pointSize: Tokens.font.size.normal
+            font.weight: 600
+            color: Colours.palette.m3onSurface
+        }
+
+        Flickable {
+            Layout.fillWidth: true
+            implicitHeight: hourlyRow.implicitHeight
+            contentWidth: hourlyRow.implicitWidth
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
+            visible: Weather.hourlyForecast.length > 0
+
+            Row {
+                id: hourlyRow
+
+                spacing: Tokens.spacing.smaller
+
+                Repeater {
+                    model: Weather.hourlyForecast.slice(0, 12)
+
+                    StyledRect {
+                        id: hourlyItem
+
+                        required property var modelData
+                        required property int index
+
+                        implicitWidth: hourlyContent.implicitWidth + Tokens.padding.normal * 2
+                        implicitHeight: hourlyContent.implicitHeight + Tokens.padding.normal * 2
+                        radius: Tokens.rounding.normal
+                        color: Colours.tPalette.m3surfaceContainer
+
+                        ColumnLayout {
+                            id: hourlyContent
+
+                            anchors.centerIn: parent
+                            spacing: Tokens.spacing.smaller
+
+                            StyledText {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: root.formatHour(hourlyItem.modelData.hour)
+                                font.pointSize: Tokens.font.size.smaller
+                                color: Colours.palette.m3onSurfaceVariant
+                            }
+
+                            MaterialIcon {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: hourlyItem.modelData.icon
+                                font.pointSize: Tokens.font.size.large
+                                color: Colours.palette.m3secondary
+                            }
+
+                            StyledText {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: GlobalConfig.services.useFahrenheit ? hourlyItem.modelData.tempF + "°" : hourlyItem.modelData.tempC + "°"
+                                font.pointSize: Tokens.font.size.small
+                                font.weight: 600
+                                color: Colours.palette.m3primary
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -196,6 +294,14 @@ Item {
                             text: GlobalConfig.services.useFahrenheit ? forecastItem.modelData.maxTempF + "°" + " / " + forecastItem.modelData.minTempF + "°" : forecastItem.modelData.maxTempC + "°" + " / " + forecastItem.modelData.minTempC + "°"
                             font.weight: 600
                             color: Colours.palette.m3tertiary
+                        }
+
+                        StyledText {
+                            Layout.alignment: Qt.AlignHCenter
+                            visible: forecastItem.modelData.precipProbability > 0
+                            text: forecastItem.modelData.precipProbability + "%"
+                            font.pointSize: Tokens.font.size.smaller
+                            color: Colours.palette.m3secondary
                         }
                     }
                 }
