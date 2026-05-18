@@ -132,6 +132,8 @@ suppress_preload = false
 
 [plugin]
 fetchers = [
+  { url = "*", run = "git", group = "git"},
+  { url = "*/", run = "git", group = "git"},
   # Mimetype
   { group = "mime", url = "*/", run = "mime.dir", prio = "high" },
   { group = "mime", url = "local://*", run = "mime.local", prio = "high" },
@@ -176,6 +178,8 @@ preloaders = [
   { mime = "application/ms-opentype", run = "font" },
 ]
 previewers = [
+  # audio
+  { mime = "audio/*", run = "exifaudio"},
   # duckdb
   { url = "*.csv", run = "duckdb" },  
   { url = "*.tsv", run = "duckdb" },  
