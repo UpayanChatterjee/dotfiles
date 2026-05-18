@@ -169,6 +169,7 @@ preloaders = [
   { mime = "application/ms-opentype", run = "font" },
 ]
 previewers = [
+  {url = "*.ipynb", run = "nbpreview"},
   { url = "*/", run = "folder" },
   # Code
   { mime = "text/*", run = "code" },
@@ -203,6 +204,10 @@ previewers = [
   # Fallback
   { url = "*", run = "file" },
 ]
+
+# prepend_previewers = [
+# { url = "*.ipynb", run = "nbpreview"},
+# ]
 
 [input]
 cursor_blink = false
