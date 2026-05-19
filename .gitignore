@@ -132,3 +132,4 @@ matcha/oauth_tokens/**
 matcha/oauth_client.json
 mpv/scripts/uosc/main.lua
 .cache_ggshield
+systemmonitorrc

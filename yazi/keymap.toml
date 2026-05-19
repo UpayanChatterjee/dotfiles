@@ -5,6 +5,8 @@
 [mgr]
 
 keymap = [
+  { on = "+", run = "plugin zoom 1", desc = "Zoom in hovered file"},
+  { on = "-", run = "plugin zoom -1", desc = "Zoom out hovered file"},
   { on = "H", run = "plugin duckdb -1", desc = "Scroll one column to the left" },
   { on = "L", run = "plugin duckdb +1", desc = "Scroll one column to the right" },
   { on = ["g", "o"], run = "plugin duckdb -open", desc = "Open with duckdb"},
