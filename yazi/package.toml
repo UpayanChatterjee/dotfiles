@@ -43,6 +43,16 @@ use = "yazi-rs/plugins:zoom"
 rev = "5d5c480"
 hash = "fa268cb59989a87780605fdcfb8d99a9"
 
+[[plugin.deps]]
+use = "ndtoan96/ouch"
+rev = "406ce6c"
+hash = "f5afc904d5106ee368c8aa2ded43bd74"
+
+[[plugin.deps]]
+use = "pirafrank/what-size"
+rev = "179ebf6"
+hash = "57056b9728006881d580ccabe8154a9c"
+
 [[flavor.deps]]
 use = "bennyyip/gruvbox-dark"
 rev = "619fdc5"

@@ -178,6 +178,8 @@ preloaders = [
   { mime = "application/ms-opentype", run = "font" },
 ]
 previewers = [
+  # ouch
+  { mime = "application/{*zip,tar,bzip2,7z*,rar,xz,zstd,java-archive}", run = "ouch"},
   # audio
   { mime = "audio/*", run = "exifaudio"},
   # duckdb
