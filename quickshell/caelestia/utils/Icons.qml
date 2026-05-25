@@ -226,6 +226,8 @@ Singleton {
             return "checklist";
         if (name === "sysmon")
             return "monitor_heart";
+        if (name === "books")
+            return "menu_book";
         return name[0].toUpperCase();
     }
 

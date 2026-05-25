@@ -74,7 +74,9 @@ class GameLauncher:
 
         self.config_path = Path(config_path)
         self.favorites_file = self.config_path.parent / "favorites.json"
+        self.state_file = self.config_path.parent / "state.json"
         self.config = self.load_config()
+        self.migrate_config()
 
         cache_dir = self.config_path.parent / "cache"
         cache_file = cache_dir / "image_cache.json"
@@ -179,6 +181,22 @@ class GameLauncher:
         except Exception as e:
             print(f"Error saving favorites: {e}", file=sys.stderr)
 
+    def load_state(self) -> Dict[str, Any]:
+        try:
+            with open(self.state_file, 'r') as f:
+                return json.load(f)
+        except Exception:
+            return {}
+
+    def save_state(self, key: str, value: Any):
+        state = self.load_state()
+        state[key] = value
+        try:
+            with open(self.state_file, 'w') as f:
+                json.dump(state, f, indent=2)
+        except Exception as e:
+            print(f"Error saving state: {e}", file=sys.stderr)
+
     def toggle_favorite(self, name: str, source: str):
         key = f"{name}:{source}"
         favorites = self.load_favorites()
@@ -200,6 +218,64 @@ class GameLauncher:
         except Exception as e:
             print(f"Error loading config: {e}", file=sys.stderr)
             return self.get_default_config()
+
+    def migrate_config(self):
+        """Insert missing config keys and remove duplicates in config.toml."""
+        NEW_KEYS = [
+            ("behavior", "default_source_index", "0",
+             "# Onglet actif au démarrage : 0=Tous, 1=premier onglet (Steam), 2=deuxième, etc."),
+            ("behavior", "remember_source", "false",
+             "# true = mémorise le dernier onglet actif entre les lancements (écrase default_source_index)"),
+        ]
+
+        try:
+            with open(self.config_path, 'r', encoding='utf-8') as f:
+                original = f.read()
+
+            content = original
+
+            # Step 1: remove duplicate key lines (keep first occurrence)
+            for _, key, _, _ in NEW_KEYS:
+                seen = False
+                new_lines = []
+                for line in content.split('\n'):
+                    if re.match(rf'^\s*{re.escape(key)}\s*=', line):
+                        if not seen:
+                            new_lines.append(line)
+                            seen = True
+                        # skip duplicates silently
+                    else:
+                        new_lines.append(line)
+                content = '\n'.join(new_lines)
+
+            # Step 2: add truly missing keys (check raw text, not parsed config)
+            for section, key, default, comment in NEW_KEYS:
+                if re.search(rf'^\s*{re.escape(key)}\s*=', content, re.MULTILINE):
+                    continue  # already present
+
+                header = f"[{section}]"
+                if header not in content:
+                    content += f"\n{header}\n{comment}\n{key} = {default}\n"
+                    continue
+
+                pos = content.find(header)
+                lines = content[pos:].split('\n')
+                end_idx = len(lines)
+                for i in range(1, len(lines)):
+                    s = lines[i].strip()
+                    if s.startswith('[') and not s.startswith('#') and s:
+                        end_idx = i
+                        break
+                lines.insert(end_idx, f"\n{comment}\n{key} = {default}\n")
+                content = content[:pos] + '\n'.join(lines)
+
+            if content != original:
+                with open(self.config_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                self.config = self.load_config()
+
+        except Exception as e:
+            print(f"Config migration error: {e}", file=sys.stderr)
 
     def get_default_config(self) -> Dict[str, Any]:
         return {
@@ -616,10 +692,57 @@ class GameLauncher:
 
     # ── Steam ──────────────────────────────────────────────────────────────
 
+    def load_steam_localconfig(self) -> Dict[str, Dict[str, int]]:
+        """Parse localconfig.vdf → {appid: {playtime_minutes, last_played}}.
+        Covers all appids without digit-count restriction.
+        """
+        result = {}
+        userdata = Path.home() / ".local/share/Steam/userdata"
+        if not userdata.exists():
+            return result
+        for user_dir in userdata.iterdir():
+            cfg = user_dir / "config" / "localconfig.vdf"
+            if not cfg.exists():
+                continue
+            try:
+                content = cfg.read_text(encoding="utf-8", errors="ignore")
+                apps_match = re.search(r'"apps"\s*\{', content)
+                if not apps_match:
+                    continue
+                apps_content = content[apps_match.end():]
+                pos = 0
+                while pos < len(apps_content):
+                    m = re.search(r'"(\d+)"\s*\{', apps_content[pos:])
+                    if not m:
+                        break
+                    appid = m.group(1)
+                    block_start = pos + m.end()
+                    depth = 1
+                    p = block_start
+                    while p < len(apps_content) and depth > 0:
+                        if apps_content[p] == '{':
+                            depth += 1
+                        elif apps_content[p] == '}':
+                            depth -= 1
+                        p += 1
+                    block = apps_content[block_start:p - 1]
+                    pt = re.search(r'"Playtime"\s+"(\d+)"', block)
+                    lp = re.search(r'"LastPlayed"\s+"(\d+)"', block)
+                    if pt or lp:
+                        result[appid] = {
+                            "playtime_minutes": int(pt.group(1)) if pt else 0,
+                            "last_played": int(lp.group(1)) if lp else 0,
+                        }
+                    pos = pos + m.start() + 1
+            except Exception:
+                pass
+        return result
+
     def scan_steam_library(self) -> List[Dict[str, Any]]:
         games = []
         if not self.config.get("steam", {}).get("enabled", True):
             return games
+        localconfig = self.load_steam_localconfig()
         library_paths = self.config.get("steam", {}).get("library_paths", [])
         for lib_path in library_paths:
             lib_path = self.expand_path(lib_path)
@@ -628,6 +751,12 @@ class GameLauncher:
             for acf_file in lib_path.glob("*.acf"):
                 game_data = self.parse_acf_file(acf_file)
                 if game_data:
+                    appid = game_data.get("appid", "")
+                    lc = localconfig.get(appid, {})
+                    game_data["playtime_minutes"] = lc.get("playtime_minutes", 0)
+                    # prefer localconfig last_played when ACF shows 0
+                    if game_data.get("last_played", 0) == 0:
+                        game_data["last_played"] = lc.get("last_played", 0)
                     games.append(game_data)
         return games
 
@@ -662,17 +791,29 @@ class GameLauncher:
             last_played_match = re.search(r'"LastPlayed"\s+"(\d+)"', content)
             last_played = int(last_played_match.group(1)) if last_played_match else 0
 
+            size_match = re.search(r'"SizeOnDisk"\s+"(\d+)"', content)
+            size_bytes = int(size_match.group(1)) if size_match else 0
+
+            updated_match = re.search(r'"LastUpdated"\s+"(\d+)"', content)
+            last_updated = int(updated_match.group(1)) if updated_match else 0
+
             sgdb_config = self.config.get("steamgriddb", {})
-            cover_url = "" if sgdb_config.get("parallel_requests", True) else self.get_steam_cover_url(app_id)
+            sgdb_active = sgdb_config.get("enabled", False) and bool(sgdb_config.get("api_key", ""))
+            cdn_cover = f"https://cdn.cloudflare.steamstatic.com/steam/apps/{app_id}/header.jpg"
+            cover_url = "" if (sgdb_active and sgdb_config.get("parallel_requests", True)) else cdn_cover
 
             return {
                 "name": name,
                 "exec": f"steam steam://rungameid/{app_id}",
                 "image": cover_url,
+                "hero_image": f"https://cdn.cloudflare.steamstatic.com/steam/apps/{app_id}/library_hero.jpg",
                 "category": "steam",
                 "favorite": False,
                 "appid": app_id,
                 "last_played": last_played,
+                "playtime_minutes": 0,  # filled by scan_steam_library from localconfig.vdf
+                "size_bytes": size_bytes,
+                "last_updated": last_updated,
                 "source": "steam",
                 "logo": ""
             }
@@ -726,6 +867,7 @@ class GameLauncher:
         games = []
         if not self.config.get("steam", {}).get("enabled", True):
             return games
+        localconfig = self.load_steam_localconfig()
         steam_path = self.expand_path("~/.local/share/Steam")
         userdata_path = steam_path / "userdata"
         if not userdata_path.exists():
@@ -734,7 +876,15 @@ class GameLauncher:
             if user_dir.is_dir():
                 shortcuts_file = user_dir / "config" / "shortcuts.vdf"
                 if shortcuts_file.exists():
-                    games.extend(self.parse_vdf_shortcuts(shortcuts_file))
+                    shortcut_games = self.parse_vdf_shortcuts(shortcuts_file)
+                    for g in shortcut_games:
+                        appid = g.get("appid", "")
+                        lc = localconfig.get(str(appid), {})
+                        if lc.get("playtime_minutes", 0) > 0:
+                            g["playtime_minutes"] = lc["playtime_minutes"]
+                        if g.get("last_played", 0) == 0:
+                            g["last_played"] = lc.get("last_played", 0)
+                    games.extend(shortcut_games)
         return games
 
     # ── Desktop files ──────────────────────────────────────────────────────
@@ -1175,10 +1325,13 @@ class GameLauncher:
         wallust_colors = {}
         if self.config.get("appearance", {}).get("use_wallust", True):
             wallust_colors = self.load_wallust_colors()
+        state = self.load_state()
         return {
-            "games":  games,
-            "config": self.config,
-            "colors": wallust_colors
+            "games":       games,
+            "config":      self.config,
+            "colors":      wallust_colors,
+            "last_source": state.get("last_source", ""),
+            "last_game":   state.get("last_game", "")
         }
 
     def output_json(self):
@@ -1192,6 +1345,9 @@ def main():
         source = sys.argv[3] if len(sys.argv) > 3 else ""
         launcher = GameLauncher()
         launcher.toggle_favorite(name, source)
+    elif len(sys.argv) >= 4 and sys.argv[1] == "save-state":
+        launcher = GameLauncher()
+        launcher.save_state(sys.argv[2], sys.argv[3])
     else:
         launcher = GameLauncher()
         launcher.output_json()

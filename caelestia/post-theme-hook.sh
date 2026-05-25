@@ -30,3 +30,8 @@ print(f'{r:.8f} {g:.8f} {b:.8f} 0.2')
 ")
   sed -i "s/^visual_mark_color .*/visual_mark_color $_mc/" "$_sf"
 fi
+
+# Zen Browser: translate Caelestia colors and update Color Boost
+if [ -x "${HOME}/.config/zen-boosts/apply_zen_boost.py" ]; then
+  "${HOME}/.config/zen-boosts/apply_zen_boost.py"
+fi

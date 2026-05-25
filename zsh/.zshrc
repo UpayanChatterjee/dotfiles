@@ -27,6 +27,7 @@ export PNPM_HOME="${PNPM_HOME:-$HOME/.local/share/pnpm}"
 export NVM_DIR="$HOME/.nvm"
 export EDITOR=nvim
 export VISUAL=nvim
+# export BROWSER=vivaldi
 export BROWSER=zen
 export XDG_CURRENT_DESKTOP=KDE
 export GTK_USE_PORTAL=1
@@ -155,7 +156,7 @@ fi
 if [[ -d "$NVM_DIR" ]]; then
   # Create a shared loader function to avoid repetition
   _load_nvm() {
-    unset -f nvm node npm npx gemini geminicommit codex
+    unset -f nvm node npm npx gemini geminicommit codex antigravity-usage
     
     # Load NVM
     [[ -s "$NVM_DIR/nvm.sh" ]] && zsource "$NVM_DIR/nvm.sh"
@@ -173,6 +174,7 @@ if [[ -d "$NVM_DIR" ]]; then
   gemini() { _load_nvm; gemini "$@" }
   geminicommit() { _load_nvm; geminicommit "$@" }
   codex() { _load_nvm; codex "$@" }
+  antigravity-usage() { _load_nvm; antigravity-usage "@" }
 
 fi
 
@@ -281,7 +283,7 @@ alias update=gu-notify.exp
 alias zshrc="vim ~/.config/zsh/.zshrc"
 alias sgc=supergfxctl
 alias wall="sudo ryzenadj --stapm-limit=80000 --fast-limit=80000 --slow-limit=80000 --tctl-temp=96"
-alias battery="sudo ryzenadj --stapm-limit=15000 --fast-limit=15000 --slow-limit=15000"
+alias battery="sudo ryzenadj --stapm-limit=15000 --fast-limit=15000 --slow-limit=15000 --tctl-temp=47"
 # alias paru="~/.local/bin/paru-notify.exp"
 alias makex="chmod +x"
 alias lsg="ls | grep"

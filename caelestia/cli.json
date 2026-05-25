@@ -19,6 +19,38 @@
         ],
         "move": true
       }
+    },
+    "books": {
+      "readest": {
+        "enable": true,
+        "match": [
+          {
+            "class": "com.bilingify.readest"
+          },
+          {
+            "class": "readest"
+          }
+        ],
+        "command": [
+          "readest"
+        ],
+        "move": true
+      },
+      "calibre": {
+        "enable": false,
+        "match": [
+          {
+            "class": "calibre-gui"
+          },
+          {
+            "class": "calibre"
+          }
+        ],
+        "command": [
+          "calibre"
+        ],
+        "move": true
+      }
     }
   }
 }

@@ -155,6 +155,10 @@
             "showWindowsOnSpecialWorkspaces": false,
             "shown": 5,
             "specialWorkspaceIcons": [
+                {
+                    "icon": "menu_book",
+                    "name": "books"
+                }
             ],
             "windowIcons": [
                 {

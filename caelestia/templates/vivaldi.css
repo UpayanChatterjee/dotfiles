@@ -1,131 +1,350 @@
-/* Caelestia Vivaldi Theme - Vertical Layout & Legibility Fix */
+/* ═══════════════════════════════════════════════════════════
+   Caelestia Dynamic Theme — Vivaldi Browser
+   Template: ~/.config/caelestia/templates/vivaldi.css
+   Rendered: ~/.local/state/caelestia/theme/vivaldi.css
+   Colors:   Material You ({{ mode }}) from wallpaper
+   ═══════════════════════════════════════════════════════════ */
 
-/* --- CORE VARIABLE OVERRIDES --- */
+/* ── CORE VIVALDI VARIABLES ────────────────────────────── */
+/* !important required — Vivaldi sets these internally */
 #browser {
-  --colorBg: #{{ surface.hex }} !important;
-  --colorFg: #{{ onSurface.hex }} !important;
-  
-  --colorWindowBg: #{{ surfaceContainerLowest.hex }} !important;
-  --colorWindowFg: #{{ onSurface.hex }} !important;
-  
-  --colorAccentBg: #{{ primary.hex }} !important;
-  --colorAccentFg: #{{ onPrimary.hex }} !important;
-  
-  --colorHighlightBg: #{{ secondary.hex }} !important;
-  --colorHighlightFg: #{{ onSecondary.hex }} !important;
-  
-  --colorBorder: #{{ outlineVariant.hex }} !important;
-  
-  /* Uniform slightly rounded corners for vertical tabs */
-  --radius: 6px; 
+  --colorBg:               #{{ surface.hex }} !important;
+  --colorFg:               #{{ onSurface.hex }} !important;
+  --colorWindowBg:         #{{ surfaceContainerLow.hex }} !important;
+  --colorWindowFg:         #{{ onSurface.hex }} !important;
+  --colorAccentBg:         #{{ primary.hex }} !important;
+  --colorAccentFg:         #{{ onPrimary.hex }} !important;
+  --colorHighlightBg:      #{{ secondary.hex }} !important;
+  --colorHighlightFg:      #{{ onSecondary.hex }} !important;
+  --colorBorder:           #{{ outlineVariant.hex }} !important;
+  --colorBgAlpha:          #{{ surface.hex }}cc !important;
+  --colorAccentBgAlpha:    #{{ primary.hex }}33 !important;
+  --colorHighlightBgAlpha: #{{ secondary.hex }}33 !important;
+  --radius:      8px !important;
+  --radiusSmall: 4px !important;
 }
 
-/* --- 1. MAIN UI & HYPRLAND BLUR --- */
-#browser, 
-#main, 
+/* ── TRANSPARENCY ROOT ─────────────────────────────────── */
+/* Transparent root lets Wayland alpha channel reach the tab bar.
+   Web content keeps its own opaque background (the webpage itself),
+   so the wallpaper never bleeds through the browsing area. */
+#browser,
+#main,
 .app-inner {
   background-color: transparent !important;
 }
 
-#browser, #main, .app-inner, button, span, .title {
-  color: var(--colorFg) !important;
+#webview-container,
+.webview-container,
+#webpage-stack {
+  background-color: #{{ surface.hex }};
 }
 
-/* --- 2. THE SIDE PANEL --- */
-/* Specifically target the panel container to force Caelestia colors */
-#panels-container,
-#switch, 
-.panel-group,
-.panel {
-  background-color: var(--colorWindowBg) !important;
-  color: var(--colorFg) !important;
+/* ── TAB BAR ───────────────────────────────────────────── */
+#tabs-tabbar-container {
+  background-color: color-mix(in srgb, #{{ surfaceContainerLow.hex }}, transparent 50%) !important;
+  border-color: #{{ outlineVariant.hex }}80 !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
 }
 
-/* --- 3. VERTICAL TABS --- */
+/* Inactive tab */
 .tab-position .tab {
   background-color: transparent !important;
-  color: var(--colorFg) !important;
-  /* Add a transparent border to inactive tabs to prevent layout shift */
-  border: 1px solid transparent !important; 
-  border-radius: var(--radius) !important; 
+  color: #{{ onSurfaceVariant.hex }} !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--radius) !important;
+  transition: background-color 160ms ease, color 120ms ease, border-color 120ms ease;
 }
 
-/* Full, uniform border for the active tab */
+.tab-position .tab .favicon { opacity: 0.7; }
+
+/* Active tab */
 .tab-position .tab.active {
-  background-color: var(--colorBg) !important;
-  border: 1px solid var(--colorAccentBg) !important;
-  border-radius: var(--radius) !important; /* Uniformly rounded on all sides */
-  z-index: 2 !important; 
-}
-
-/* Gentle hover effect for inactive tabs */
-.tab-position .tab:hover:not(.active) {
   background-color: #{{ surfaceContainerHigh.hex }} !important;
+  color: #{{ onSurface.hex }} !important;
+  border-color: #{{ primary.hex }}55 !important;
 }
 
-/* --- 4. ADDRESS BAR & INPUTS --- */
+.tab-position .tab.active .favicon { opacity: 1; }
+
+/* Hovered inactive tab */
+.tab-position .tab:hover:not(.active) {
+  background-color: #{{ surfaceContainer.hex }} !important;
+  color: #{{ onSurface.hex }} !important;
+  border-color: #{{ outlineVariant.hex }} !important;
+}
+
+/* Active tab title */
+.tab.active .tab-title { font-weight: 500; }
+
+/* Tab close button */
+.tab .close {
+  color: #{{ onSurfaceVariant.hex }};
+  opacity: 0;
+  transition: opacity 140ms, color 140ms;
+}
+.tab:hover .close          { opacity: 0.6; }
+.tab .close:hover          { opacity: 1; color: #{{ error.hex }}; }
+
+/* Pinned active tab */
+.tab.pinned.active {
+  background-color: #{{ primaryContainer.hex }}55 !important;
+  border-color: #{{ primary.hex }}77 !important;
+}
+
+/* Tab group indicator line */
+.tab-group-indicator { background-color: #{{ primary.hex }} !important; }
+
+/* Flexible spacer (empty space in tab bar and panel) — no hover/active */
+.button-toolbar.toolbar-spacer-flexible,
+.button-toolbar.toolbar-spacer-flexible:hover,
+.button-toolbar.toolbar-spacer-flexible:active,
+.button-toolbar.toolbar-spacer-flexible .ToolbarButton-Button,
+.button-toolbar.toolbar-spacer-flexible .ToolbarButton-Button:hover,
+.button-toolbar.toolbar-spacer-flexible .ToolbarButton-Button:active {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  cursor: default !important;
+}
+
+/* ── TOOLBAR / ADDRESS BAR ─────────────────────────────── */
+.toolbar-mainbar,
+.toolbar-addressbar {
+  background-color: color-mix(in srgb, #{{ surfaceContainerLow.hex }}, transparent 35%) !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+}
+
+.UrlBar-AddressField,
 .toolbar-addressbar .addressfield,
 .toolbar-addressbar .searchfield {
-  background-color: #{{ surfaceContainerHigh.hex }} !important;
-  border: 1px solid #{{ outline.hex }} !important;
-  color: var(--colorFg) !important;
+  background-color: #{{ surfaceContainer.hex }} !important;
+  border: 1px solid #{{ outlineVariant.hex }} !important;
+  color: #{{ onSurface.hex }} !important;
   border-radius: var(--radius) !important;
+  transition: border-color 150ms, background-color 150ms;
 }
 
-.addressfield input, .searchfield input {
-  color: var(--colorFg) !important;
+.UrlBar-AddressField:focus-within,
+.toolbar-addressbar .addressfield:focus-within {
+  background-color: #{{ surfaceContainerHigh.hex }} !important;
+  border-color: #{{ primary.hex }} !important;
 }
 
+.addressfield input,
+.searchfield input,
+.UrlBar-AddressField input { color: #{{ onSurface.hex }} !important; }
+
+::placeholder,
 ::-webkit-input-placeholder {
   color: #{{ onSurfaceVariant.hex }} !important;
+  opacity: 0.65;
 }
 
-/* --- 5. MENUS & DROPDOWNS --- */
-.vivaldi-dropdown,
-.menu-item,
-.OmniDropdown,
-.OmniLinkItem {
-    background-color: var(--colorWindowBg) !important;
-    color: var(--colorFg) !important;
+/* Toolbar buttons */
+.toolbar button,
+.toolbar .button-toolbar {
+  color: #{{ onSurfaceVariant.hex }};
+  border-radius: var(--radius);
+  transition: background-color 120ms, color 120ms;
+}
+.toolbar button:hover,
+.toolbar .button-toolbar:hover {
+  background-color: #{{ surfaceContainerHigh.hex }};
+  color: #{{ onSurface.hex }};
+}
+.toolbar button:active,
+.toolbar .button-toolbar:active {
+  background-color: #{{ surfaceContainerHighest.hex }};
+  color: #{{ primary.hex }};
 }
 
-/* OMNIBOX HIGHLIGHT FIX */
-/* Updated Vivaldi Omnibox Classes */
+/* Security badge tinting */
+.UrlBar-SecurityBadge--Secure   svg { color: #{{ primary.hex }}; }
+.UrlBar-SecurityBadge--Insecure svg { color: #{{ error.hex }}; }
+
+/* ── PANEL / SIDEBAR ───────────────────────────────────── */
+#panels-container,
+.panel-group,
+.panel {
+  background-color: #{{ surfaceContainerLowest.hex }} !important;
+  color: #{{ onSurface.hex }} !important;
+}
+
+#switch {
+  background-color: #{{ surfaceContainerLow.hex }} !important;
+  border-color: #{{ outlineVariant.hex }} !important;
+}
+
+#switch .button-toolbar {
+  color: #{{ onSurfaceVariant.hex }};
+  border-radius: var(--radius);
+  transition: background-color 120ms, color 120ms;
+}
+#switch .button-toolbar:hover {
+  background-color: #{{ surfaceContainerHigh.hex }};
+  color: #{{ onSurface.hex }};
+}
+#switch .button-toolbar.active,
+#switch .button-toolbar[aria-checked="true"] {
+  color: #{{ primary.hex }};
+  background-color: #{{ primaryContainer.hex }}44;
+}
+
+
+/* ── OMNIBOX / ADDRESS DROPDOWN ────────────────────────── */
+.OmniDropdown {
+  background-color: #{{ surfaceContainerLow.hex }} !important;
+  border: 1px solid #{{ outlineVariant.hex }} !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 8px 32px #{{ shadow.hex }}80 !important;
+  color: #{{ onSurface.hex }} !important;
+}
+
+.OmniLinkItem,
+.omni-clickable {
+  color: #{{ onSurface.hex }} !important;
+  border-radius: var(--radiusSmall);
+  transition: background-color 100ms;
+}
+
 .OmniLinkItem:hover,
 .OmniLinkItem[data-selected="true"],
 .omni-clickable:hover,
 .omni-clickable.is-selected {
-    background-color: var(--colorHighlightBg) !important;
-    color: var(--colorHighlightFg) !important;
+  background-color: #{{ surfaceContainerHigh.hex }} !important;
+  color: #{{ onSurface.hex }} !important;
 }
 
-/* Force contrast on all nested text/labels */
 .OmniLinkItem:hover *,
 .OmniLinkItem[data-selected="true"] *,
 .omni-clickable:hover *,
-.omni-clickable.is-selected * {
-    color: var(--colorHighlightFg) !important;
+.omni-clickable.is-selected * { color: inherit !important; }
+
+/* ── CONTEXT MENUS ─────────────────────────────────────── */
+.context-menu,
+.vivaldi-dropdown {
+  background-color: #{{ surfaceContainerLow.hex }} !important;
+  border: 1px solid #{{ outlineVariant.hex }} !important;
+  border-radius: var(--radius) !important;
+  box-shadow: 0 8px 32px #{{ shadow.hex }}80 !important;
+  color: #{{ onSurface.hex }} !important;
 }
 
-/* Remove debug border */
-#browser { border: none !important; }
+.context-menu .menuitem,
+.menu-item {
+  color: #{{ onSurface.hex }} !important;
+  border-radius: var(--radiusSmall);
+  transition: background-color 100ms;
+}
 
-/* --- 6. START PAGE (SPEED DIAL) --- */
-/* Strip Vivaldi default gray overlay and apply deepest theme color */
+.context-menu .menuitem:hover,
+.menu-item:hover {
+  background-color: #{{ surfaceContainerHigh.hex }} !important;
+  color: #{{ onSurface.hex }} !important;
+}
+
+.context-menu .menuitem.destructive:hover,
+.menu-item.destructive:hover {
+  background-color: #{{ errorContainer.hex }}55 !important;
+  color: #{{ error.hex }} !important;
+}
+
+.menu-separator,
+.context-menu hr { background-color: #{{ outlineVariant.hex }} !important; }
+
+/* ── STATUS BAR ────────────────────────────────────────── */
+.toolbar-statusbar,
+#status-bar {
+  background-color: #{{ surfaceContainerLow.hex }} !important;
+  border-top: 1px solid #{{ outlineVariant.hex }} !important;
+  color: #{{ onSurfaceVariant.hex }} !important;
+}
+
+/* ── START PAGE / SPEED DIAL ───────────────────────────── */
 .startpage,
 .startpage .startpage-bg-image {
   background-color: #{{ background.hex }} !important;
-  background-image: none !important; 
+  background-image: none !important;
 }
 
-/* Ensure the Speed Dial folders/buttons also match */
+.startpage h2,
+.startpage .speedDial-label,
+.startpage .sd-group-label {
+  color: #{{ onSurfaceVariant.hex }};
+}
+
 .dial {
-  background-color: #{{ surfaceContainerHigh.hex }} !important;
-  border: 1px solid #{{ outline.hex }} !important;
+  background-color: #{{ surfaceContainer.hex }} !important;
+  border: 1px solid #{{ outlineVariant.hex }} !important;
   border-radius: var(--radius) !important;
+  color: #{{ onSurface.hex }};
+  transition: background-color 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
 
 .dial:hover {
-  background-color: #{{ surfaceContainerHighest.hex }} !important;
+  background-color: #{{ surfaceContainerHigh.hex }} !important;
   border-color: #{{ primary.hex }} !important;
+  transform: translateY(-2px);
+}
+
+.dial .dial-title { color: #{{ onSurface.hex }}; }
+
+.dial.folder {
+  background-color: #{{ surfaceContainerLow.hex }} !important;
+}
+
+/* ── FIND IN PAGE ──────────────────────────────────────── */
+.find-in-page {
+  background-color: #{{ surfaceContainerLow.hex }} !important;
+  border: 1px solid #{{ outlineVariant.hex }} !important;
+  border-radius: var(--radius) !important;
+  color: #{{ onSurface.hex }} !important;
+  box-shadow: 0 4px 16px #{{ shadow.hex }}60 !important;
+}
+
+.find-in-page input {
+  background-color: #{{ surfaceContainer.hex }} !important;
+  color: #{{ onSurface.hex }} !important;
+  border: 1px solid #{{ outline.hex }} !important;
+  border-radius: var(--radiusSmall) !important;
+}
+
+.find-in-page .match-count { color: #{{ primary.hex }}; }
+
+/* ── SCROLLBARS ────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 5px; height: 5px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  {
+  background-color: #{{ outlineVariant.hex }};
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover { background-color: #{{ outline.hex }}; }
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* ── TEXT SELECTION ────────────────────────────────────── */
+::selection {
+  background-color: #{{ primary.hex }}40;
+  color: #{{ onSurface.hex }};
+}
+
+/* ── NOTIFICATIONS ─────────────────────────────────────── */
+.notif-container {
+  background-color: #{{ surfaceContainerHigh.hex }} !important;
+  border: 1px solid #{{ outlineVariant.hex }} !important;
+  border-radius: var(--radius) !important;
+  color: #{{ onSurface.hex }} !important;
+}
+
+/* ── MOD INTEGRATIONS ──────────────────────────────────── */
+.tab-strip .separator .label { color: #{{ onSurfaceVariant.hex }}; }
+
+:root {
+  --caelestia-accent:    #{{ primary.hex }};
+  --caelestia-accent-fg: #{{ onPrimary.hex }};
+  --caelestia-surface:   #{{ surfaceContainerHigh.hex }};
+  --caelestia-fg:        #{{ onSurface.hex }};
+  --caelestia-muted:     #{{ onSurfaceVariant.hex }};
+  --caelestia-error:     #{{ error.hex }};
 }

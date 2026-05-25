@@ -7,6 +7,7 @@ import Quickshell.Io
 
 Rectangle {
     id: launcher
+    I18n { id: i18n }
 
     required property var config
     property var gamesData: []
@@ -25,6 +26,9 @@ Rectangle {
     property int spacing: config?.display?.spacing ?? 20
 
     property int sidebarWidth: 68
+    property bool bigPictureMode: false
+    property int screenW: 1920
+    property int screenH: 1080
     property int favoriteCount: {
         var n = 0
         for (var i = 0; i < gamesData.length; i++)
@@ -32,8 +36,8 @@ Rectangle {
         return n
     }
 
-    width: sidebarWidth + spacing + (itemWidth * gridColumns) + (spacing * (gridColumns + 1))
-    height: (itemHeight * gridRows) + (spacing * (gridRows + 1)) + 60 + 44 + spacing
+    width: bigPictureMode ? screenW : sidebarWidth + spacing + (itemWidth * gridColumns) + (spacing * (gridColumns + 1))
+    height: bigPictureMode ? screenH : (itemHeight * gridRows) + (spacing * (gridRows + 1)) + 60 + 44 + spacing
 
     focus: true
     activeFocusOnTab: true
@@ -118,6 +122,11 @@ Rectangle {
             navigateDown(); event.accepted = true
         } else if (event.key === Qt.Key_F && (event.modifiers & Qt.AltModifier) && !searchField.activeFocus) {
             toggleFavorite(null); event.accepted = true
+        } else if (event.key === Qt.Key_B && (event.modifiers & Qt.AltModifier)) {
+            launcher.bigPictureMode = !launcher.bigPictureMode
+            if (launcher.bigPictureMode) bpView.forceActiveFocus()
+            else launcher.forceActiveFocus()
+            event.accepted = true
         } else if (event.key === Qt.Key_Backspace && !searchField.activeFocus) {
             if (searchText.length > 0) {
                 searchText = searchText.slice(0, -1)
@@ -135,7 +144,27 @@ Rectangle {
     Keys.onEscapePressed: Qt.quit()
 
     onSearchTextChanged:   filterGames()
-    onSelectedSourceChanged: filterGames()
+    readonly property string _backendPath: Qt.resolvedUrl("service/backend.py").toString().replace("file://", "")
+
+    onSelectedSourceChanged: {
+        filterGames()
+        if (config?.behavior?.remember_source ?? false) {
+            saveStateProcess.command = ["python3", _backendPath, "save-state", "last_source", selectedSource]
+            saveStateProcess.running = true
+        }
+    }
+
+    onSelectedIndexChanged: {
+        if (config?.behavior?.remember_source ?? false) {
+            const game = filteredGames[selectedIndex]
+            if (game) {
+                const k = game.appid ? String(game.appid) + ":" + (game.source || "")
+                                     : game.name + ":" + (game.source || "")
+                saveGameProcess.command = ["python3", _backendPath, "save-state", "last_game", k]
+                saveGameProcess.running = true
+            }
+        }
+    }
 
     signal closeRequested()
 
@@ -151,6 +180,35 @@ Rectangle {
                 gamesData = result.games || []
                 colors = result.colors || {}
                 filterGames()
+
+                const behavior = result.config?.behavior || {}
+                const rememberSource = behavior.remember_source ?? false
+                const defaultIdx = Math.max(0, behavior.default_source_index ?? 0)
+
+                if (rememberSource && result.last_source) {
+                    selectedSource = result.last_source
+                } else if (defaultIdx > 0) {
+                    const seen = {}, sources = []
+                    for (const g of result.games || []) {
+                        const s = g.source || ""
+                        if (s && !seen[s]) { seen[s] = true; sources.push(s) }
+                    }
+                    selectedSource = sources[defaultIdx - 1] || "all"
+                }
+
+                if (rememberSource && result.last_game) {
+                    const games = result.games || []
+                    const src = selectedSource
+                    let filtered = games.slice()
+                    if (src === "favorites") filtered = filtered.filter(g => g.favorite)
+                    else if (src !== "all") filtered = filtered.filter(g => (g.source || "") === src)
+                    const idx = filtered.findIndex(g => {
+                        const k = g.appid ? String(g.appid) + ":" + (g.source || "")
+                                          : g.name + ":" + (g.source || "")
+                        return k === result.last_game
+                    })
+                    if (idx >= 0) selectedIndex = idx
+                }
             } catch (e) {
                 console.error("Failed to parse games data:", e)
             }
@@ -215,6 +273,8 @@ Rectangle {
             if (filteredGames.length === 0) return
             game = filteredGames[selectedIndex]
         }
+        var gameName   = game.name
+        var gameSource = game.source || ""
         var newFav = !game.favorite
         // Optimistic local update
         var updated = []
@@ -237,6 +297,11 @@ Rectangle {
             if (!stillHasFav) selectedSource = "all"
         }
         filterGames()
+        // Follow the game to its new position after reorder (favorites first, etc.)
+        var newIdx = filteredGames.findIndex(function(g) {
+            return g.name === gameName && (g.source || "") === gameSource
+        })
+        if (newIdx >= 0) selectedIndex = newIdx
         // Persist to file
         toggleFavoriteProcess.command = [
             "python3",
@@ -259,13 +324,24 @@ Rectangle {
         stdout: SplitParser { onRead: data => {} }
     }
 
+    Process {
+        id: saveStateProcess
+        running: false
+    }
+
+    Process {
+        id: saveGameProcess
+        running: false
+    }
+
     function launchGame(game, cardItem) {
         launchProcess.command = ["sh", "-c", "setsid " + game.exec + " &"]
         launchProcess.running = true
         launcher.enabled = false
-        if (config?.behavior?.close_on_launch ?? true) {
+        if (launcher.bigPictureMode) {
+            bpView.showLaunch(game.logo || "", game.name || "")
+        } else if (config?.behavior?.close_on_launch ?? true) {
             launchOverlay.colors = colors
-            // Récupère la position de la carte dans le repère du launcher
             var pos = cardItem ? cardItem.mapToItem(launcher, 0, 0) : null
             launchOverlay.show(
                 game.image || "",
@@ -316,6 +392,11 @@ Rectangle {
                     break
                 case "toggle":
                     launcher.visible = !launcher.visible
+                    break
+                case "bigpicture":
+                    launcher.bigPictureMode = !launcher.bigPictureMode
+                    if (launcher.bigPictureMode) bpView.forceActiveFocus()
+                    else launcher.forceActiveFocus()
                     break
                 case "up":
                     navigateSource("up")
@@ -384,7 +465,7 @@ Rectangle {
                         }
                         Text {
                             anchors.horizontalCenter: parent.horizontalCenter
-                            text: "All"
+                            text: i18n.t("all")
                             font.pixelSize: 9
                             font.bold: selectedSource === "all"
                             font.family: "Open Sans Regular"
@@ -451,7 +532,7 @@ Rectangle {
                         }
                         Text {
                             anchors.horizontalCenter: parent.horizontalCenter
-                            text: "Favs"
+                            text: i18n.t("favs")
                             font.pixelSize: 9
                             font.bold: launcher.selectedSource === "favorites"
                             font.family: "Open Sans Regular"
@@ -618,7 +699,7 @@ Rectangle {
                     anchors.right: clearBtn.left; anchors.rightMargin: 4
                     anchors.verticalCenter: parent.verticalCenter
                     height: parent.height - 4
-                    placeholderText: "Search for a game…"
+                    placeholderText: i18n.t("search")
                     placeholderTextColor: Qt.rgba(1,1,1,0.3)
                     color: colors.foreground || "#ffffff"
                     font.pixelSize: 14
@@ -633,9 +714,38 @@ Rectangle {
                     onTextChanged: launcher.searchText = text
                 }
 
+                // Big Picture toggle button
+                Rectangle {
+                    id: bigPictureBtn
+                    anchors.right: parent.right; anchors.rightMargin: 8
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 32; height: 32; radius: 16
+                    color: launcher.bigPictureMode
+                        ? (colors.color5 || "#73ff00")
+                        : (bpMouse.containsMouse ? Qt.rgba(1,1,1,0.18) : Qt.rgba(1,1,1,0.08))
+                    border.color: launcher.bigPictureMode ? "transparent" : Qt.rgba(1,1,1,0.2)
+                    border.width: 1
+                    Behavior on color { ColorAnimation { duration: 150 } }
+                    Text {
+                        anchors.centerIn: parent
+                        text: "\uf26c"
+                        font.family: "Font Awesome 7 Free Solid"; font.pixelSize: 14
+                        color: launcher.bigPictureMode ? "#1a1a1a" : (colors.foreground || "#ffffff")
+                    }
+                    MouseArea {
+                        id: bpMouse
+                        anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            launcher.bigPictureMode = !launcher.bigPictureMode
+                            if (launcher.bigPictureMode) bpView.forceActiveFocus()
+                            else launcher.forceActiveFocus()
+                        }
+                    }
+                }
+
                 Rectangle {
                     id: clearBtn
-                    anchors.right: parent.right; anchors.rightMargin: 8
+                    anchors.right: bigPictureBtn.left; anchors.rightMargin: 4
                     anchors.verticalCenter: parent.verticalCenter
                     width: 26; height: 26; radius: 13
                     visible: launcher.searchText !== ""
@@ -707,8 +817,8 @@ Rectangle {
                         Column {
                             anchors.centerIn: parent; spacing: 16
                             Text { anchors.horizontalCenter: parent.horizontalCenter; text: "🎮"; font.pixelSize: 64; opacity: 0.3 }
-                            Text { anchors.horizontalCenter: parent.horizontalCenter; text: "Aucun jeu trouvé"; font.pixelSize: 18; color: colors.foreground||"#ffffff"; opacity: 0.7 }
-                            Text { anchors.horizontalCenter: parent.horizontalCenter; text: launcher.searchText !== "" ? "Essaie un autre terme" : "Aucun jeu dans cette source"; font.pixelSize: 14; color: colors.foreground||"#ffffff"; opacity: 0.5 }
+                            Text { anchors.horizontalCenter: parent.horizontalCenter; text: i18n.t("no_games"); font.pixelSize: 18; color: colors.foreground||"#ffffff"; opacity: 0.7 }
+                            Text { anchors.horizontalCenter: parent.horizontalCenter; text: launcher.searchText !== "" ? i18n.t("try_other") : i18n.t("no_games_source"); font.pixelSize: 14; color: colors.foreground||"#ffffff"; opacity: 0.5 }
                         }
                     }
                 }
@@ -731,7 +841,7 @@ Rectangle {
                         }
                     }
                     Text { anchors.right: parent.right; anchors.verticalCenter: parent.verticalCenter; text: filteredGames.length > 0 ? (selectedIndex + 1) + " / " + filteredGames.length : "0"; font.pixelSize: 12; color: colors.foreground||"#ffffff"; opacity: 0.6 }
-                    Text { anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter; text: "← → Navigate | ⏎ Launch | 'ALT+F' Favorite | Esc Close"; font.pixelSize: 11; color: colors.foreground||'#15ff00'; opacity: 0.5 }
+                    Text { anchors.left: parent.left; anchors.verticalCenter: parent.verticalCenter; text: i18n.t("help_horiz"); font.pixelSize: 11; color: colors.foreground||'#15ff00'; opacity: 0.5 }
                 }
             }
 
@@ -813,6 +923,29 @@ Rectangle {
                 }
             }
         }
+    }
+
+    // ── BIG PICTURE OVERLAY ──────────────────────────────────────────────────
+    BigPictureView {
+        id: bpView
+        anchors.fill: parent
+        visible: launcher.bigPictureMode
+        filteredGames: launcher.filteredGames
+        colors: launcher.colors
+        selectedIndex: launcher.selectedIndex
+        selectedSource: launcher.selectedSource
+        favoriteCount: launcher.favoriteCount
+        availableSources: launcher.availableSources
+
+        onExitRequested: {
+            launcher.bigPictureMode = false
+            launcher.forceActiveFocus()
+        }
+        onLaunchRequested: (game) => launchGame(game, null)
+        onFavoriteToggleRequested: (game) => toggleFavorite(game)
+        onSourceSelected: (src) => { launcher.selectedSource = src }
+        onIndexChanged: (idx) => { launcher.selectedIndex = idx }
+        onLaunchDone: Qt.quit()
     }
 
     // Entrance animation

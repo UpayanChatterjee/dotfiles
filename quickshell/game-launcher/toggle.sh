@@ -13,3 +13,4 @@ fi
 
 # Launch the game launcher
 quickshell -c "$LAUNCHER_DIR" &
+
