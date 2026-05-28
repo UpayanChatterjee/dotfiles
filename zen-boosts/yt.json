@@ -1,1 +1,26 @@
-{"boostName":"yt","dotAngleDeg":25.588235294117652,"dotPos":{"x":0.5901562464429645,"y":0.17684043998774313},"dotDistance":1,"secondaryDotAngleDegDelta":22.41176470588239,"secondaryDotPos":{"x":0.7065544249717586,"y":0.23562239216494496},"brightness":0.7342047930283224,"saturation":0.2754098360655737,"contrast":0.75,"fontFamily":"Inter Display","enableColorBoost":true,"smartInvert":false,"autoTheme":false,"textCaseOverride":"none","sizeOverride":1,"zapSelectors":[],"changeWasMade":true,"customCSS":""}
+{
+  "boostName": "yt",
+  "dotAngleDeg": 357.3333333333333,
+  "dotPos": {
+    "x": 0.4264320215849583,
+    "y": 0.1726653049981961
+  },
+  "dotDistance": 1.0,
+  "secondaryDotAngleDegDelta": 317.0666666666667,
+  "secondaryDotPos": {
+    "x": 0.2231744213276322,
+    "y": 0.3104535703509329
+  },
+  "brightness": 0.8235294117647058,
+  "saturation": 0.27777777777777757,
+  "contrast": 0.75,
+  "fontFamily": "Inter Display",
+  "enableColorBoost": true,
+  "smartInvert": false,
+  "autoTheme": false,
+  "textCaseOverride": "none",
+  "sizeOverride": 1,
+  "zapSelectors": [],
+  "changeWasMade": true,
+  "customCSS": ""
+}

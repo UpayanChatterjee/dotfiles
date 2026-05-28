@@ -1,5 +1,5 @@
 {
-  "boostName": "chatgpt",
+  "boostName": "x",
   "dotAngleDeg": 357.3333333333333,
   "dotPos": {
     "x": 0.4264320215849583,
@@ -13,14 +13,14 @@
   },
   "brightness": 0.8235294117647058,
   "saturation": 0.27777777777777757,
-  "contrast": 0.75,
-  "fontFamily": "JetBrainsMono Nerd Font",
+  "contrast": "0.32",
+  "fontFamily": "Inter Display",
   "enableColorBoost": true,
   "smartInvert": false,
   "autoTheme": false,
   "textCaseOverride": "none",
   "sizeOverride": 1,
   "zapSelectors": [],
-  "changeWasMade": true,
-  "customCSS": ""
+  "customCSS": "",
+  "changeWasMade": true
 }

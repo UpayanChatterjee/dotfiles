@@ -1,5 +1,5 @@
 {
-  "boostName": "chatgpt",
+  "boostName": "keep",
   "dotAngleDeg": 357.3333333333333,
   "dotPos": {
     "x": 0.4264320215849583,
@@ -21,6 +21,6 @@
   "textCaseOverride": "none",
   "sizeOverride": 1,
   "zapSelectors": [],
-  "changeWasMade": true,
-  "customCSS": ""
+  "customCSS": "",
+  "changeWasMade": true
 }
