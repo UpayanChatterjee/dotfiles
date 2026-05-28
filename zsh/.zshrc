@@ -283,7 +283,7 @@ alias update=gu-notify.exp
 alias zshrc="vim ~/.config/zsh/.zshrc"
 alias sgc=supergfxctl
 alias wall="sudo ryzenadj --stapm-limit=80000 --fast-limit=80000 --slow-limit=80000 --tctl-temp=96"
-alias battery="sudo ryzenadj --stapm-limit=15000 --fast-limit=15000 --slow-limit=15000 --tctl-temp=47"
+alias battery="sudo ryzenadj --stapm-limit=20000 --fast-limit=20000 --slow-limit=20000"
 # alias paru="~/.local/bin/paru-notify.exp"
 alias makex="chmod +x"
 alias lsg="ls | grep"
@@ -291,6 +291,7 @@ alias gmni=gemini
 alias oc=opencode
 alias se=sudoedit
 alias webcam="mpv av://v4l2:/dev/video0"
+alias fixbt="sudo sh -c 'echo 1 > /sys/bus/usb/devices/3-0:1.0/usb3-port3/disable && sleep 1 && echo 0 > /sys/bus/usb/devices/3-0:1.0/usb3-port3/disable'"
 
 
 # ── 12. Functions ───────────────────────────────────────────────────
