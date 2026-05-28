@@ -134,3 +134,31 @@ mpv/scripts/uosc/main.lua
 .cache_ggshield
 systemmonitorrc
 antigravity-usage/**
+# Ignore AI/tool-generated metadata directories at any depth
+**/.deepseek/
+**/.claude/
+**/.antigravity/
+**/.gemini/
+# Theme files
+**/caelestia.theme.css
+qtengine/caelestia.colors
+spicetify/Themes/caelestia/color.ini
+zed/themes/caelestia.json
+
+# App-specific configs and state
+Trolltech.conf
+cava/config
+com.bilingify.readest/
+fuzzel/fuzzel.ini
+gtk-3.0/
+gtkrc
+gtkrc-2.0
+htop/htoprc
+kdeglobals
+nvtop/nvtop.colors
+
+# Nested repository files
+quickshell/game-launcher/.gitignore
+
+deepseek/**
+glazepkg/**
