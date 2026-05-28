@@ -9,6 +9,7 @@ Rectangle {
 
     property string gameName: "Game"
     property string gameImage: ""
+    property string gameImageAnimated: ""
     property string gameCategory: ""
     property string gameSource: ""  // steam, manual, config
     property bool isFavorite: false
@@ -17,14 +18,46 @@ Rectangle {
     property int lastPlayed: 0  // Unix timestamp
     property real glowStrength: 0.8
     property real glowBlur: 12
-    property bool isWebM: gameImage.toLowerCase().endsWith(".webm")
-    property bool isAnimatedWebP: gameImage.toLowerCase().endsWith(".webp")
+    property bool hasLocalAnimated: gameImageAnimated !== "" &&
+        (gameImageAnimated.startsWith("file://") || gameImageAnimated.startsWith("/"))
+    property string effectiveImage: hasLocalAnimated ? gameImageAnimated : gameImage
+    property bool isWebM: effectiveImage.toLowerCase().endsWith(".webm")
+    property bool isAnimatedWebP: effectiveImage.toLowerCase().endsWith(".webp")
     property bool isAnimated: isWebM || isAnimatedWebP
     property real glowOpacity: 0.8
+
+    // Source WebM gérée manuellement pour contrôler le cycle vie RAM/réseau
+    property string _webmSource: ""
 
     signal clicked()
     signal launchRequested()
     signal favoriteToggled()
+
+    // Libère la RAM WebM après 5s d'inactivité — navigation rapide = source encore chargée
+    Timer {
+        id: clearVideoTimer
+        interval: 5000
+        running: false
+        onTriggered: {
+            if (!card.isSelected) {
+                videoPlayer.stop()
+                card._webmSource = ""
+            }
+        }
+    }
+
+    onIsSelectedChanged: {
+        if (card.isWebM) {
+            if (isSelected) {
+                clearVideoTimer.stop()
+                if (card._webmSource === "") card._webmSource = card.effectiveImage
+                videoPlayer.play()
+            } else {
+                videoPlayer.pause()
+                clearVideoTimer.start()
+            }
+        }
+    }
 
     width: 220
     height: 300
@@ -107,14 +140,13 @@ Rectangle {
             color: "#2a2a2a"
             clip: true
 
-            // Thumbnail statique pour WebP non sélectionné (1er frame uniquement, ~5MB vs centaines de MB)
-            // Sibling direct → clippé par la cover Rectangle (clip:true + radius) sans layer propre
+            // Thumbnail statique WebP — visible aussi pendant le chargement de l'animé
             Image {
                 id: thumbnailImage
                 anchors.fill: parent
                 anchors.margins: 2
-                visible: card.isAnimatedWebP && !card.isSelected
-                source: visible ? gameImage : ""
+                visible: card.isAnimatedWebP && (!card.isSelected || animCover.status !== Image.Ready)
+                source: visible ? card.effectiveImage : ""
                 fillMode: Image.PreserveAspectCrop
                 asynchronous: true
                 cache: true
@@ -137,19 +169,17 @@ Rectangle {
                 }
             }
 
-            // Image statique ou WebP animé (sélectionné seulement pour les WebP)
-            AnimatedImage {
-                id: coverImage
+            // Cover statique (JPEG/PNG) — Image simple, pas d'AnimatedImage pour éviter les warnings
+            Image {
+                id: staticCover
                 anchors.fill: parent
                 anchors.margins: 2
-                visible: !card.isAnimated || card.isSelected
-                source: card.isWebM ? "" : (card.isAnimatedWebP && !card.isSelected ? "" : gameImage)
+                visible: !card.isAnimated
+                source: visible ? card.effectiveImage : ""
                 fillMode: Image.PreserveAspectCrop
                 asynchronous: true
                 smooth: true
-                cache: false
-                playing: isSelected
-                paused: !isSelected
+                cache: true
 
                 layer.enabled: true
                 layer.effect: MultiEffect {
@@ -157,18 +187,17 @@ Rectangle {
                     maskThresholdMin: 0.5
                     maskSource: ShaderEffectSource {
                         sourceItem: Rectangle {
-                            width: coverImage.width
-                            height: coverImage.height
+                            width: staticCover.width
+                            height: staticCover.height
                             radius: card.radius
                         }
                     }
                 }
 
-                // Fallback initiales image statique manquante
+                // Fallback initiales si image absente
                 Rectangle {
                     anchors.fill: parent
-                    visible: !card.isAnimated &&
-                             (coverImage.status === Image.Error || coverImage.status === Image.Null)
+                    visible: staticCover.status === Image.Error || staticCover.status === Image.Null
                     color: gameColors.color8 || "#333333"
                     Text {
                         anchors.centerIn: parent
@@ -179,6 +208,34 @@ Rectangle {
                         font.family: "Open Sans Regular"
                         color: gameColors.foreground || "#ffffff"
                         opacity: 0.5
+                    }
+                }
+            }
+
+            // WebP animé — AnimatedImage uniquement pour ce format, seulement quand sélectionné
+            AnimatedImage {
+                id: animCover
+                anchors.fill: parent
+                anchors.margins: 2
+                visible: card.isAnimatedWebP && card.isSelected
+                source: visible ? card.effectiveImage : ""
+                fillMode: Image.PreserveAspectCrop
+                asynchronous: true
+                smooth: true
+                cache: false
+                playing: true
+                paused: false
+
+                layer.enabled: true
+                layer.effect: MultiEffect {
+                    maskEnabled: true
+                    maskThresholdMin: 0.5
+                    maskSource: ShaderEffectSource {
+                        sourceItem: Rectangle {
+                            width: animCover.width
+                            height: animCover.height
+                            radius: card.radius
+                        }
                     }
                 }
             }
@@ -205,10 +262,9 @@ Rectangle {
 
             MediaPlayer {
                 id: videoPlayer
-                source: (card.isWebM && card.isSelected) ? gameImage : ""
+                source: card._webmSource
                 videoOutput: videoOutput
                 loops: MediaPlayer.Infinite
-                onSourceChanged: if (source !== "") play()
             }
 
             // Status badges (NOUVEAU/RÉCENT)
