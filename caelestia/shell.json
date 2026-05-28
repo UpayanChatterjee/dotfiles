@@ -138,6 +138,10 @@
             "hiddenIcons": [
             ],
             "iconSubs": [
+                {
+                    "id": "xdm-app",
+                    "image": "root:/assets/xdm.png"
+                }
             ],
             "recolour": true
         },

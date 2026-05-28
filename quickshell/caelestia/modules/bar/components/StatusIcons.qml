@@ -277,46 +277,43 @@ StyledRect {
             sourceComponent: ColumnLayout {
                 spacing: 0
 
-                // 1. Percentage Text
-                StyledText {
-                    Layout.alignment: Qt.AlignHCenter
+                // Charging indicator
+                MaterialIcon {
                     visible: UPower.displayDevice && UPower.displayDevice.isLaptopBattery
-
-                    text: (UPower.displayDevice ? Math.floor(UPower.displayDevice.percentage * 100) : 0) + "%"
-
+                             && [UPowerDeviceState.Charging, UPowerDeviceState.FullyCharged, UPowerDeviceState.PendingCharge].includes(UPower.displayDevice.state)
+                    text: "bolt"
                     font.pixelSize: 10
-                    font.bold: true
-
                     color: !UPower.onBattery || (UPower.displayDevice && UPower.displayDevice.percentage > 0.2) ? root.colour : Colours.palette.m3error
+                    fill: 1
+                    Layout.alignment: Qt.AlignHCenter
                 }
 
-                // 2. Battery Icon
-                MaterialIcon {
+                // Battery percentage
+                StyledText {
+                    visible: UPower.displayDevice && UPower.displayDevice.isLaptopBattery
+                    text: (UPower.displayDevice ? Math.floor(UPower.displayDevice.percentage * 100) : 0)
+                    font.pixelSize: 13
+                    font.bold: true
+                    color: !UPower.onBattery || (UPower.displayDevice && UPower.displayDevice.percentage > 0.2) ? root.colour : Colours.palette.m3error
                     Layout.alignment: Qt.AlignHCenter
+                }
+
+                // Fallback icon for non-laptop / no battery
+                MaterialIcon {
+                    visible: !UPower.displayDevice || !UPower.displayDevice.isLaptopBattery
                     animate: true
                     text: {
                         if (!UPower.displayDevice)
                             return "battery_unknown";
-
-                        if (!UPower.displayDevice.isLaptopBattery) {
-                            if (PowerProfiles.profile === PowerProfile.PowerSaver)
-                                return "energy_savings_leaf";
-                            if (PowerProfiles.profile === PowerProfile.Performance)
-                                return "rocket_launch";
-                            return "balance";
-                        }
-
-                        const perc = UPower.displayDevice.percentage;
-                        const charging = [UPowerDeviceState.Charging, UPowerDeviceState.FullyCharged, UPowerDeviceState.PendingCharge].includes(UPower.displayDevice.state);
-                        if (perc === 1)
-                            return charging ? "battery_charging_full" : "battery_full";
-                        let level = Math.floor(perc * 7);
-                        if (charging && (level === 4 || level === 1))
-                            level--;
-                        return charging ? `battery_charging_${(level + 3) * 10}` : `battery_${level}_bar`;
+                        if (PowerProfiles.profile === PowerProfile.PowerSaver)
+                            return "energy_savings_leaf";
+                        if (PowerProfiles.profile === PowerProfile.Performance)
+                            return "rocket_launch";
+                        return "balance";
                     }
-                    color: !UPower.onBattery || (UPower.displayDevice && UPower.displayDevice.percentage > 0.2) ? root.colour : Colours.palette.m3error
+                    color: root.colour
                     fill: 1
+                    Layout.alignment: Qt.AlignHCenter
                 }
             }
         }
