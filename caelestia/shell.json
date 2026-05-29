@@ -2,7 +2,7 @@
     "appearance": {
         "anim": {
             "durations": {
-                "scale": 0.7373284901919867
+                "scale": 0.5246087228714524
             }
         },
         "font": {
@@ -398,7 +398,7 @@
                 "command": [
                     "sh",
                     "-c",
-                    "hyprctl dispatch exit"
+                    "hyprctl dispatch 'hl.dsp.exit()'"
                 ],
                 "dangerous": true,
                 "description": "Log out of the current session",
@@ -524,7 +524,7 @@
             "logout": [
                 "sh",
                 "-c",
-                "hyprctl dispatch exit"
+                "hyprctl dispatch 'hl.dsp.exit()'"
             ],
             "reboot": [
                 "systemctl",
