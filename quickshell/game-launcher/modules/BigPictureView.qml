@@ -15,6 +15,7 @@ Item {
     property var availableSources: []
 
     signal exitRequested()
+    signal openConfigRequested()
     signal launchRequested(var game)
     signal favoriteToggleRequested(var game)
     signal sourceSelected(string src)
@@ -284,9 +285,25 @@ Item {
 
             Text {
                 anchors.verticalCenter: parent.verticalCenter
-                text: bp.bpGames.length + " " + i18n.t("games")
+                text: bp.bpSearch !== ""
+                    ? bp.bpGames.length + " " + i18n.t("results")
+                    : bp.bpGames.length + " " + i18n.t("games")
                 font.pixelSize: 12; font.family: "Open Sans Regular"
-                color: Qt.rgba(1,1,1,0.4)
+                color: bp.bpSearch !== "" ? (colors.color5 || "#73ff00") : Qt.rgba(1,1,1,0.4)
+                Behavior on color { ColorAnimation { duration: 150 } }
+            }
+
+            Rectangle {
+                width: 36; height: 36; radius: 18
+                color: cfgBpM.containsMouse ? Qt.rgba(1,1,1,0.15) : Qt.rgba(1,1,1,0.08)
+                Behavior on color { ColorAnimation { duration: 150 } }
+                Text {
+                    anchors.centerIn: parent; text: "\uf013"
+                    font.family: "Font Awesome 7 Free Solid"; font.pixelSize: 14
+                    color: cfgBpM.containsMouse ? "#ffffff" : Qt.rgba(1,1,1,0.55)
+                    Behavior on color { ColorAnimation { duration: 150 } }
+                }
+                MouseArea { id: cfgBpM; anchors.fill: parent; hoverEnabled: true; cursorShape: Qt.PointingHandCursor; onClicked: bp.openConfigRequested() }
             }
 
             Rectangle {
@@ -614,7 +631,6 @@ Item {
         }
     }
 
-    // ── GAME STRIP (bottom) ──────────────────────────────────────────────────
     Rectangle {
         id: gameStrip
         anchors.bottom: parent.bottom

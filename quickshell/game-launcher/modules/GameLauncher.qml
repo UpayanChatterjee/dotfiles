@@ -16,17 +16,19 @@ Rectangle {
     property int selectedIndex: 0
     property string searchText: ""
     property string selectedSource: "all"
+    property bool isLoading: false
 
     // Config values
     property string orientation: config?.display?.orientation ?? "horizontal"
-    property int gridColumns: config?.display?.grid_size?.[0] ?? 4
+    property int gridColumns: config?.display?.grid_size?.[0] ?? 1
     property int gridRows: config?.display?.grid_size?.[1] ?? 3
+    property int effectiveRows: orientation === "horizontal" ? 1 : gridRows
     property int itemWidth: config?.display?.item_width ?? 200
     property int itemHeight: config?.display?.item_height ?? 300
     property int spacing: config?.display?.spacing ?? 20
 
     property int sidebarWidth: 68
-    property bool bigPictureMode: false
+    property bool bigPictureMode: config?.behavior?.start_in_bigpicture ?? false
     property int screenW: 1920
     property int screenH: 1080
     property int favoriteCount: {
@@ -36,8 +38,11 @@ Rectangle {
         return n
     }
 
-    width: bigPictureMode ? screenW : sidebarWidth + spacing + (itemWidth * gridColumns) + (spacing * (gridColumns + 1))
-    height: bigPictureMode ? screenH : (itemHeight * gridRows) + (spacing * (gridRows + 1)) + 60 + 44 + spacing
+    width: bigPictureMode ? screenW
+        : orientation === "vertical"
+            ? sidebarWidth + spacing * 3 + (itemWidth + spacing) * gridColumns + 50
+            : sidebarWidth + spacing + (itemWidth * gridColumns) + (spacing * (gridColumns + 1))
+    height: bigPictureMode ? screenH : (itemHeight * effectiveRows) + (spacing * (effectiveRows + 1)) + 60 + (2 * spacing)
 
     focus: true
     activeFocusOnTab: true
@@ -68,7 +73,12 @@ Rectangle {
         opacity: 0.5
     }
 
+    onGridColumnsChanged: console.log("→ gridColumns =", gridColumns)
+    onGridRowsChanged:    console.log("→ gridRows =", gridRows)
+    onOrientationChanged: console.log("→ orientation =", orientation)
+
     Component.onCompleted: {
+        console.log("GameLauncher ready — gridColumns:", gridColumns, "gridRows:", gridRows, "orientation:", orientation)
         launcher.forceActiveFocus()
         loadGames()
         gamepadService.running = true
@@ -122,6 +132,8 @@ Rectangle {
             navigateDown(); event.accepted = true
         } else if (event.key === Qt.Key_F && (event.modifiers & Qt.AltModifier) && !searchField.activeFocus) {
             toggleFavorite(null); event.accepted = true
+        } else if (event.key === Qt.Key_F5 && !gamesProcess.running) {
+            loadGames(); event.accepted = true
         } else if (event.key === Qt.Key_B && (event.modifiers & Qt.AltModifier)) {
             launcher.bigPictureMode = !launcher.bigPictureMode
             if (launcher.bigPictureMode) bpView.forceActiveFocus()
@@ -167,6 +179,7 @@ Rectangle {
     }
 
     signal closeRequested()
+    signal openConfigRequested()
 
     Process {
         id: gamesProcess
@@ -175,6 +188,7 @@ Rectangle {
         property string output: ""
         stdout: SplitParser { onRead: data => gamesProcess.output += data }
         onExited: {
+            launcher.isLoading = false
             try {
                 const result = JSON.parse(gamesProcess.output)
                 gamesData = result.games || []
@@ -215,8 +229,8 @@ Rectangle {
             gamesProcess.output = ""
         }
     }
-    
-    function loadGames() { gamesProcess.running = true }
+
+    function loadGames() { launcher.isLoading = true; gamesProcess.running = true }
 
     function filterGames() {
         let result = gamesData.slice()
@@ -238,17 +252,18 @@ Rectangle {
 
     function navigateLeft() {
         if (orientation === "horizontal" && selectedIndex > 0) selectedIndex--
-        else if (orientation === "vertical" && selectedIndex % gridColumns > 0) selectedIndex--
+        else if (orientation === "vertical" && selectedIndex > 0) selectedIndex--
     }
     function navigateRight() {
         if (orientation === "horizontal" && selectedIndex < filteredGames.length - 1) selectedIndex++
-        else if (orientation === "vertical" && selectedIndex % gridColumns < gridColumns - 1 && selectedIndex < filteredGames.length - 1) selectedIndex++
+        else if (orientation === "vertical" && selectedIndex < filteredGames.length - 1) selectedIndex++
     }
     function navigateUp() {
         if (orientation === "vertical" && selectedIndex >= gridColumns) selectedIndex -= gridColumns
     }
     function navigateDown() {
         if (orientation === "vertical" && selectedIndex + gridColumns < filteredGames.length) selectedIndex += gridColumns
+        else if (orientation === "vertical" && selectedIndex < filteredGames.length - 1) selectedIndex = filteredGames.length - 1
     }
     function launchSelectedGame() {
         if (filteredGames.length === 0) return
@@ -371,11 +386,11 @@ Rectangle {
         }
     }
 }
- 
+
     // ── Handler des actions manette ────────────────────────────────────────────
     QtObject {
         id: gamepadHandler
-    
+
         function handle(action) {
             switch(action) {
                 case "left":
@@ -399,9 +414,17 @@ Rectangle {
                     else launcher.forceActiveFocus()
                     break
                 case "up":
-                    navigateSource("up")
+                    if (orientation === "vertical") navigateUp()
+                    else navigateSource("up")
                     break
                 case "down":
+                    if (orientation === "vertical") navigateDown()
+                    else navigateSource("down")
+                    break
+                case "source_prev":
+                    navigateSource("up")
+                    break
+                case "source_next":
                     navigateSource("down")
                     break
                 case "favorite":
@@ -654,6 +677,33 @@ Rectangle {
                     }
                 }
             }
+
+            // Settings button — bottom-right of sidebar
+            Rectangle {
+                anchors.bottom: parent.bottom
+                anchors.right: parent.right
+                anchors.bottomMargin: 8
+                anchors.rightMargin: 8
+                width: 32; height: 32; radius: 10
+                color: gearMouse.containsMouse ? Qt.rgba(1,1,1,0.12) : "transparent"
+                Behavior on color { ColorAnimation { duration: 150 } }
+                Text {
+                    anchors.centerIn: parent
+                    text: "\uf013"
+                    font.family: "Font Awesome 7 Free Solid"
+                    font.pixelSize: 15
+                    color: colors.foreground || "#ffffff"
+                    opacity: gearMouse.containsMouse ? 0.85 : 0.35
+                    Behavior on opacity { NumberAnimation { duration: 150 } }
+                }
+                MouseArea {
+                    id: gearMouse
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: launcher.openConfigRequested()
+                }
+            }
         }
         // ── FIN SIDEBAR ──────────────────────────────────────────────────────
 
@@ -775,6 +825,7 @@ Rectangle {
                     spacing: launcher.spacing
                     clip: true
                     model: filteredGames
+                    cacheBuffer: itemWidth
                     highlightRangeMode: ListView.StrictlyEnforceRange
                     highlightMoveDuration: 300
                     preferredHighlightBegin: width / 2 - itemWidth / 2
@@ -796,7 +847,7 @@ Rectangle {
                         width: itemWidth; height: itemHeight
                         gameName: modelData.name || "Unknown"
                         gameImage: modelData.image || ""
-                        gameImageAnimated: modelData.image_animated || ""
+                        gameImageAnimated: Math.abs(index - selectedIndex) <= 1 ? (modelData.image_animated || "") : ""
                         gameCategory: modelData.category || ""
                         gameSource: modelData.source || ""
                         isFavorite: modelData.favorite || false
@@ -815,7 +866,33 @@ Rectangle {
                     Rectangle {
                         visible: filteredGames.length === 0
                         anchors.centerIn: parent; width: 300; height: 200; color: "transparent"
+
+                        // Chargement — points qui sautent
+                        Row {
+                            visible: launcher.isLoading
+                            anchors.centerIn: parent
+                            spacing: 14
+                            Repeater {
+                                model: 3
+                                delegate: Rectangle {
+                                    width: 12; height: 12; radius: 6
+                                    color: colors.color5 || "#00ffff"
+                                    y: 0
+                                    SequentialAnimation on y {
+                                        loops: Animation.Infinite
+                                        running: launcher.isLoading
+                                        PauseAnimation  { duration: index * 160 }
+                                        NumberAnimation { to: -18; duration: 350; easing.type: Easing.OutCubic }
+                                        NumberAnimation { to:   0; duration: 350; easing.type: Easing.InCubic }
+                                        PauseAnimation  { duration: (2 - index) * 160 }
+                                    }
+                                }
+                            }
+                        }
+
+                        // Aucun jeu trouvé
                         Column {
+                            visible: !launcher.isLoading
                             anchors.centerIn: parent; spacing: 16
                             Text { anchors.horizontalCenter: parent.horizontalCenter; text: "🎮"; font.pixelSize: 64; opacity: 0.3 }
                             Text { anchors.horizontalCenter: parent.horizontalCenter; text: i18n.t("no_games"); font.pixelSize: 18; color: colors.foreground||"#ffffff"; opacity: 0.7 }
@@ -872,19 +949,23 @@ Rectangle {
 
                 GridView {
                     id: gamesCarouselV
-                    Layout.preferredWidth: (itemWidth * gridColumns) + (spacing * (gridColumns - 1))
+                    Layout.preferredWidth: (itemWidth + spacing) * gridColumns
+                    Layout.maximumWidth: (itemWidth + spacing) * gridColumns
+                    Layout.maximumHeight: (itemHeight + spacing) * effectiveRows
                     Layout.fillHeight: true
                     Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
                     cellWidth: itemWidth + spacing; cellHeight: itemHeight + spacing
                     clip: true; model: filteredGames
+                    interactive: false
+                    cacheBuffer: itemHeight
                     currentIndex: selectedIndex
                     onCurrentIndexChanged: selectedIndex = currentIndex
 
                     MouseArea {
                         anchors.fill: parent; propagateComposedEvents: true; focus: false
                         onWheel: (wheel) => {
-                            if (wheel.angleDelta.y > 0) navigateUp()
-                            else navigateDown()
+                            if (wheel.angleDelta.y > 0) navigateLeft()
+                            else navigateRight()
                             launcher.forceActiveFocus(); wheel.accepted = true
                         }
                         onClicked: (mouse) => { launcher.forceActiveFocus(); mouse.accepted = false }
@@ -894,7 +975,7 @@ Rectangle {
                         width: itemWidth; height: itemHeight
                         gameName: modelData.name || "Unknown"
                         gameImage: modelData.image || ""
-                        gameImageAnimated: modelData.image_animated || ""
+                        gameImageAnimated: Math.abs(index - selectedIndex) <= gridColumns ? (modelData.image_animated || "") : ""
                         gameCategory: modelData.category || ""
                         gameSource: modelData.source || ""
                         isFavorite: modelData.favorite || false
@@ -973,6 +1054,7 @@ Rectangle {
             launcher.bigPictureMode = false
             launcher.forceActiveFocus()
         }
+        onOpenConfigRequested: launcher.openConfigRequested()
         onLaunchRequested: (game) => launchGame(game, null)
         onFavoriteToggleRequested: (game) => toggleFavorite(game)
         onSourceSelected: (src) => { launcher.selectedSource = src }
