@@ -162,3 +162,9 @@ quickshell/game-launcher/.gitignore
 
 deepseek/**
 glazepkg/**
+discoverrc
+gtk-3.0/colors.css
+okularpartrc
+vlc/vlc-qt-interface.conf
+archwiki-tui/**
+kconf_updaterc
