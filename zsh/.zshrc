@@ -283,7 +283,7 @@ alias update=gu-notify.exp
 alias zshrc="vim ~/.config/zsh/.zshrc"
 alias sgc=supergfxctl
 alias wall="sudo ryzenadj --stapm-limit=80000 --fast-limit=80000 --slow-limit=80000 --tctl-temp=96"
-alias battery="sudo ryzenadj --stapm-limit=20000 --fast-limit=20000 --slow-limit=20000"
+alias battery="sudo ryzenadj --stapm-limit=20000 --fast-limit=20000 --slow-limit=20000 --tctl-temp=45"
 # alias paru="~/.local/bin/paru-notify.exp"
 alias makex="chmod +x"
 alias lsg="ls | grep"
