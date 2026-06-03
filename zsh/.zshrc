@@ -141,6 +141,9 @@ zinit wait lucid light-mode for \
   atinit"zicompinit; zicdreplay" \
     zdharma-continuum/fast-syntax-highlighting
 
+# shai
+zsource "${HOME}/.config/shai/shai.zsh"
+
 # ── 8. Lazy Tool Loading ────────────────────────────────────────────
 
 # Pyenv lazy load
