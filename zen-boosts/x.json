@@ -1,26 +1,32 @@
 {
   "boostName": "x",
-  "dotAngleDeg": 60.0,
+  "dotAngleDeg": 323.99999999999994,
   "dotPos": {
-    "x": 0.7570079106664171,
-    "y": 0.28434475695016603
+    "x": 0.2586614969863822,
+    "y": 0.2669421167110067
   },
   "dotDistance": 1.0,
-  "secondaryDotAngleDegDelta": 336.0,
+  "secondaryDotAngleDegDelta": 310.7368421052632,
   "secondaryDotPos": {
-    "x": 0.6470735197477355,
-    "y": 0.19845459746662947
+    "x": 0.16591450554281656,
+    "y": 0.5307755161337588
   },
-  "brightness": 0.6383442265795207,
-  "saturation": 0.530120481927711,
-  "contrast": "0.32",
+  "brightness": 0.7995642701525054,
+  "saturation": 0.29347826086956563,
+  "contrast": "0.63",
   "fontFamily": "Inter Display",
   "enableColorBoost": true,
   "smartInvert": false,
   "autoTheme": false,
   "textCaseOverride": "none",
   "sizeOverride": 1,
-  "zapSelectors": [],
-  "customCSS": "",
-  "changeWasMade": true
+  "zapSelectors": [
+    "body:last-child > div#react-root:nth-child(2) > div.css-175oi2r.r-13awgt0.r-12vffkv:first-child > div.css-175oi2r.r-13awgt0.r-12vffkv:first-child > div#layers.r-zchlnj.r-1d2f490.r-u8s1d.r-ipm5af:nth-child(2) > div.css-175oi2r.r-aqfbo4.r-zchlnj.r-1d2f490.r-1xcajam.r-1p0dtai.r-12vffkv:first-child > div.css-175oi2r.r-12vffkv:first-child > div.css-175oi2r.r-12vffkv:first-child > div.css-175oi2r.r-633pao.r-173mn98.r-6gpygo.r-1va2g9v.r-bnwqim > button.css-175oi2r.r-105ug2t.r-1awozwy.r-173mn98.r-1e5uvyk.r-5zmot.r-j7xza8.r-1867qdf.r-rs99b7.r-qo02w8.r-8oi148.r-1777fci.r-u8s1d.r-1tfmumk.r-1loqt21.r-o7ynqc.r-6416eg.r-1ny4l3l:first-child",
+    "div.css-175oi2r.r-633pao.r-173mn98.r-6koalj.r-1euycsn.r-6gpygo.r-1va2g9v.r-bnwqim > button.css-175oi2r.r-105ug2t.r-1awozwy.r-173mn98.r-1e5uvyk.r-5zmot.r-j7xza8.r-1867qdf.r-rs99b7.r-qo02w8.r-8oi148.r-1777fci.r-u8s1d.r-1tfmumk.r-1loqt21.r-o7ynqc.r-6416eg.r-1ny4l3l:first-child",
+    "nav.css-175oi2r.r-eqz5dr.r-13qz1uu.r-1habvwh > a.css-175oi2r.r-6koalj.r-eqz5dr.r-16y2uox.r-1habvwh.r-cnw61z.r-13qz1uu.r-1ny4l3l.r-1loqt21:nth-child(8)",
+    "nav.css-175oi2r.r-eqz5dr.r-13qz1uu.r-1habvwh > a.css-175oi2r.r-6koalj.r-eqz5dr.r-16y2uox.r-1habvwh.r-cnw61z.r-13qz1uu.r-1ny4l3l.r-1loqt21:nth-child(7)",
+    "div.css-175oi2r.r-kemksi.r-1kqtdi0.r-1867qdf.r-1phboty.r-rs99b7.r-1ifxtd0.r-1udh08x > aside.css-175oi2r.r-1habvwh.r-eqz5dr.r-uaa2di.r-w7s2jr.r-u9wvl5.r-bnwqim:first-child"
+  ],
+  "changeWasMade": true,
+  "customCSS": "@media (min-width: 1200px) {\n\n  header[role=\"banner\"] {\n    width: 0px !important;\n/*     transition: width .2s ease !important;\n    overflow: hidden !important; */\n  }\n\n/*   header[role=\"banner\"]:hover {\n    width: 260px !important;\n  } */\n\n  .r-1ye8kvj {\n    max-width: 950px !important;\n  }\n}"
 }

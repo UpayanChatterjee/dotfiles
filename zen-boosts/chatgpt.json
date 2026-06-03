@@ -1,18 +1,18 @@
 {
   "boostName": "chatgpt",
-  "dotAngleDeg": 60.0,
+  "dotAngleDeg": 323.99999999999994,
   "dotPos": {
-    "x": 0.7570079106664171,
-    "y": 0.28434475695016603
+    "x": 0.2586614969863822,
+    "y": 0.2669421167110067
   },
   "dotDistance": 1.0,
-  "secondaryDotAngleDegDelta": 336.0,
+  "secondaryDotAngleDegDelta": 310.7368421052632,
   "secondaryDotPos": {
-    "x": 0.6470735197477355,
-    "y": 0.19845459746662947
+    "x": 0.16591450554281656,
+    "y": 0.5307755161337588
   },
-  "brightness": 0.6383442265795207,
-  "saturation": 0.530120481927711,
+  "brightness": 0.7995642701525054,
+  "saturation": 0.29347826086956563,
   "contrast": 0.75,
   "fontFamily": "JetBrainsMono Nerd Font",
   "enableColorBoost": true,
