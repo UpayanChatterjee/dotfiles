@@ -12,6 +12,7 @@ Singleton {
     property string cpuName: ""
     property real cpuPerc
     property real cpuTemp
+    property int cpuFan: -1
 
     // GPU properties
     readonly property string gpuType: GlobalConfig.services.gpuType.toUpperCase() || autoGpuType
@@ -19,6 +20,7 @@ Singleton {
     property string gpuName: ""
     property real gpuPerc
     property real gpuTemp
+    property int gpuFan: -1
 
     // Memory properties
     property real memUsed
@@ -297,6 +299,38 @@ Singleton {
 
                 if (cpuTemp)
                     root.cpuTemp = parseFloat(cpuTemp[1]);
+
+                // Parse CPU and GPU Fan Speeds
+                let parsedCpuFan = -1;
+                let parsedGpuFan = -1;
+                let currentChip = "";
+                const lines = text.trim().split("\n");
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (trimmed === "") continue;
+                    if (!line.startsWith(" ") && !line.includes(":") && !line.includes("RPM")) {
+                        currentChip = trimmed.toLowerCase();
+                        continue;
+                    }
+                    const fanMatch = line.match(/^\s*([^:]+):\s*([0-9]+)\s*RPM/i);
+                    if (fanMatch) {
+                        const label = fanMatch[1].trim().toLowerCase();
+                        const speed = parseInt(fanMatch[2], 10);
+                        if (label.includes("cpu")) {
+                            parsedCpuFan = speed;
+                        } else if (label.includes("gpu") || label.includes("vga")) {
+                            parsedGpuFan = speed;
+                        } else if (currentChip.includes("amdgpu") || currentChip.includes("nvidia") || currentChip.includes("nouveau") || currentChip.includes("radeon")) {
+                            parsedGpuFan = speed;
+                        } else if (label === "fan1") {
+                            if (parsedCpuFan === -1) parsedCpuFan = speed;
+                        } else if (label === "fan2") {
+                            if (parsedGpuFan === -1) parsedGpuFan = speed;
+                        }
+                    }
+                }
+                root.cpuFan = parsedCpuFan;
+                root.gpuFan = parsedGpuFan;
 
                 if (root.gpuType !== "GENERIC")
                     return;

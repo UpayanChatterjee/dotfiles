@@ -7,7 +7,7 @@
       "discord": {
         "enable": false
       },
-      "zapzap": {
+      "whatsie": {
         "enable": true,
         "match": [
           {
@@ -25,7 +25,7 @@
         "enable": true,
         "match": [
           {
-            "class": "com.bilingify.readest"
+            "title": "Readest"
           },
           {
             "class": "readest"

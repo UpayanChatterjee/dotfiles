@@ -93,6 +93,7 @@ Item {
                     secondaryLabel: qsTr("Temp")
                     usage: SystemUsage.cpuPerc
                     temperature: SystemUsage.cpuTemp
+                    fanSpeed: SystemUsage.cpuFan
                     accentColor: Colours.palette.m3primary
                 }
 
@@ -109,6 +110,7 @@ Item {
                     secondaryLabel: qsTr("Temp")
                     usage: SystemUsage.gpuPerc
                     temperature: SystemUsage.gpuTemp
+                    fanSpeed: SystemUsage.gpuFan
                     accentColor: Colours.palette.m3secondary
                 }
             }
@@ -339,6 +341,7 @@ Item {
         property string secondaryLabel
         property real usage: 0
         property real temperature: 0
+        property int fanSpeed: -1
         property color accentColor: Colours.palette.m3primary
         readonly property real maxTemp: 100
         readonly property real tempProgress: Math.min(1, Math.max(0, temperature / maxTemp))
@@ -384,19 +387,41 @@ Item {
             spacing: Tokens.spacing.small
 
             Row {
-                spacing: Tokens.spacing.small
+                spacing: Tokens.spacing.large
 
-                StyledText {
-                    text: heroCard.secondaryValue
-                    font.pointSize: Tokens.font.size.normal
-                    font.weight: Font.Medium
+                Row {
+                    spacing: Tokens.spacing.small
+
+                    StyledText {
+                        text: heroCard.secondaryValue
+                        font.pointSize: Tokens.font.size.normal
+                        font.weight: Font.Medium
+                    }
+
+                    StyledText {
+                        text: heroCard.secondaryLabel
+                        font.pointSize: Tokens.font.size.small
+                        color: Colours.palette.m3onSurfaceVariant
+                        anchors.baseline: parent.children[0].baseline
+                    }
                 }
 
-                StyledText {
-                    text: heroCard.secondaryLabel
-                    font.pointSize: Tokens.font.size.small
-                    color: Colours.palette.m3onSurfaceVariant
-                    anchors.baseline: parent.children[0].baseline
+                Row {
+                    visible: heroCard.fanSpeed >= 0
+                    spacing: Tokens.spacing.small
+
+                    StyledText {
+                        text: `${heroCard.fanSpeed}`
+                        font.pointSize: Tokens.font.size.normal
+                        font.weight: Font.Medium
+                    }
+
+                    StyledText {
+                        text: qsTr("RPM")
+                        font.pointSize: Tokens.font.size.small
+                        color: Colours.palette.m3onSurfaceVariant
+                        anchors.baseline: parent.children[0].baseline
+                    }
                 }
             }
 

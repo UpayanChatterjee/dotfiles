@@ -103,6 +103,14 @@ ColumnLayout {
                 elide: Text.ElideRight
             }
 
+            StyledText {
+                visible: device.modelData.state === BluetoothDeviceState.Connected && device.modelData.batteryAvailable
+                Layout.rightMargin: Tokens.spacing.small / 2
+                text: qsTr("%1%").arg(Math.round(device.modelData.battery * 100))
+                font.weight: 500
+                color: device.modelData.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+            }
+
             MaterialIcon {
                 visible: device.modelData.state === BluetoothDeviceState.Connected  // qmllint disable unresolved-type
                 text: Icons.getBatteryIcon(device.modelData.batteryAvailable ? device.modelData.battery * 100 : -1)

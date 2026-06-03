@@ -101,6 +101,10 @@
             },
             {
                 "enabled": true,
+                "id": "sysUsage"
+            },
+            {
+                "enabled": true,
                 "id": "statusIcons"
             },
             {

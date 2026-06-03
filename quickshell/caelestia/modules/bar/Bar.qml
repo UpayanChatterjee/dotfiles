@@ -73,6 +73,10 @@ ColumnLayout {
             popouts.currentName = id.toLowerCase();
             popouts.currentCenter = (ch.item as Item).mapToItem(root, 0, (ch.item as Item).implicitHeight / 2).y ?? 0;
             popouts.hasCurrent = true;
+        } else if (id === "sysUsage") {
+            popouts.currentName = "sysUsage";
+            popouts.currentCenter = (ch.item as Item).mapToItem(root, 0, (ch.item as Item).implicitHeight / 2).y ?? 0;
+            popouts.hasCurrent = true;
         }
     }
 
@@ -171,6 +175,13 @@ ColumnLayout {
                     sourceComponent: Power {
                         visibilities: root.visibilities
                     }
+                }
+            }
+            DelegateChoice {
+                roleValue: "sysUsage"
+                delegate: WrappedLoader {
+                    visible: !root.fullscreen && (BarExtras.showCpu || BarExtras.showRam)
+                    sourceComponent: SysUsage {}
                 }
             }
         }
