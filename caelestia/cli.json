@@ -51,6 +51,19 @@
         ],
         "move": true
       }
+    },
+    "sysmon": {
+      "plasma-systemmonitor": {
+        "match": [
+          {
+            "class": "org.kde.plasma-systemmonitor"
+          }
+        ],
+        "command": [
+          "plasma-systemmonitor"
+        ],
+        "move": true
+      }
     }
   }
 }

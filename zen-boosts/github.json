@@ -1,18 +1,18 @@
 {
   "boostName": "github",
-  "dotAngleDeg": 323.99999999999994,
+  "dotAngleDeg": 105.71428571428572,
   "dotPos": {
-    "x": 0.2586614969863822,
-    "y": 0.2669421167110067
+    "x": 0.8338328251350922,
+    "y": 0.5334050125328965
   },
   "dotDistance": 1.0,
-  "secondaryDotAngleDegDelta": 310.7368421052632,
+  "secondaryDotAngleDegDelta": 312.7857142857143,
   "secondaryDotPos": {
-    "x": 0.16591450554281656,
-    "y": 0.5307755161337588
+    "x": 0.7512746443247101,
+    "y": 0.27769097382361996
   },
-  "brightness": 0.7995642701525054,
-  "saturation": 0.29347826086956563,
+  "brightness": 0.6993464052287582,
+  "saturation": 0.6043478260869566,
   "contrast": 0.75,
   "fontFamily": "JetBrainsMono Nerd Font",
   "enableColorBoost": true,

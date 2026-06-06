@@ -169,3 +169,7 @@ vlc/vlc-qt-interface.conf
 archwiki-tui/**
 kconf_updaterc
 shai/**
+trashrc
+autostart/**
+nitpick/**
+tui-chan/**

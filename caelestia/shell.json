@@ -181,7 +181,7 @@
         "thickness": 4
     },
     "dashboard": {
-        "dragThreshold": 50,
+        "dragThreshold": 0,
         "enabled": true,
         "mediaUpdateInterval": 500,
         "performance": {
@@ -511,7 +511,7 @@
                 "to": "YT Music"
             }
         ],
-        "showLyrics": false,
+        "showLyrics": true,
         "smartScheme": true,
         "useFahrenheit": false,
         "useFahrenheitPerformance": false,
