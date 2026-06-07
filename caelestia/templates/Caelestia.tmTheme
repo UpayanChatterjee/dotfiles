@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>name</key>
+    <string>Caelestia</string>
+    <key>semanticClass</key>
+    <string>theme.dark.caelestia</string>
+    <key>author</key>
+    <string>Caelestia</string>
+    <key>colorSpaceName</key>
+    <string>sRGB</string>
+
+    <key>settings</key>
+    <array>
+      <!-- Global UI colors -->
+      <dict>
+        <key>settings</key>
+        <dict>
+          <key>background</key>
+          <string>#{{ surface.hex }}</string>
+          <key>foreground</key>
+          <string>#{{ onSurface.hex }}</string>
+          <key>caret</key>
+          <string>#{{ primary.hex }}</string>
+          <key>lineHighlight</key>
+          <string>#{{ surfaceContainerLow.hex }}</string>
+          <key>misspelling</key>
+          <string>#{{ error.hex }}</string>
+          <key>accent</key>
+          <string>#{{ primary.hex }}</string>
+          <key>selection</key>
+          <string>#{{ primary.hex }}44</string>
+          <key>activeGuide</key>
+          <string>#{{ outlineVariant.hex }}</string>
+          <key>findHighlight</key>
+          <string>#{{ surfaceContainerHigh.hex }}66</string>
+          <key>gutterForeground</key>
+          <string>#{{ outline.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Text & variables → fg0 (onSurface) -->
+      <dict>
+        <key>name</key>
+        <string>Text &amp; variables</string>
+        <key>scope</key>
+        <string>text, source, variable.other.readwrite, punctuation.definition.variable</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ onSurface.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Punctuation/brackets → fg1 (onSurfaceVariant) — nvim @punctuation.bracket -->
+      <dict>
+        <key>name</key>
+        <string>Parens/Brackets/Braces</string>
+        <key>scope</key>
+        <string>punctuation</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ onSurfaceVariant.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Comments → fg2 (outline), italic — nvim Comment -->
+      <dict>
+        <key>name</key>
+        <string>Comments</string>
+        <key>scope</key>
+        <string>comment, punctuation.definition.comment</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ outline.hex }}</string>
+          <key>fontStyle</key>
+          <string>italic</string>
+        </dict>
+      </dict>
+
+      <!-- Strings → bright_green (green) — nvim String -->
+      <dict>
+        <key>name</key>
+        <string>Strings</string>
+        <key>scope</key>
+        <string>string, punctuation.definition.string</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ green.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- String escape → bright_red (red) — nvim @string.escape -->
+      <dict>
+        <key>name</key>
+        <string>String escape</string>
+        <key>scope</key>
+        <string>constant.character.escape</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ red.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Numbers & booleans → bright_purple (mauve) — nvim Number/Boolean -->
+      <dict>
+        <key>name</key>
+        <string>Numbers &amp; booleans</string>
+        <key>scope</key>
+        <string>constant.numeric, constant.language.boolean, constant.language.false, constant.language.true</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ mauve.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Constants → bright_purple (mauve) — nvim Constant -->
+      <dict>
+        <key>name</key>
+        <string>Constants</string>
+        <key>scope</key>
+        <string>variable.other.constant, entity.name.constant, constant.language</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ mauve.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Keywords → bright_red (red) — nvim Keyword/Statement -->
+      <dict>
+        <key>name</key>
+        <string>Keywords &amp; storage</string>
+        <key>scope</key>
+        <string>keyword, storage.type, storage.modifier, keyword.operator.word, keyword.control</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ red.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Operators → bright_orange (peach) — nvim Operator -->
+      <dict>
+        <key>name</key>
+        <string>Operators &amp; punctuation</string>
+        <key>scope</key>
+        <string>keyword.operator, punctuation.accessor, punctuation.separator.key-value, punctuation.separator</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ peach.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Functions → bright_green (green), bold — nvim Function -->
+      <dict>
+        <key>name</key>
+        <string>Functions &amp; calls</string>
+        <key>scope</key>
+        <string>entity.name.function, meta.function-call, support.function, variable.function</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ green.hex }}</string>
+          <key>fontStyle</key>
+          <string>bold</string>
+        </dict>
+      </dict>
+
+      <!-- Parameters → bright_blue (blue), italic — nvim @parameter -->
+      <dict>
+        <key>name</key>
+        <string>Parameters</string>
+        <key>scope</key>
+        <string>variable.parameter, meta.function.parameters</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ blue.hex }}</string>
+          <key>fontStyle</key>
+          <string>italic</string>
+        </dict>
+      </dict>
+
+      <!-- Classes / Types → bright_yellow (yellow), italic — nvim Type -->
+      <dict>
+        <key>name</key>
+        <string>Classes / Types</string>
+        <key>scope</key>
+        <string>entity.name.class, entity.other.inherited-class, support.class, entity.name.struct, entity.name.type, support.type</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ yellow.hex }}</string>
+          <key>fontStyle</key>
+          <string>italic</string>
+        </dict>
+      </dict>
+
+      <!-- Decorators / Annotations → bright_aqua (teal) — nvim PreProc -->
+      <dict>
+        <key>name</key>
+        <string>Decorators / Annotations</string>
+        <key>scope</key>
+        <string>meta.annotation, meta.decorator, punctuation.decorator</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ teal.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Object properties → bright_blue (blue) — nvim @property -->
+      <dict>
+        <key>name</key>
+        <string>Object properties</string>
+        <key>scope</key>
+        <string>variable.other.property, variable.object.property, meta.property.object</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ blue.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- this/self → bright_orange (peach), italic — nvim @variable.builtin -->
+      <dict>
+        <key>name</key>
+        <string>this/self</string>
+        <key>scope</key>
+        <string>variable.language.this, variable.language.self.rust, variable.language</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ peach.hex }}</string>
+          <key>fontStyle</key>
+          <string>italic</string>
+        </dict>
+      </dict>
+
+      <!-- JSON/YAML keys → bright_blue (blue) — nvim @field/@property -->
+      <dict>
+        <key>name</key>
+        <string>JSON/YAML keys</string>
+        <key>scope</key>
+        <string>support.type.property-name.json, entity.name.tag.yaml, support.type.property-name</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ blue.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- JSON/YAML constants → bright_purple (mauve) — nvim Constant -->
+      <dict>
+        <key>name</key>
+        <string>JSON/YAML constants</string>
+        <key>scope</key>
+        <string>constant.language.json, constant.language.yaml</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ mauve.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Markdown headings → bright_orange (peach), bold — nvim @text.title -->
+      <dict>
+        <key>name</key>
+        <string>Markdown headings</string>
+        <key>scope</key>
+        <string>markup.heading, markup.heading.1, markup.heading.2, markup.heading.3, markup.heading.4, markup.heading.5, markup.heading.6</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ peach.hex }}</string>
+          <key>fontStyle</key>
+          <string>bold</string>
+        </dict>
+      </dict>
+
+      <!-- Markdown code → bright_green (green) — nvim @text.literal -->
+      <dict>
+        <key>name</key>
+        <string>Markdown code</string>
+        <key>scope</key>
+        <string>markup.inline.raw, markup.raw.block, punctuation.definition.raw</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ green.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Markdown links → bright_blue (blue), underline — nvim @text.uri -->
+      <dict>
+        <key>name</key>
+        <string>Markdown links</string>
+        <key>scope</key>
+        <string>markup.underline.link, punctuation.definition.link, markup.link</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ blue.hex }}</string>
+          <key>fontStyle</key>
+          <string>underline</string>
+        </dict>
+      </dict>
+
+      <!-- Diffs → nvim diffAdded/diffRemoved/diffChanged -->
+      <dict>
+        <key>name</key>
+        <string>Diffs</string>
+        <key>scope</key>
+        <string>markup.inserted.diff, markup.deleted.diff, markup.changed.diff, meta.diff.header</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ green.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Tags → bright_aqua (teal) — nvim Tag -->
+      <dict>
+        <key>name</key>
+        <string>Tags</string>
+        <key>scope</key>
+        <string>entity.name.tag</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ teal.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Attributes → bright_aqua (teal) — nvim @tag.attribute / @attribute -->
+      <dict>
+        <key>name</key>
+        <string>Attributes</string>
+        <key>scope</key>
+        <string>entity.other.attribute-name</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ teal.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- HTML entities → bright_red (red) — nvim SpecialChar -->
+      <dict>
+        <key>name</key>
+        <string>Entities (&amp;amp; etc.)</string>
+        <key>scope</key>
+        <string>constant.character.entity, constant.character.entity punctuation</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ red.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Regex anchors/classes → bright_orange (peach) — nvim @keyword -->
+      <dict>
+        <key>name</key>
+        <string>Regex anchors/classes</string>
+        <key>scope</key>
+        <string>keyword.control.anchor.regexp, punctuation.definition.character-class.regexp</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ peach.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Regex groups/backrefs → bright_green (green) — nvim @string.regex -->
+      <dict>
+        <key>name</key>
+        <string>Regex groups/backrefs</string>
+        <key>scope</key>
+        <string>punctuation.definition.group.regexp, keyword.other.back-reference.regexp</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ green.hex }}</string>
+        </dict>
+      </dict>
+
+      <!-- Regex quantifiers/operators → bright_aqua (teal) — nvim @@string.regex -->
+      <dict>
+        <key>name</key>
+        <string>Regex quantifiers/operators</string>
+        <key>scope</key>
+        <string>keyword.operator.quantifier.regexp, keyword.operator</string>
+        <key>settings</key>
+        <dict>
+          <key>foreground</key>
+          <string>#{{ teal.hex }}</string>
+        </dict>
+      </dict>
+    </array>
+  </dict>
+</plist>

@@ -101,6 +101,12 @@ open(os.path.expanduser('$_kvtheme/Caelestia.svg'), 'w').write(svg)
   ln -sf "$_kvtheme/Caelestia.svg" "$_kvout/Caelestia.svg"
 fi
 
+# bat: rebuild the syntax-highlighting theme cache so 'bat' picks up
+# the newly generated Caelestia.tmTheme on the next invocation.
+if [ -f "$_kvtheme/Caelestia.tmTheme" ]; then
+  bat cache --build >/dev/null 2>&1
+fi
+
 # Generate Lua scheme file for Hyprland Lua configs.
 # caelestia-cli only writes current.conf (hyprlang), but the Lua config
 # requires current.lua.  SCHEME_COLOURS provides all colours as JSON.
