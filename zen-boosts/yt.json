@@ -1,18 +1,18 @@
 {
   "boostName": "yt",
-  "dotAngleDeg": 248.5714285714286,
+  "dotAngleDeg": 252.00000000000003,
   "dotPos": {
-    "x": 0.2137209092124117,
-    "y": 0.6749415107338215
+    "x": 0.20377108259582988,
+    "y": 0.6575077093146662
   },
   "dotDistance": 1.0,
-  "secondaryDotAngleDegDelta": 80.2285714285714,
+  "secondaryDotAngleDegDelta": 153.0,
   "secondaryDotPos": {
-    "x": 0.27900968613018273,
-    "y": 0.24756479806548443
+    "x": 0.692434894395776,
+    "y": 0.2251744891410432
   },
-  "brightness": 0.8300653594771241,
-  "saturation": 0.2999999999999997,
+  "brightness": 0.7930283224400871,
+  "saturation": 0.6578947368421049,
   "contrast": 0.75,
   "fontFamily": "Inter Display",
   "enableColorBoost": true,

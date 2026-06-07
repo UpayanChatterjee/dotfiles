@@ -9,27 +9,6 @@ Item {
 
     readonly property var today: Weather.forecast && Weather.forecast.length > 0 ? Weather.forecast[0] : null
 
-    function formatHour(hour) {
-        if (GlobalConfig.services.useTwelveHourClock) {
-            const h = hour % 12 || 12;
-            return h + (hour >= 12 ? "PM" : "AM");
-        }
-        return (hour < 10 ? "0" : "") + hour + ":00";
-    }
-
-    function getWindDir(degrees) {
-        const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
-        return dirs[Math.round(degrees / 45) % 8];
-    }
-
-    function getUVLabel(uv) {
-        if (uv <= 2) return uv + " · Low";
-        if (uv <= 5) return uv + " · Mod";
-        if (uv <= 7) return uv + " · High";
-        if (uv <= 10) return uv + " · V.High";
-        return uv + " · Extreme";
-    }
-
     implicitWidth: layout.implicitWidth > 800 ? layout.implicitWidth : 840
     implicitHeight: layout.implicitHeight
     Component.onCompleted: Weather.reload()
@@ -38,7 +17,7 @@ Item {
         id: layout
 
         anchors.fill: parent
-        spacing: Tokens.spacing.smaller
+        spacing: Tokens.spacing.medium
 
         RowLayout {
             Layout.leftMargin: Tokens.padding.large
@@ -46,18 +25,17 @@ Item {
             Layout.fillWidth: true
 
             Column {
-                spacing: Tokens.spacing.small / 2
+                spacing: Tokens.spacing.extraSmall
 
                 StyledText {
                     text: Weather.city || qsTr("Loading...")
-                    font.pointSize: Tokens.font.size.extraLarge
-                    font.weight: 600
+                    font: Tokens.font.body.builders.large.size(28).weight(Font.DemiBold).build()
                     color: Colours.palette.m3onSurface
                 }
 
                 StyledText {
                     text: new Date().toLocaleDateString(Qt.locale(), "dddd, MMMM d")
-                    font.pointSize: Tokens.font.size.small
+                    font: Tokens.font.body.small
                     color: Colours.palette.m3onSurfaceVariant
                 }
             }
@@ -67,7 +45,7 @@ Item {
             }
 
             Row {
-                spacing: Tokens.spacing.large
+                spacing: Tokens.spacing.largeIncreased
 
                 WeatherStat {
                     icon: "wb_twilight"
@@ -87,21 +65,21 @@ Item {
 
         StyledRect {
             Layout.fillWidth: true
-            implicitHeight: bigInfoRow.implicitHeight + Tokens.padding.small * 2
+            implicitHeight: bigInfoRow.implicitHeight + Tokens.padding.small
 
-            radius: Tokens.rounding.large * 2
+            radius: Tokens.rounding.extraLarge * 2
             color: Colours.tPalette.m3surfaceContainer
 
             RowLayout {
                 id: bigInfoRow
 
                 anchors.centerIn: parent
-                spacing: Tokens.spacing.large
+                spacing: Tokens.spacing.largeIncreased
 
                 MaterialIcon {
                     Layout.alignment: Qt.AlignVCenter
                     text: Weather.icon
-                    font.pointSize: Tokens.font.size.extraLarge * 3
+                    fontStyle: Tokens.font.icon.builders.extraLarge.scale(3).build()
                     color: Colours.palette.m3secondary
                     animate: true
                 }
@@ -112,15 +90,14 @@ Item {
 
                     StyledText {
                         text: Weather.temp
-                        font.pointSize: Tokens.font.size.extraLarge * 2
-                        font.weight: 500
+                        font: Tokens.font.body.builders.large.size(28 * 2).weight(Font.Medium).build()
                         color: Colours.palette.m3primary
                     }
 
                     StyledText {
-                        Layout.leftMargin: Tokens.padding.small
+                        Layout.leftMargin: Tokens.padding.extraSmall
                         text: Weather.description
-                        font.pointSize: Tokens.font.size.normal
+                        font: Tokens.font.body.medium
                         color: Colours.palette.m3onSurfaceVariant
                     }
                 }
@@ -129,7 +106,7 @@ Item {
 
         RowLayout {
             Layout.fillWidth: true
-            spacing: Tokens.spacing.smaller
+            spacing: Tokens.spacing.medium
 
             DetailCard {
                 icon: "water_drop"
@@ -146,101 +123,23 @@ Item {
             DetailCard {
                 icon: "air"
                 label: "Wind"
-                value: Weather.windSpeed ? Weather.windSpeed + " km/h · " + root.getWindDir(Weather.windDirection) : "--"
+                value: Weather.windSpeed ? Weather.windSpeed + " km/h" : "--"
                 colour: Colours.palette.m3tertiary
             }
-
-            DetailCard {
-                icon: "wb_sunny"
-                label: "UV Index"
-                value: root.getUVLabel(Weather.uvIndex)
-                colour: Colours.palette.m3secondary
-            }
         }
 
         StyledText {
-            Layout.topMargin: Tokens.spacing.normal
-            Layout.leftMargin: Tokens.padding.normal
-            visible: Weather.hourlyForecast.length > 0
-            text: qsTr("Hourly Forecast")
-            font.pointSize: Tokens.font.size.normal
-            font.weight: 600
-            color: Colours.palette.m3onSurface
-        }
-
-        Flickable {
-            Layout.fillWidth: true
-            implicitHeight: hourlyRow.implicitHeight
-            contentWidth: hourlyRow.implicitWidth
-            clip: true
-            boundsBehavior: Flickable.StopAtBounds
-            visible: Weather.hourlyForecast.length > 0
-
-            Row {
-                id: hourlyRow
-
-                spacing: Tokens.spacing.smaller
-
-                Repeater {
-                    model: Weather.hourlyForecast.slice(0, 12)
-
-                    StyledRect {
-                        id: hourlyItem
-
-                        required property var modelData
-                        required property int index
-
-                        implicitWidth: hourlyContent.implicitWidth + Tokens.padding.normal * 2
-                        implicitHeight: hourlyContent.implicitHeight + Tokens.padding.normal * 2
-                        radius: Tokens.rounding.normal
-                        color: Colours.tPalette.m3surfaceContainer
-
-                        ColumnLayout {
-                            id: hourlyContent
-
-                            anchors.centerIn: parent
-                            spacing: Tokens.spacing.smaller
-
-                            StyledText {
-                                Layout.alignment: Qt.AlignHCenter
-                                text: root.formatHour(hourlyItem.modelData.hour)
-                                font.pointSize: Tokens.font.size.smaller
-                                color: Colours.palette.m3onSurfaceVariant
-                            }
-
-                            MaterialIcon {
-                                Layout.alignment: Qt.AlignHCenter
-                                text: hourlyItem.modelData.icon
-                                font.pointSize: Tokens.font.size.large
-                                color: Colours.palette.m3secondary
-                            }
-
-                            StyledText {
-                                Layout.alignment: Qt.AlignHCenter
-                                text: GlobalConfig.services.useFahrenheit ? hourlyItem.modelData.tempF + "°" : hourlyItem.modelData.tempC + "°"
-                                font.pointSize: Tokens.font.size.small
-                                font.weight: 600
-                                color: Colours.palette.m3primary
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        StyledText {
-            Layout.topMargin: Tokens.spacing.normal
-            Layout.leftMargin: Tokens.padding.normal
+            Layout.topMargin: Tokens.spacing.medium
+            Layout.leftMargin: Tokens.padding.medium
             visible: forecastRepeater.count > 0
             text: qsTr("7-Day Forecast")
-            font.pointSize: Tokens.font.size.normal
-            font.weight: 600
+            font: Tokens.font.body.builders.medium.weight(Font.DemiBold).build()
             color: Colours.palette.m3onSurface
         }
 
         RowLayout {
             Layout.fillWidth: true
-            spacing: Tokens.spacing.smaller
+            spacing: Tokens.spacing.medium
 
             Repeater {
                 id: forecastRepeater
@@ -254,9 +153,9 @@ Item {
                     required property var modelData
 
                     Layout.fillWidth: true
-                    implicitHeight: forecastItemColumn.implicitHeight + Tokens.padding.normal * 2
+                    implicitHeight: forecastItemColumn.implicitHeight + Tokens.padding.medium * 2
 
-                    radius: Tokens.rounding.normal
+                    radius: Tokens.rounding.large
                     color: Colours.tPalette.m3surfaceContainer
 
                     ColumnLayout {
@@ -268,16 +167,15 @@ Item {
                         StyledText {
                             Layout.alignment: Qt.AlignHCenter
                             text: forecastItem.index === 0 ? qsTr("Today") : new Date(forecastItem.modelData.date).toLocaleDateString(Qt.locale(), "ddd")
-                            font.pointSize: Tokens.font.size.normal
-                            font.weight: 600
+                            font: Tokens.font.body.builders.medium.weight(Font.DemiBold).build()
                             color: Colours.palette.m3primary
                         }
 
                         StyledText {
-                            Layout.topMargin: -Tokens.spacing.small / 2
+                            Layout.topMargin: -Tokens.spacing.extraSmall
                             Layout.alignment: Qt.AlignHCenter
                             text: new Date(forecastItem.modelData.date).toLocaleDateString(Qt.locale(), "MMM d")
-                            font.pointSize: Tokens.font.size.small
+                            font: Tokens.font.body.small
                             opacity: 0.7
                             color: Colours.palette.m3onSurfaceVariant
                         }
@@ -285,23 +183,15 @@ Item {
                         MaterialIcon {
                             Layout.alignment: Qt.AlignHCenter
                             text: forecastItem.modelData.icon
-                            font.pointSize: Tokens.font.size.extraLarge
+                            fontStyle: Tokens.font.icon.extraLarge
                             color: Colours.palette.m3secondary
                         }
 
                         StyledText {
                             Layout.alignment: Qt.AlignHCenter
                             text: GlobalConfig.services.useFahrenheit ? forecastItem.modelData.maxTempF + "°" + " / " + forecastItem.modelData.minTempF + "°" : forecastItem.modelData.maxTempC + "°" + " / " + forecastItem.modelData.minTempC + "°"
-                            font.weight: 600
+                            font: Tokens.font.body.builders.small.weight(Font.DemiBold).build()
                             color: Colours.palette.m3tertiary
-                        }
-
-                        StyledText {
-                            Layout.alignment: Qt.AlignHCenter
-                            visible: forecastItem.modelData.precipProbability > 0
-                            text: forecastItem.modelData.precipProbability + "%"
-                            font.pointSize: Tokens.font.size.smaller
-                            color: Colours.palette.m3secondary
                         }
                     }
                 }
@@ -319,17 +209,17 @@ Item {
 
         Layout.fillWidth: true
         Layout.preferredHeight: 60
-        radius: Tokens.rounding.small
+        radius: Tokens.rounding.medium
         color: Colours.tPalette.m3surfaceContainer
 
         Row {
             anchors.centerIn: parent
-            spacing: Tokens.spacing.normal
+            spacing: Tokens.spacing.medium
 
             MaterialIcon {
                 text: detailRoot.icon
                 color: detailRoot.colour
-                font.pointSize: Tokens.font.size.large
+                fontStyle: Tokens.font.icon.large
                 anchors.verticalCenter: parent.verticalCenter
             }
 
@@ -339,13 +229,13 @@ Item {
 
                 StyledText {
                     text: detailRoot.label
-                    font.pointSize: Tokens.font.size.smaller
+                    font: Tokens.font.body.small
                     opacity: 0.7
                     horizontalAlignment: Text.AlignLeft
                 }
                 StyledText {
                     text: detailRoot.value
-                    font.weight: 600
+                    font: Tokens.font.body.builders.small.weight(Font.DemiBold).build()
                     horizontalAlignment: Text.AlignLeft
                 }
             }
@@ -364,20 +254,19 @@ Item {
 
         MaterialIcon {
             text: weatherStat.icon
-            font.pointSize: Tokens.font.size.extraLarge
+            fontStyle: Tokens.font.icon.extraLarge
             color: weatherStat.colour
         }
 
         Column {
             StyledText {
                 text: weatherStat.label
-                font.pointSize: Tokens.font.size.smaller
+                font: Tokens.font.body.small
                 color: Colours.palette.m3onSurfaceVariant
             }
             StyledText {
                 text: weatherStat.value
-                font.pointSize: Tokens.font.size.small
-                font.weight: 600
+                font: Tokens.font.body.builders.small.weight(Font.DemiBold).build()
                 color: Colours.palette.m3onSurface
             }
         }

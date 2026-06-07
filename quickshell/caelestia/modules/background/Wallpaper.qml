@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Caelestia.Config
 import qs.components
-import qs.components.effects
 import qs.components.filedialog
 import qs.components.images
 import qs.services
@@ -13,25 +12,24 @@ Item {
     id: root
 
     property string source: Wallpapers.current
+    property CachingImage current
     property bool completed
-    property bool isRevealing: false
-    property real revealProgress: 0
 
     onSourceChanged: {
-        if (!source) return;
-        if (!completed) {
-            // FileView loaded after onCompleted — set base image directly
-            baseImage.path = source;
-            completed = true;
-            return;
-        }
-        overlayImage.path = source;
+        if (!source)
+            current = null;
+        else
+            current = imgComp.createObject(this, {
+                path: source
+            });
     }
 
     Component.onCompleted: {
         if (source)
             Qt.callLater(() => {
-                baseImage.path = source;
+                current = imgComp.createObject(this, {
+                    path: source
+                });
                 completed = true;
             });
     }
@@ -47,12 +45,12 @@ Item {
 
             Row {
                 anchors.centerIn: parent
-                spacing: Tokens.spacing.large
+                spacing: Tokens.spacing.largeIncreased
 
                 MaterialIcon {
                     text: "sentiment_stressed"
                     color: Colours.palette.m3onSurfaceVariant
-                    font.pointSize: Tokens.font.size.extraLarge * 5
+                    fontStyle: Tokens.font.icon.builders.extraLarge.scale(5).build()
                 }
 
                 Column {
@@ -62,13 +60,12 @@ Item {
                     StyledText {
                         text: qsTr("Wallpaper missing?")
                         color: Colours.palette.m3onSurfaceVariant
-                        font.pointSize: Tokens.font.size.extraLarge * 2
-                        font.bold: true
+                        font: Tokens.font.body.builders.large.size(28 * 2).weight(Font.Bold).build()
                     }
 
                     StyledRect {
-                        implicitWidth: selectWallText.implicitWidth + Tokens.padding.large * 2
-                        implicitHeight: selectWallText.implicitHeight + Tokens.padding.small * 2
+                        implicitWidth: selectWallText.implicitWidth + Tokens.padding.extraLargeIncreased
+                        implicitHeight: selectWallText.implicitHeight + Tokens.padding.small
 
                         radius: Tokens.rounding.full
                         color: Colours.palette.m3primary
@@ -95,7 +92,7 @@ Item {
 
                             text: qsTr("Set it now!")
                             color: Colours.palette.m3onPrimary
-                            font.pointSize: Tokens.font.size.large
+                            font: Tokens.font.body.large
                         }
                     }
                 }
@@ -103,81 +100,35 @@ Item {
         }
     }
 
-    // Base layer — always visible, holds the committed wallpaper
-    CachingImage {
-        id: baseImage
-        anchors.fill: parent
-    }
-
-    // Overlay — new wallpaper revealed through an expanding circle mask
-    Item {
-        id: overlayContainer
-        anchors.fill: parent
-        visible: root.isRevealing
-
-        layer.enabled: true
-        layer.effect: OpacityMask {
-            maskSource: circleMask
-        }
+    Component {
+        id: imgComp
 
         CachingImage {
-            id: overlayImage
+            id: img
+
             anchors.fill: parent
+
+            opacity: 0
 
             onStatusChanged: {
-                if (status === Image.Ready
-                        && path === root.source
-                        && root.completed
-                        && path !== baseImage.path) {
-                    root.isRevealing = true;
-                    revealAnim.restart();
-                }
+                if (status === Image.Ready)
+                    anim.start();
             }
-        }
-    }
 
-    // Mask: a white circle that grows from the screen centre outward
-    Item {
-        id: circleMask
-        anchors.fill: parent
-        layer.enabled: true
-        visible: false
+            Anim on opacity {
+                id: anim
 
-        Canvas {
-            id: circleCanvas
-            anchors.fill: parent
-            onPaint: {
-                var ctx = getContext("2d");
-                ctx.clearRect(0, 0, width, height);
-                if (root.revealProgress <= 0) return;
-                var maxR = Math.sqrt(width * width + height * height);
-                ctx.fillStyle = "white";
-                ctx.beginPath();
-                ctx.arc(width * 0.5, height * 0.5, maxR * root.revealProgress, 0, Math.PI * 2);
-                ctx.fill();
+                type: Anim.SlowEffects
+                running: false
+                from: 0
+                to: 1
             }
-        }
-    }
 
-    Connections {
-        target: root
-        function onRevealProgressChanged() { circleCanvas.requestPaint(); }
-    }
-
-    NumberAnimation {
-        id: revealAnim
-        target: root
-        property: "revealProgress"
-        from: 0; to: 1
-        duration: 1100
-        easing.type: Easing.OutCubic
-
-        onFinished: {
-            baseImage.path = overlayImage.path;
-            Qt.callLater(() => {
-                root.isRevealing = false;
-                root.revealProgress = 0;
-            });
+            Timer {
+                running: root.current !== img && root.current?.status === Image.Ready
+                interval: anim.duration
+                onTriggered: img.destroy()
+            }
         }
     }
 }

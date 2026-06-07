@@ -58,7 +58,7 @@ ColumnLayout {
             if (!Config.bar.tray.compact || (tray.expanded && !tray.expandIcon.contains(mapToItem(tray.expandIcon, tray.implicitWidth / 2, y)))) {
                 const index = Math.floor(((y - top - tray.padding * 2 + tray.spacing) / tray.layout.implicitHeight) * tray.items.count);
                 const trayItem = tray.items.itemAt(index);
-                if (trayItem && trayItem.modelData.hasMenu) {
+                if (trayItem) {
                     popouts.currentName = `traymenu${index}`;
                     popouts.currentCenter = Qt.binding(() => trayItem.mapToItem(root, 0, trayItem.implicitHeight / 2).y);
                     popouts.hasCurrent = true;
@@ -71,10 +71,6 @@ ColumnLayout {
             }
         } else if (id === "activeWindow" && Config.bar.popouts.activeWindow && Config.bar.activeWindow.showOnHover) {
             popouts.currentName = id.toLowerCase();
-            popouts.currentCenter = (ch.item as Item).mapToItem(root, 0, (ch.item as Item).implicitHeight / 2).y ?? 0;
-            popouts.hasCurrent = true;
-        } else if (id === "sysUsage") {
-            popouts.currentName = "sysUsage";
             popouts.currentCenter = (ch.item as Item).mapToItem(root, 0, (ch.item as Item).implicitHeight / 2).y ?? 0;
             popouts.hasCurrent = true;
         }
@@ -106,7 +102,7 @@ ColumnLayout {
         }
     }
 
-    spacing: Tokens.spacing.normal
+    spacing: Tokens.spacing.medium
 
     Repeater {
         id: repeater
@@ -175,13 +171,6 @@ ColumnLayout {
                     sourceComponent: Power {
                         visibilities: root.visibilities
                     }
-                }
-            }
-            DelegateChoice {
-                roleValue: "sysUsage"
-                delegate: WrappedLoader {
-                    visible: !root.fullscreen && (BarExtras.showCpu || BarExtras.showRam)
-                    sourceComponent: SysUsage {}
                 }
             }
         }

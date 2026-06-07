@@ -5,17 +5,6 @@
                 "scale": 0.5246087228714524
             }
         },
-        "font": {
-            "family": {
-                "clock": "Rubik",
-                "material": "Material Symbols Rounded",
-                "mono": "JetBrainsMono Nerd Font",
-                "sans": "Inter"
-            },
-            "size": {
-                "scale": 1
-            }
-        },
         "padding": {
             "scale": 1
         },
@@ -457,7 +446,7 @@
         ],
         "maxShown": 7,
         "maxWallpapers": 9,
-        "showOnHover": false,
+        "showOnHover": true,
         "specialPrefix": "@",
         "useFuzzy": {
             "actions": true,
@@ -511,7 +500,6 @@
                 "to": "YT Music"
             }
         ],
-        "showLyrics": false,
         "smartScheme": true,
         "useFahrenheit": false,
         "useFahrenheitPerformance": false,

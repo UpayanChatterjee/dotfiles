@@ -1,9 +1,7 @@
-//StatusIcons.qml
 pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls
 import Quickshell
 import Quickshell.Bluetooth
 import Quickshell.Services.UPower
@@ -11,8 +9,6 @@ import Caelestia.Config
 import qs.components
 import qs.services
 import qs.utils
-import Caelestia.Internal
-import qs.components.misc
 
 StyledRect {
     id: root
@@ -23,9 +19,9 @@ StyledRect {
     color: Colours.tPalette.m3surfaceContainer
     radius: Tokens.rounding.full
 
-    // clip: true
+    clip: true
     implicitWidth: Tokens.sizes.bar.innerWidth
-    implicitHeight: iconColumn.implicitHeight + Tokens.padding.normal * 2 - (Config.bar.status.showLockStatus && !Hypr.capsLock && !Hypr.numLock ? iconColumn.spacing : 0)
+    implicitHeight: iconColumn.implicitHeight + Tokens.padding.medium * 2 - (Config.bar.status.showLockStatus && !Hypr.capsLock && !Hypr.numLock ? iconColumn.spacing : 0)
 
     ColumnLayout {
         id: iconColumn
@@ -33,9 +29,9 @@ StyledRect {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: Tokens.padding.normal
+        anchors.bottomMargin: Tokens.padding.medium
 
-        spacing: Tokens.spacing.smaller / 2
+        spacing: Tokens.spacing.medium / 2
 
         // Lock keys status
         WrappedLoader {
@@ -61,7 +57,9 @@ StyledRect {
                         color: root.colour
 
                         Behavior on opacity {
-                            Anim {}
+                            Anim {
+                                type: Anim.DefaultEffects
+                            }
                         }
 
                         Behavior on scale {
@@ -92,7 +90,9 @@ StyledRect {
                         color: root.colour
 
                         Behavior on opacity {
-                            Anim {}
+                            Anim {
+                                type: Anim.DefaultEffects
+                            }
                         }
 
                         Behavior on scale {
@@ -103,41 +103,6 @@ StyledRect {
                     Behavior on implicitHeight {
                         Anim {}
                     }
-                }
-            }
-        }
-
-        // network speed
-        WrappedLoader {
-            // Note: Make sure "name" matches whatever string your PopoutManager uses to route the Network popup!
-            name: "netSpeed"
-            active: BarExtras.showNetSpeed
-
-            sourceComponent: Item {
-                implicitWidth: Tokens.sizes.bar.innerWidth
-                implicitHeight: netText.implicitHeight
-
-                Ref {
-                    service: NetworkUsage
-                }
-
-                StyledText {
-                    id: netText
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: {
-                        const dSpeed = NetworkUsage.downloadSpeed ?? 0;
-                        const uSpeed = NetworkUsage.uploadSpeed ?? 0;
-                        const d = dSpeed >= 1024 ? NetworkUsage.formatBytes(dSpeed) : null;
-                        const u = uSpeed >= 1024 ? NetworkUsage.formatBytes(uSpeed) : null;
-                        const uStr = u ? `${u.value.toFixed(0)}${u.unit[0]}` : "0";
-                        const dStr = d ? `${d.value.toFixed(0)}${d.unit[0]}` : "0";
-                        return `↑${uStr}\n↓${dStr}`;
-                    }
-                    font.pixelSize: 10
-                    font.family: Tokens.font.family.mono
-                    font.weight: Font.Bold
-                    color: Colours.palette.m3tertiary
-                    horizontalAlignment: Text.AlignHCenter
                 }
             }
         }
@@ -156,7 +121,7 @@ StyledRect {
 
         // Microphone icon
         WrappedLoader {
-            name: "microphone"
+            name: "audio"
             active: Config.bar.status.showMicrophone
 
             sourceComponent: MaterialIcon {
@@ -175,7 +140,7 @@ StyledRect {
                 animate: true
                 text: Hypr.kbLayout
                 color: root.colour
-                font.family: Tokens.font.family.mono
+                font: Tokens.font.mono.medium
             }
         }
 
@@ -211,7 +176,7 @@ StyledRect {
             active: Config.bar.status.showBluetooth
 
             sourceComponent: ColumnLayout {
-                spacing: Tokens.spacing.smaller / 2
+                spacing: Tokens.spacing.medium / 2
 
                 // Bluetooth icon
                 MaterialIcon {
@@ -269,52 +234,25 @@ StyledRect {
             }
         }
 
-        // Battery icon with Percentage
+        // Battery icon
         WrappedLoader {
             name: "battery"
             active: Config.bar.status.showBattery
 
-            sourceComponent: ColumnLayout {
-                spacing: 0
-
-                // Charging indicator
-                MaterialIcon {
-                    visible: UPower.displayDevice && UPower.displayDevice.isLaptopBattery
-                             && [UPowerDeviceState.Charging, UPowerDeviceState.FullyCharged, UPowerDeviceState.PendingCharge].includes(UPower.displayDevice.state)
-                    text: "bolt"
-                    font.pixelSize: 10
-                    color: !UPower.onBattery || (UPower.displayDevice && UPower.displayDevice.percentage > 0.2) ? root.colour : Colours.palette.m3error
-                    fill: 1
-                    Layout.alignment: Qt.AlignHCenter
-                }
-
-                // Battery percentage
-                StyledText {
-                    visible: UPower.displayDevice && UPower.displayDevice.isLaptopBattery
-                    text: (UPower.displayDevice ? Math.floor(UPower.displayDevice.percentage * 100) : 0)
-                    font.pixelSize: 13
-                    font.bold: true
-                    color: !UPower.onBattery || (UPower.displayDevice && UPower.displayDevice.percentage > 0.2) ? root.colour : Colours.palette.m3error
-                    Layout.alignment: Qt.AlignHCenter
-                }
-
-                // Fallback icon for non-laptop / no battery
-                MaterialIcon {
-                    visible: !UPower.displayDevice || !UPower.displayDevice.isLaptopBattery
-                    animate: true
-                    text: {
-                        if (!UPower.displayDevice)
-                            return "battery_unknown";
+            sourceComponent: MaterialIcon {
+                animate: true
+                text: {
+                    if (!UPower.displayDevice.isLaptopBattery) {
                         if (PowerProfiles.profile === PowerProfile.PowerSaver)
                             return "energy_savings_leaf";
                         if (PowerProfiles.profile === PowerProfile.Performance)
                             return "rocket_launch";
                         return "balance";
                     }
-                    color: root.colour
-                    fill: 1
-                    Layout.alignment: Qt.AlignHCenter
+                    return Icons.getBatteryIcon(UPower.displayDevice.percentage, [UPowerDeviceState.Charging, UPowerDeviceState.FullyCharged, UPowerDeviceState.PendingCharge].includes(UPower.displayDevice.state));
                 }
+                color: !UPower.onBattery || UPower.displayDevice.percentage > 0.2 ? root.colour : Colours.palette.m3error
+                fill: 1
             }
         }
     }
@@ -325,28 +263,5 @@ StyledRect {
         asynchronous: true
         Layout.alignment: Qt.AlignHCenter
         visible: active
-    }
-
-    component CardHeader: RowLayout {
-        property string icon
-        property string title
-        property color accentColor: Colours.palette.m3primary
-
-        Layout.fillWidth: true
-        spacing: Tokens.spacing.small
-
-        MaterialIcon {
-            text: parent.icon
-            fill: 1
-            color: parent.accentColor
-            font.pointSize: Tokens.spacing.large
-        }
-
-        StyledText {
-            Layout.fillWidth: true
-            text: parent.title
-            font.pointSize: Tokens.font.size.normal
-            elide: Text.ElideRight
-        }
     }
 }
