@@ -54,9 +54,11 @@
     },
     "sysmon": {
       "plasma-systemmonitor": {
+        "enable": true,
         "match": [
           {
-            "class": "org.kde.plasma-systemmonitor"
+            "class": "org.kde.plasma-systemmonitor",
+            "title": "Overview — System Monitor"
           }
         ],
         "command": [
