@@ -42,7 +42,56 @@ Singleton {
     signal configReloaded
 
     function dispatch(request: string): void {
-        Hyprland.dispatch(request);
+        const parts = request.split(" ");
+        const cmd = parts[0];
+        let lua = "";
+
+        switch (cmd) {
+            case "workspace": {
+                const ws = parts.slice(1).join(" ");
+                if (/^[re][+-]/.test(ws))
+                    lua = `hl.dsp.focus({ workspace = "${ws}" })`;
+                else
+                    lua = `hl.dsp.focus({ workspace = ${ws} })`;
+                break;
+            }
+            case "togglespecialworkspace":
+                lua = `hl.dsp.workspace.toggle_special("${parts[1]}")`;
+                break;
+            case "movetoworkspace": {
+                const sub = parts[1].split(",");
+                const ws = sub[0];
+                const addr = sub[1]?.replace("address:", "") ?? "";
+                if (addr)
+                    lua = `hl.dsp.window.move({ workspace = ${ws}, address = "${addr}" })`;
+                else
+                    lua = `hl.dsp.window.move({ workspace = ${ws} })`;
+                break;
+            }
+            case "togglefloating": {
+                const addr = parts[1].replace("address:", "");
+                lua = `hl.dsp.window.float({ address = "${addr}", action = "toggle" })`;
+                break;
+            }
+            case "pin": {
+                const addr = parts[1].replace("address:", "");
+                lua = `hl.dsp.window.pin({ address = "${addr}" })`;
+                break;
+            }
+            case "killwindow": {
+                const addr = parts[1].replace("address:", "");
+                lua = `hl.dsp.window.close({ address = "${addr}" })`;
+                break;
+            }
+            case "dpms":
+                lua = `hl.dsp.output.dpms(${parts[1] === "on" ? "true" : "false"})`;
+                break;
+            default:
+                lua = request;
+                break;
+        }
+
+        Quickshell.execDetached(["hyprctl", "dispatch", lua]);
     }
 
     function cycleSpecialWorkspace(direction: string): void {
@@ -86,11 +135,6 @@ Singleton {
         return Hyprland.monitorFor(screen);
     }
 
-    function reloadDynamicConfs(): void {
-        extras.batchMessage(["keyword bindlni ,Caps_Lock,global,caelestia:refreshDevices", "keyword bindlni ,Num_Lock,global,caelestia:refreshDevices"]);
-    }
-
-    Component.onCompleted: reloadDynamicConfs()
 
     onCapsLockChanged: {
         if (!GlobalConfig.utilities.toasts.capsLockChanged)
@@ -119,6 +163,13 @@ Singleton {
         hadKeyboard = !!keyboard;
     }
 
+    Timer {
+        interval: 500
+        running: true
+        repeat: true
+        onTriggered: extras.refreshDevices()
+    }
+
     Connections {
         function onRawEvent(event: HyprlandEvent): void {
             const n = event.name;
@@ -127,7 +178,6 @@ Singleton {
 
             if (n === "configreloaded") {
                 root.configReloaded();
-                root.reloadDynamicConfs();
             } else if (["workspace", "moveworkspace", "activespecial", "focusedmon"].includes(n)) {
                 Hyprland.refreshWorkspaces();
                 Hyprland.refreshMonitors();

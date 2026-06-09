@@ -59,6 +59,11 @@ Item {
             root.volume = Audio.volume;
         }
 
+        function onVolumeAdjustAttempted(): void {
+            root.show();
+            root.volume = Audio.volume;
+        }
+
         function onSourceMutedChanged(): void {
             root.show();
             root.sourceMuted = Audio.sourceMuted;
@@ -69,11 +74,21 @@ Item {
             root.sourceVolume = Audio.sourceVolume;
         }
 
+        function onSourceVolumeAdjustAttempted(): void {
+            root.show();
+            root.sourceVolume = Audio.sourceVolume;
+        }
+
         target: Audio
     }
 
     Connections {
         function onBrightnessChanged(): void {
+            root.show();
+            root.brightness = root.monitor?.brightness ?? 0;
+        }
+
+        function onBrightnessAdjustAttempted(): void {
             root.show();
             root.brightness = root.monitor?.brightness ?? 0;
         }

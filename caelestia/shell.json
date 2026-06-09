@@ -446,7 +446,7 @@
         ],
         "maxShown": 7,
         "maxWallpapers": 9,
-        "showOnHover": true,
+        "showOnHover": false,
         "specialPrefix": "@",
         "useFuzzy": {
             "actions": true,
@@ -488,11 +488,11 @@
         "wallpaperDir": "/home/tony/walls"
     },
     "services": {
-        "audioIncrement": 0.1,
+        "audioIncrement": 0.05,
         "brightnessIncrement": 0.1,
         "defaultPlayer": "Spotify",
         "gpuType": "",
-        "lyricsBackend": "Auto",
+        "lyricsBackend": "LyricsBackend::NetEase",
         "maxVolume": 1,
         "playerAliases": [
             {

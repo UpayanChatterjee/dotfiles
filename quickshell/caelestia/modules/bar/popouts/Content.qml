@@ -122,6 +122,11 @@ Item {
         }
 
         Popout {
+            name: "netspeed"
+            sourceComponent: NetworkSpeed {}
+        }
+
+        Popout {
             name: "lockstatus"
             sourceComponent: LockStatus {}
         }

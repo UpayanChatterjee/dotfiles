@@ -31,17 +31,8 @@ hl.bind("XF86AudioPrev", hl.dsp.global("caelestia:mediaPrev"), { locked = true }
 hl.bind("XF86AudioStop", hl.dsp.global("caelestia:mediaStop"), { locked = true })
 hl.bind("CTRL + SUPER + N", hl.dsp.global("caelestia:mediaNextPlayer"), { locked = true })
 
--- Refresh keyboard devices when numlock/capslock toggled (so QML indicators update)
-hl.bind(
-	"Caps_Lock",
-	hl.dsp.global("caelestia:refreshDevices"),
-	{ locked = true, non_consuming = true, ignore_mods = true }
-)
-hl.bind(
-	"Num_Lock",
-	hl.dsp.global("caelestia:refreshDevices"),
-	{ locked = true, non_consuming = true, ignore_mods = true }
-)
+-- CapsLock/NumLock detection: Hyprland 0.55 cannot bind modifier-only keys.
+-- Instead, Quickshell polls keyboard state every 500ms (Timer in services/Hypr.qml).
 
 -- Kill/restart shell (release binds)
 hl.bind("CTRL + SUPER + SHIFT + R", hl.dsp.exec_cmd("qs -c caelestia kill"), { release = true })
@@ -222,3 +213,5 @@ hl.bind("mouse:274", function()
 		hl.dispatch(hl.dsp.window.drag())
 	end
 end, { mouse = true, non_consuming = true })
+
+hl.bind("CTRL + Space", hl.dsp.exec_cmd("vicinae toggle"))

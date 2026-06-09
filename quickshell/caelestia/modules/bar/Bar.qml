@@ -46,12 +46,20 @@ ColumnLayout {
         const top = ch.y;
 
         if (id === "statusIcons" && Config.bar.popouts.statusIcons) {
-            const items = (ch.item as StatusIcons).items;
+            const statusIcons = ch.item as StatusIcons;
+            const items = statusIcons.items;
             const icon = items.childAt(items.width / 2, mapToItem(items, 0, y).y);
             if (icon) {
                 popouts.currentName = icon.name;
                 popouts.currentCenter = Qt.binding(() => icon.mapToItem(root, 0, icon.implicitHeight / 2).y);
                 popouts.hasCurrent = true;
+            } else if (statusIcons.netspeed.active) {
+                const nsY = mapToItem(statusIcons.netspeed, 0, y).y;
+                if (nsY >= 0 && nsY < statusIcons.netspeed.height) {
+                    popouts.currentName = "netspeed";
+                    popouts.currentCenter = Qt.binding(() => statusIcons.netspeed.mapToItem(root, 0, statusIcons.netspeed.implicitHeight / 2).y);
+                    popouts.hasCurrent = true;
+                }
             }
         } else if (id === "tray" && Config.bar.popouts.tray) {
             const tray = ch.item as Tray;

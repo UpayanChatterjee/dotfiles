@@ -172,6 +172,8 @@ Singleton {
         property real brightness
         property real queuedBrightness: NaN
 
+        signal brightnessAdjustAttempted()
+
         readonly property Process initProc: Process {
             stdout: StdioCollector {
                 onStreamFinished: {
@@ -197,6 +199,7 @@ Singleton {
         }
 
         function setBrightness(value: real): void {
+            brightnessAdjustAttempted();
             value = Math.max(0, Math.min(1, value));
             const rounded = Math.round(value * 100);
             if (Math.round(brightness * 100) === rounded)
