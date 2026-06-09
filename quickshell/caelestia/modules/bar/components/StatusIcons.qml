@@ -6,7 +6,10 @@ import Quickshell
 import Quickshell.Bluetooth
 import Quickshell.Services.UPower
 import Caelestia.Config
+import Caelestia.Services
+import M3Shapes
 import qs.components
+import qs.components.controls
 import qs.services
 import qs.utils
 
@@ -15,23 +18,88 @@ Item {
 
     property color colour: Colours.palette.m3secondary
     readonly property alias items: iconColumn
+    readonly property alias sysmon: sysmonLoader
     readonly property alias netspeed: netspeedLoader
 
     implicitWidth: pill.implicitWidth
-    implicitHeight: (netspeedLoader.active ? netspeedLoader.implicitHeight + Tokens.spacing.medium / 2 : 0) + pill.implicitHeight
+    implicitHeight:
+        (sysmonLoader.active ? sysmonLoader.implicitHeight + Tokens.spacing.medium / 2 : 0) +
+        (netspeedLoader.active ? netspeedLoader.implicitHeight + Tokens.spacing.medium / 2 : 0) +
+        pill.implicitHeight
 
-    Binding {
-        target: NetworkUsage
-        property: "refCount"
-        value: Config.bar.status.showNetwork ? 1 : 0
+    // System monitor - CPU and RAM usage, bare on the taskbar
+    Loader {
+        id: sysmonLoader
+        active: true
+        asynchronous: true
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+
+        sourceComponent: Item {
+            implicitWidth: column.implicitWidth
+            implicitHeight: column.implicitHeight
+
+            ColumnLayout {
+                id: column
+
+                spacing: 0
+
+                CircularProgress {
+                    implicitSize: 26
+                    value: Memory.percentage
+                    strokeWidth: 2
+                    fgColour: Colours.palette.m3tertiary
+
+                    Behavior on clampedVal {
+                        Anim {}
+                    }
+
+                    StyledText {
+                        anchors.centerIn: parent
+                        text: Math.round(Memory.percentage * 100)
+                        font.pixelSize: 10
+                        font.bold: true
+                        color: Colours.palette.m3tertiary
+                    }
+                }
+
+                MaterialShape {
+                    implicitSize: 26
+                    color: Colours.palette.m3secondaryContainer
+                    shape: {
+                        if (Cpu.percentage >= 0.8)
+                            return MaterialShape.SoftBurst;
+                        if (Cpu.percentage >= 0.4)
+                            return MaterialShape.Sunny;
+                        return MaterialShape.Cookie4Sided;
+                    }
+
+                    Behavior on color {
+                        CAnim {}
+                    }
+
+                    StyledText {
+                        anchors.centerIn: parent
+                        text: Math.round(Cpu.percentage * 100)
+                        font.pixelSize: 10
+                        font.bold: true
+                        color: Colours.palette.m3primary
+                    }
+                }
+            }
+
+            ServiceRef { service: Cpu }
+            ServiceRef { service: Memory }
+        }
     }
 
-    // Network speed - bare on the taskbar, outside the pill background
+    // Network speed - bare on the taskbar
     Loader {
         id: netspeedLoader
         active: Config.bar.status.showNetwork
         asynchronous: true
-        anchors.top: parent.top
+        anchors.top: sysmonLoader.active ? sysmonLoader.bottom : parent.top
+        anchors.topMargin: sysmonLoader.active ? Tokens.spacing.medium / 2 : 0
         anchors.horizontalCenter: parent.horizontalCenter
 
         sourceComponent: ColumnLayout {
@@ -83,12 +151,18 @@ Item {
         }
     }
 
+    Binding {
+        target: NetworkUsage
+        property: "refCount"
+        value: Config.bar.status.showNetwork ? 1 : 0
+    }
+
     // Pill background with remaining status icons
     StyledRect {
         id: pill
 
-        anchors.top: netspeedLoader.active ? netspeedLoader.bottom : parent.top
-        anchors.topMargin: netspeedLoader.active ? Tokens.spacing.medium / 2 : 0
+        anchors.top: netspeedLoader.active ? netspeedLoader.bottom : (sysmonLoader.active ? sysmonLoader.bottom : parent.top)
+        anchors.topMargin: (netspeedLoader.active || sysmonLoader.active) ? Tokens.spacing.medium / 2 : 0
 
         color: Colours.tPalette.m3surfaceContainer
         radius: Tokens.rounding.full

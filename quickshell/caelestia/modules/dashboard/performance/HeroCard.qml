@@ -4,6 +4,7 @@ import M3Shapes
 import Caelestia.Config
 import qs.components
 import qs.components.controls
+import qs.components.misc
 import qs.services
 
 StyledRect {
@@ -15,6 +16,11 @@ StyledRect {
     required property color accent
     required property real usage
     required property real temperature
+    property int fanSpeed: -1
+
+    Ref {
+        service: FanSpeeds
+    }
 
     color: Colours.tPalette.m3surfaceContainer
     radius: Tokens.rounding.extraLarge
@@ -94,6 +100,22 @@ StyledRect {
 
             StyledText {
                 text: `${Math.ceil(GlobalConfig.services.useFahrenheitPerformance ? root.temperature * 1.8 + 32 : root.temperature)}°${GlobalConfig.services.useFahrenheitPerformance ? "F" : "C"}`
+                font: Tokens.font.body.builders.medium.build()
+            }
+
+            Item { Layout.fillWidth: true }
+
+            MaterialIcon {
+                visible: root.fanSpeed >= 0
+                Layout.topMargin: Math.round(fontInfo.pointSize * 0.08)
+                text: "mode_fan"
+                color: root.accent
+                fontStyle: Tokens.font.icon.medium
+            }
+
+            StyledText {
+                visible: root.fanSpeed >= 0
+                text: `${root.fanSpeed} RPM`
                 font: Tokens.font.body.builders.medium.build()
             }
         }

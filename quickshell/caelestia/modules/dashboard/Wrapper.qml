@@ -12,9 +12,7 @@ Item {
     id: root
 
     required property DrawerVisibilities visibilities
-    readonly property DashboardState dashState: DashboardState {
-        reloadableId: "dashboardState"
-    }
+    readonly property DashboardState dashState: DashboardState
     readonly property FileDialog facePicker: FileDialog {
         title: qsTr("Select a profile picture")
         filterLabel: qsTr("Image files")

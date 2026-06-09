@@ -47,19 +47,36 @@ ColumnLayout {
 
         if (id === "statusIcons" && Config.bar.popouts.statusIcons) {
             const statusIcons = ch.item as StatusIcons;
+
+            // Sysmon — independent check, above the pill
+            if (statusIcons.sysmon.active) {
+                const smY = mapToItem(statusIcons.sysmon, 0, y).y;
+                if (smY >= 0 && smY < statusIcons.sysmon.height) {
+                    popouts.currentName = "sysmon";
+                    popouts.currentCenter = Qt.binding(() => statusIcons.sysmon.mapToItem(root, 0, statusIcons.sysmon.implicitHeight / 2).y);
+                    popouts.hasCurrent = true;
+                    return;
+                }
+            }
+
+            // Netspeed — independent check, above the pill
+            if (statusIcons.netspeed.active) {
+                const nsY = mapToItem(statusIcons.netspeed, 0, y).y;
+                if (nsY >= 0 && nsY < statusIcons.netspeed.height) {
+                    popouts.currentName = "netspeed";
+                    popouts.currentCenter = Qt.binding(() => statusIcons.netspeed.mapToItem(root, 0, statusIcons.netspeed.implicitHeight / 2).y);
+                    popouts.hasCurrent = true;
+                    return;
+                }
+            }
+
+            // Pill icons
             const items = statusIcons.items;
             const icon = items.childAt(items.width / 2, mapToItem(items, 0, y).y);
             if (icon) {
                 popouts.currentName = icon.name;
                 popouts.currentCenter = Qt.binding(() => icon.mapToItem(root, 0, icon.implicitHeight / 2).y);
                 popouts.hasCurrent = true;
-            } else if (statusIcons.netspeed.active) {
-                const nsY = mapToItem(statusIcons.netspeed, 0, y).y;
-                if (nsY >= 0 && nsY < statusIcons.netspeed.height) {
-                    popouts.currentName = "netspeed";
-                    popouts.currentCenter = Qt.binding(() => statusIcons.netspeed.mapToItem(root, 0, statusIcons.netspeed.implicitHeight / 2).y);
-                    popouts.hasCurrent = true;
-                }
             }
         } else if (id === "tray" && Config.bar.popouts.tray) {
             const tray = ch.item as Tray;

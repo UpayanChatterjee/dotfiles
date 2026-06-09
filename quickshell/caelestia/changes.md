@@ -160,3 +160,97 @@ The fix translates old dispatch commands to their Lua equivalents (e.g., `hl.dsp
 2. **OSD now shows when volume is at min (0) or max.** `Wrapper.qml` only listened to `onVolumeChanged` (a property-change signal that doesn't fire when the value is clamped to the same boundary). Added handlers for `onVolumeAdjustAttempted` and `onSourceVolumeAdjustAttempted` — signals `Audio.qml` already emitted on every adjustment attempt regardless of whether the value changed.
 
 3. **OSD now shows when brightness is at min (0%) or max (100%).** `Brightness.qml`'s `setBrightness()` returned early when the rounded value matched current brightness, preventing `brightnessChanged` from firing. Added a `brightnessAdjustAttempted` signal emitted at the very start of `setBrightness()`, before the early return, and connected `Wrapper.qml` to it.
+
+---
+
+## 2026-06-10: Vicinae dynamic theme support
+
+**Files:**
+- `~/.config/caelestia/templates/vicinae.toml` (new) — theme template using `{{ name.hex }}` placeholders
+- `~/.local/share/vicinae/themes/caelestia.toml` — symlink → `~/.local/state/caelestia/theme/vicinae.toml`
+- `~/.config/vicinae/settings.json` — changed theme from `dracula` to `caelestia` for both dark/light
+- `~/.config/caelestia/post-theme-hook.sh` — added `vicinae theme set caelestia` for live reload
+
+**What:** Added dynamic Vicinae theming that regenerates on every wallpaper change, following the same pattern as kitty, yazi, and the other apps. The template maps caelestia Material Design 3 colours to Vicinae's theme structure (core colours, eight accent hues, text, input, button, list, grid, scrollbar, and loading colours). Both dark and light variants are supported through the `{{ mode }}` placeholder.
+
+**How it works:** The existing `apply_user_templates` in caelestia's `theme.py` processes `~/.config/caelestia/templates/*` on every wallpaper change and writes output to `~/.local/state/caelestia/theme/`. A symlink from Vicinae's themes directory points to the generated file. The post-hook calls `vicinae theme set caelestia` so the running instance picks up changes immediately.
+
+**Template colour mapping:**
+- `core.accent` → primary, `core.background` → surface, `core.foreground` → onSurface
+- `core.secondary_background` → surfaceContainer, `core.border` → outlineVariant
+- `accents`: blue→blue, green→green, magenta→mauve, orange→peach, red→red, yellow→yellow, cyan→teal, purple→lavender
+- `text.danger` → error, `text.success` → success, `text.muted` → onSurfaceVariant
+- `input.border_focus` → primary, `input.border_error` → error
+- `button.primary.background` → primary, `.foreground` → onPrimary, `.hover` → primaryContainer
+
+---
+
+## 2026-06-10: Fixed dashboard tab shortcuts (Super+Ctrl+P/M/W)
+
+**Files:**
+- `modules/Shortcuts.qml` — added three new `CustomShortcut` definitions
+- `components/DashboardState.qml` — converted to proper singleton
+
+**Root cause:** Hyprland `keybinds.conf` dispatched `caelestia:dashboardMedia`, `caelestia:dashboardPerformance`, `caelestia:dashboardWeather` (bound to Ctrl+Super+M/P/W), but no matching `CustomShortcut` definitions existed in the QML code. Additionally, `DashboardState` was a regular component — accessing `DashboardState.currentTab` from `Shortcuts.qml` created a different instance than the one the dashboard used, so tab switching and close-on-repress never worked.
+
+**Fix — Shortcuts.qml:** Added three `CustomShortcut` blocks (lines 51-127):
+- Each computes the correct filtered tab index (accounting for enabled/disabled tabs via `Config.dashboard.showDashboard`, `showMedia`, etc.)
+- If dashboard is hidden → shows it at the target tab
+- If visible on a different tab → switches to the target tab
+- If already on the target tab → hides the dashboard
+
+**Fix — DashboardState.qml:** Added `pragma Singleton` and moved `reloadableId: "dashboardState"` inline. Updated `Wrapper.qml` to reference the singleton (`DashboardState`) instead of creating a new instance (`DashboardState { ... }`). This makes `DashboardState.currentTab` globally accessible.
+
+---
+
+## 2026-06-10: Added CPU/GPU fan speed display to performance dashboard
+
+**Files:**
+- `services/FanSpeeds.qml` (new) — singleton service for fan speed discovery and polling
+- `modules/dashboard/performance/HeroCard.qml` — added `fanSpeed` property and display row
+- `modules/dashboard/Performance.qml` — wired `FanSpeeds` to CPU/GPU `HeroCard` instances
+
+**What:** The CPU and GPU performance cards now show fan RPM alongside temperature. Fan icon and speed appear on the right side of the temperature row (e.g. `🌡 51°C  fan 3100 RPM`), hidden when no fan sensor is detected.
+
+**How it works:**
+1. **Discovery** — `Process` runs `sh -c` to scan `/sys/class/hwmon/hwmon*/fan*_label` files, matching `*cpu*` and `*gpu*` (case-insensitive) to find sensor paths. Labels are stable (set by kernel drivers) so this survives hwmon renumbering across reboots.
+2. **Polling** — `Timer` fires every `resourceUpdateInterval` ms, runs `cat` on discovered paths via a second `Process`, parses RPM values into `cpuFanRpm` / `gpuFanRpm`.
+3. **Lifecycle** — `Ref { service: FanSpeeds }` in `HeroCard` manages the `refCount`, following the same pattern as `NetworkCard` / `NetworkUsage`.
+4. **Display** — `HeroCard.fanSpeed` defaults to -1 (not shown). When >= 0, a fan icon and RPM text appear in the temperature row, right-aligned via a spacer.
+
+**Robustness:**
+- Fan labels (not hwmon indices) identify sensors — survives device renumbering
+- No match → `fanSpeed` stays -1 → row stays hidden (graceful degradation)
+- Discovery script uses regular JS string (not template literal) to prevent `$` interpolation
+- `StdioCollector.text` used as property (not function) — matches Quickshell API
+- Process-based `cat` reading avoids `FileView` dynamic-path-change concerns
+
+---
+
+## 2026-06-10: Repositioned fan speed to same row as temperature
+
+**File:** `modules/dashboard/performance/HeroCard.qml`
+
+**What:** Merged the separate fan speed `RowLayout` into the temperature `RowLayout`. Fan icon and RPM text sit on the right side of the row, with a `Layout.fillWidth` spacer between them and the temperature display. This puts both readings on one line: temperature (left) + fan speed (right), with the temperature progress bar below.
+
+---
+
+## 2026-06-10: Added CPU/RAM taskbar indicators with system monitor popout
+
+**Files:**
+- `modules/bar/components/StatusIcons.qml` — added `sysmonLoader` (CPU + RAM) and `netspeedLoader` above the pill
+- `modules/bar/popouts/SystemMonitor.qml` (new) — hover popout with CPU/GPU temps and fan speeds
+- `modules/bar/popouts/Content.qml` — registered `"sysmon"` popout
+- `modules/bar/Bar.qml` — independent hit-testing for sysmon and netspeed within the statusIcons area
+
+**What:**
+- **Taskbar indicators** — Two small widgets stacked vertically above the status icon pill:
+  - **RAM**: `CircularProgress` full circle (26×26, 2px stroke, tertiary colour) with percentage number centered (no % symbol)
+  - **CPU**: `MaterialShape` (26×26) morphing with usage level (`Cookie4Sided` < 40%, `Sunny` 40–80%, `SoftBurst` > 80%), primary colour, with percentage number centered
+- **Network speed** — Compact upload/download speeds below the sysmon indicators, same monospace format as before (`↑3M` / `↓12K`)
+
+**Popout:** Hovering over the CPU/RAM indicators shows CPU and GPU rows, each with icon, label, temperature (with °F support), and fan speed (hidden when no fan detected). GPU row hidden entirely when `Gpu.type === Gpu.None`. `Ref { service: FanSpeeds }` keeps fan data alive while the popout is open.
+
+**Hit-testing:** Each indicator (sysmon, netspeed) has its own independent `if` block with early `return` inside the `statusIcons` branch — checked in priority order: sysmon → netspeed → pill icons. No chaining or mutual dependency.
+
+**Layout:** Both loaders sit bare on the taskbar above the pill (no background). The pill's top anchor and the root `implicitHeight` adjust dynamically based on which loaders are active. Since `StatusIcons` is positioned by the bar's entry order (typically near the bottom), the indicators appear between the clock and the status icon pill.

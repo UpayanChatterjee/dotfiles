@@ -127,6 +127,11 @@ Item {
         }
 
         Popout {
+            name: "sysmon"
+            sourceComponent: SystemMonitor {}
+        }
+
+        Popout {
             name: "lockstatus"
             sourceComponent: LockStatus {}
         }

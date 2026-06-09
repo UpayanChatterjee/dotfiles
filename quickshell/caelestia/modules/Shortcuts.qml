@@ -2,6 +2,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Caelestia
+import Caelestia.Config
+import qs.components
 import qs.components.misc
 import qs.services
 import qs.modules.nexus
@@ -43,6 +45,84 @@ Scope {
                 return;
             const visibilities = Visibilities.getForActive();
             visibilities.dashboard = !visibilities.dashboard;
+        }
+    }
+
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "dashboardMedia"
+        description: "Toggle dashboard with Media tab"
+        onPressed: {
+            if (root.hasFullscreen)
+                return;
+            if (!Config.dashboard.showMedia) {
+                const visibilities = Visibilities.getForActive();
+                visibilities.dashboard = !visibilities.dashboard;
+                return;
+            }
+            const visibilities = Visibilities.getForActive();
+            const idx = Config.dashboard.showDashboard ? 1 : 0;
+            if (!visibilities.dashboard) {
+                visibilities.dashboard = true;
+                DashboardState.currentTab = idx;
+            } else if (DashboardState.currentTab === idx) {
+                visibilities.dashboard = false;
+            } else {
+                DashboardState.currentTab = idx;
+            }
+        }
+    }
+
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "dashboardPerformance"
+        description: "Toggle dashboard with Performance tab"
+        onPressed: {
+            if (root.hasFullscreen)
+                return;
+            if (!Config.dashboard.showPerformance) {
+                const visibilities = Visibilities.getForActive();
+                visibilities.dashboard = !visibilities.dashboard;
+                return;
+            }
+            const visibilities = Visibilities.getForActive();
+            const idx = (Config.dashboard.showDashboard ? 1 : 0) + (Config.dashboard.showMedia ? 1 : 0);
+            if (!visibilities.dashboard) {
+                visibilities.dashboard = true;
+                DashboardState.currentTab = idx;
+            } else if (DashboardState.currentTab === idx) {
+                visibilities.dashboard = false;
+            } else {
+                DashboardState.currentTab = idx;
+            }
+        }
+    }
+
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "dashboardWeather"
+        description: "Toggle dashboard with Weather tab"
+        onPressed: {
+            if (root.hasFullscreen)
+                return;
+            if (!Config.dashboard.showWeather) {
+                const visibilities = Visibilities.getForActive();
+                visibilities.dashboard = !visibilities.dashboard;
+                return;
+            }
+            const visibilities = Visibilities.getForActive();
+            const idx = (Config.dashboard.showDashboard ? 1 : 0) + (Config.dashboard.showMedia ? 1 : 0) + (Config.dashboard.showPerformance ? 1 : 0);
+            if (!visibilities.dashboard) {
+                visibilities.dashboard = true;
+                DashboardState.currentTab = idx;
+            } else if (DashboardState.currentTab === idx) {
+                visibilities.dashboard = false;
+            } else {
+                DashboardState.currentTab = idx;
+            }
         }
     }
 
