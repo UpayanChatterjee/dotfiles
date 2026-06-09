@@ -1,0 +1,79 @@
+[meta]
+version = 1
+name = "Caelestia"
+description = "Dynamic theme generated from wallpaper colours by Caelestia."
+variant = "{{ mode }}"
+inherits = "vicinae-{{ mode }}"
+
+[colors.core]
+accent = "#{{ primary.hex }}"
+accent_foreground = "#{{ onPrimary.hex }}"
+background = "#{{ surface.hex }}"
+foreground = "#{{ onSurface.hex }}"
+secondary_background = "#{{ surfaceContainer.hex }}"
+border = "#{{ outlineVariant.hex }}"
+
+[colors.main_window]
+border = "#{{ outlineVariant.hex }}"
+footer = { background = "#{{ surfaceContainer.hex }}" }
+
+[colors.settings_window]
+border = "#{{ outlineVariant.hex }}"
+
+[colors.accents]
+blue = "#{{ blue.hex }}"
+green = "#{{ green.hex }}"
+magenta = "#{{ mauve.hex }}"
+orange = "#{{ peach.hex }}"
+red = "#{{ red.hex }}"
+yellow = "#{{ yellow.hex }}"
+cyan = "#{{ teal.hex }}"
+purple = "#{{ lavender.hex }}"
+
+[colors.shortcut]
+border = "#{{ outlineVariant.hex }}"
+
+[colors.text]
+default = "#{{ onSurface.hex }}"
+muted = "#{{ onSurfaceVariant.hex }}"
+danger = "#{{ error.hex }}"
+success = "#{{ success.hex }}"
+placeholder = "#{{ outline.hex }}"
+selection = { background = "#{{ primary.hex }}", foreground = "#{{ onPrimary.hex }}" }
+
+[colors.text.links]
+default = "#{{ blue.hex }}"
+visited = "#{{ mauve.hex }}"
+
+[colors.input]
+border = "#{{ outlineVariant.hex }}"
+border_focus = "#{{ primary.hex }}"
+border_error = "#{{ error.hex }}"
+
+[colors.button.primary]
+background = "#{{ primary.hex }}"
+foreground = "#{{ onPrimary.hex }}"
+hover = { background = "#{{ primaryContainer.hex }}" }
+focus = { outline = "#{{ primary.hex }}" }
+
+[colors.list.item.hover]
+foreground = "#{{ onSurface.hex }}"
+secondary_foreground = "#{{ onSurface.hex }}"
+
+[colors.list.item.selection]
+background = "#{{ surfaceContainerHigh.hex }}"
+foreground = "#{{ onSurface.hex }}"
+secondary_background = "#{{ surfaceContainerHigh.hex }}"
+secondary_foreground = "#{{ onSurface.hex }}"
+
+[colors.grid.item]
+background = "#{{ surfaceContainer.hex }}"
+hover = { outline = "#{{ onSurfaceVariant.hex }}" }
+selection = { outline = "#{{ primary.hex }}" }
+
+[colors.scrollbars]
+background = "#{{ outlineVariant.hex }}"
+
+[colors.loading]
+bar = "#{{ primary.hex }}"
+spinner = "#{{ onSurface.hex }}"

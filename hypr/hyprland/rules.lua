@@ -121,15 +121,15 @@ hl.window_rule({
 })
 
 -- bitwarden extension
-hl.window_rule({
-	match = {
-		title = "Zen Browser",
-		class = "zen",
-	},
-	float = true,
-	keep_aspect_ratio = true,
-	center = true,
-})
+-- hl.window_rule({
+-- 	match = {
+-- 		title = "Zen Browser",
+-- 		class = "zen",
+-- 	},
+-- 	float = true,
+-- 	keep_aspect_ratio = true,
+-- 	center = true,
+-- })
 
 -- Creative software (opaque)
 hl.window_rule({
@@ -242,6 +242,9 @@ hl.layer_rule({ match = { namespace = "caelestia-drawers" }, ignore_alpha = 0.57
 -- Overview blur
 hl.layer_rule({ match = { namespace = "quickshell:overview-blur" }, blur = true })
 hl.layer_rule({ match = { namespace = "quickshell:overview-blur" }, ignore_alpha = 0.2 })
+
+-- Vicinae
+hl.layer_rule({ match = { namespace = "vicinae" }, blur = true, ignore_alpha = 0 })
 
 -- GTK blur?
 -- hl.layer_rule({ match = { namespace = "gtk-layer-shell" }, blur = true })

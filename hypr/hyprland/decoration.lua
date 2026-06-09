@@ -32,8 +32,8 @@ hl.config({
 		},
 
 		--dusky
-		active_opacity = 0.85, -- Opacity of active windows [0.0 - 1.0]
-		inactive_opacity = 0.85, -- Opacity of inactive windows [0.0 - 1.0]
+		active_opacity = 0.95, -- Opacity of active windows [0.0 - 1.0]
+		inactive_opacity = 0.95, -- Opacity of inactive windows [0.0 - 1.0]
 		fullscreen_opacity = 1.0, -- Opacity of fullscreen windows [0.0 - 1.0]
 		dim_modal = true, -- Enables dimming of parents of modal windows
 		dim_inactive = true, -- Enables dimming of inactive windows

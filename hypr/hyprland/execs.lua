@@ -45,4 +45,7 @@ hl.on("hyprland.start", function()
 
 	-- xdm (X11 backend needed for GtkStatusIcon -> XEmbed -> xembedsniproxy -> SNI)
 	hl.exec_cmd("sleep 2 && GDK_BACKEND=x11 /opt/xdman/xdm-app --background")
+
+	-- vicinae
+	hl.exec_cmd("vicinae server")
 end)

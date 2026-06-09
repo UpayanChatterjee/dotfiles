@@ -101,6 +101,10 @@ open(os.path.expanduser('$_kvtheme/Caelestia.svg'), 'w').write(svg)
   ln -sf "$_kvtheme/Caelestia.svg" "$_kvout/Caelestia.svg"
 fi
 
+# Vicinae: reapply theme after colour regeneration so the running
+# instance picks up the newly written theme file.
+vicinae theme set caelestia 2>/dev/null
+
 # bat: rebuild the syntax-highlighting theme cache so 'bat' picks up
 # the newly generated Caelestia.tmTheme on the next invocation.
 if [ -f "$_kvtheme/Caelestia.tmTheme" ]; then
