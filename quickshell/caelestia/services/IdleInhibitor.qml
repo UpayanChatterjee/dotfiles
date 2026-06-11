@@ -1,8 +1,11 @@
 pragma Singleton
 
+import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Services.UPower
 import Quickshell.Wayland
+import Caelestia
 
 Singleton {
     id: root
@@ -10,9 +13,20 @@ Singleton {
     property alias enabled: props.enabled
     readonly property alias enabledSince: props.enabledSince
 
+    // distinguishes the unplug auto-off from a manual off for the toast
+    property bool autoDisabling: false
+
     onEnabledChanged: {
-        if (enabled)
+        if (enabled) {
             props.enabledSince = new Date();
+            props.enabledOnBattery = UPower.onBattery;
+            Toaster.toast(qsTr("Keep awake enabled"), qsTr("The screen will stay on"), "coffee");
+        } else if (autoDisabling) {
+            autoDisabling = false;
+            Toaster.toast(qsTr("Keep awake disabled"), qsTr("Charger was unplugged"), "power_off");
+        } else {
+            Toaster.toast(qsTr("Keep awake disabled"), qsTr("Normal power management restored"), "coffee");
+        }
     }
 
     PersistentProperties {
@@ -20,8 +34,20 @@ Singleton {
 
         property bool enabled
         property date enabledSince
+        property bool enabledOnBattery
 
         reloadableId: "idleInhibitor"
+    }
+
+    Connections {
+        function onOnBatteryChanged(): void {
+            if (UPower.onBattery && props.enabled && !props.enabledOnBattery) {
+                root.autoDisabling = true;
+                props.enabled = false;
+            }
+        }
+
+        target: UPower
     }
 
     IdleInhibitor {

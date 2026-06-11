@@ -1,5 +1,38 @@
 # Caelestia Shell — Hyprland 0.55 Lua Migration
 
+## 2026-06-12: Keep Awake auto-off on charger unplug + toggle toasts
+
+**File:** `services/IdleInhibitor.qml`
+
+**What:** The "Keep Awake" card (utilities panel, `modules/utilities/cards/IdleInhibit.qml`) now reacts to power events:
+- If keep-awake was enabled **while plugged in**, unplugging the charger auto-disables it with a toast ("Keep awake disabled / Charger was unplugged", icon `power_off`).
+- If it was enabled **while on battery**, it is exempt — no unplug ever auto-disables it (exemption sticks through plug/unplug cycles until manually turned off). Tracked via new `enabledOnBattery` bool in the `PersistentProperties` block, stamped with `UPower.onBattery` at enable time.
+- Manual toggling now toasts: "Keep awake enabled / The screen will stay on" and "Keep awake disabled / Normal power management restored" (icon `coffee`).
+
+**How:** Added imports `QtQuick`, `Quickshell.Services.UPower`, `Caelestia`; a `Connections { target: UPower }` on `onOnBatteryChanged` (same pattern as `modules/BatteryMonitor.qml`) that, when going on battery with `enabled && !enabledOnBattery`, sets a transient `autoDisabling` flag and disables; `onEnabledChanged` picks the toast based on that flag. Plug-in events do nothing.
+
+**Notes:** Toasts are unconditional — the `GlobalConfig.utilities.toasts.*` gate keys are a fixed compiled C++ schema (`UtilitiesToasts` in `libcaelestia-config.so`), so no new gate key can be added without rebuilding the plugin. On unplug, the existing BatteryMonitor "Charger unplugged" toast (gated by `toasts.chargingChanged`) appears alongside the new one. Known quirk (same as GameMode): a shell config reload that restores `enabled: true` re-fires the toast and re-stamps `enabledOnBattery`.
+
+---
+
+## 2026-06-12: Fixed game mode quick toggle (keyword IPC → eval)
+
+**File:** `services/GameMode.qml`
+
+**Root cause:** `setDynamicConfs()` used `Hypr.extras.applyOptions({...})`, which sends `[[BATCH]]keyword <option> <value>;...` over the Hyprland IPC socket. Hyprland 0.55's Lua (non-legacy) config parser rejects every `keyword` request with `keyword can't work with non-legacy parsers. Use eval.` The failure is silent — the toggle flipped and the toast showed, but no options were applied. Same breakage class as the `Hyprland.dispatch()` fix (2026-06-09).
+
+**Fix:** Replaced the `applyOptions()` call with a single eval message via the existing socket path:
+```qml
+Hypr.extras.message("eval hl.config({ animations = { enabled = false }, decoration = { rounding = 0, shadow = { enabled = false }, blur = { enabled = false } }, general = { gaps_in = 0, gaps_out = 0, border_size = 1, allow_tearing = true } })");
+```
+The disable path (`Hypr.extras.message("reload")`) was already working (re-runs the Lua config tree) and is unchanged.
+
+**Verified:** `qs -c caelestia ipc call gameMode toggle` → `hyprctl getoption` shows animations false, gaps 0, blur false, border 1; toggle off restores config values. Note: the gameMode IPC target only registers once the utilities drawer (or DesktopClock) first instantiates the singleton.
+
+**Known wart (intentionally untouched):** the cold-start state binding `Hypr.options["animations:enabled"] === 0` reads `descriptions` IPC data, which on 0.55 reports booleans and is desynced from `getoption`; it harmlessly evaluates false. Persistent state across reloads comes from `PersistentProperties` anyway.
+
+---
+
 ## 2026-06-11: ZapZap dynamic theming (backgrounds + accent)
 
 Replaces WhatsApp Web's stock green with the wallpaper accent and themes its

@@ -13,16 +13,8 @@ Singleton {
     property alias enabled: props.enabled
 
     function setDynamicConfs(): void {
-        Hypr.extras.applyOptions({
-            "animations:enabled": 0,
-            "decoration:shadow:enabled": 0,
-            "decoration:blur:enabled": 0,
-            "general:gaps_in": 0,
-            "general:gaps_out": 0,
-            "general:border_size": 1,
-            "decoration:rounding": 0,
-            "general:allow_tearing": 1
-        });
+        // Hyprland 0.55's Lua parser rejects `keyword` IPC (which applyOptions uses); set options via eval instead
+        Hypr.extras.message("eval hl.config({ animations = { enabled = false }, decoration = { rounding = 0, shadow = { enabled = false }, blur = { enabled = false } }, general = { gaps_in = 0, gaps_out = 0, border_size = 1, allow_tearing = true } })");
     }
 
     onEnabledChanged: {
