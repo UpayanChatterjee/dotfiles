@@ -112,6 +112,13 @@ ColumnLayout {
                 color: networkItem.modelData.active ? Colours.palette.m3primary : Colours.palette.m3onSurface
             }
 
+            StyledText {
+                visible: networkItem.modelData.active
+                text: networkItem.modelData.strength + "%"
+                color: Colours.palette.m3primary
+                font: Tokens.font.body.small
+            }
+
             StyledRect {
                 implicitWidth: implicitHeight
                 implicitHeight: wirelessConnectIcon.implicitHeight + Tokens.padding.extraSmall

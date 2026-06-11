@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick.Layouts
 import Caelestia.Config
 import qs.modules.nexus.common
+import qs.services
 
 PageBase {
     id: root
@@ -25,6 +26,34 @@ PageBase {
         ToggleRow {
             Layout.fillWidth: true
             first: true
+            text: qsTr("CPU usage")
+            checked: BarConfig.showCpu
+            onToggled: BarConfig.showCpu = checked
+        }
+
+        ToggleRow {
+            Layout.fillWidth: true
+            text: qsTr("RAM usage")
+            checked: BarConfig.showRam
+            onToggled: BarConfig.showRam = checked
+        }
+
+        ToggleRow {
+            Layout.fillWidth: true
+            text: qsTr("Upload speed")
+            checked: BarConfig.showUpload
+            onToggled: BarConfig.showUpload = checked
+        }
+
+        ToggleRow {
+            Layout.fillWidth: true
+            text: qsTr("Download speed")
+            checked: BarConfig.showDownload
+            onToggled: BarConfig.showDownload = checked
+        }
+
+        ToggleRow {
+            Layout.fillWidth: true
             text: qsTr("Speakers")
             checked: Config.bar.status.showAudio
             onToggled: GlobalConfig.bar.status.showAudio = checked

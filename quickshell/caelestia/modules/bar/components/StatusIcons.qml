@@ -30,7 +30,7 @@ Item {
     // System monitor - CPU and RAM usage, bare on the taskbar
     Loader {
         id: sysmonLoader
-        active: true
+        active: BarConfig.showCpu || BarConfig.showRam
         asynchronous: true
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
@@ -45,6 +45,7 @@ Item {
                 spacing: 0
 
                 CircularProgress {
+                    visible: BarConfig.showRam
                     implicitSize: 26
                     value: Memory.percentage
                     strokeWidth: 2
@@ -64,6 +65,7 @@ Item {
                 }
 
                 MaterialShape {
+                    visible: BarConfig.showCpu
                     implicitSize: 26
                     color: Colours.palette.m3secondaryContainer
                     shape: {
@@ -96,7 +98,7 @@ Item {
     // Network speed - bare on the taskbar
     Loader {
         id: netspeedLoader
-        active: Config.bar.status.showNetwork
+        active: BarConfig.showUpload || BarConfig.showDownload
         asynchronous: true
         anchors.top: sysmonLoader.active ? sysmonLoader.bottom : parent.top
         anchors.topMargin: sysmonLoader.active ? Tokens.spacing.medium / 2 : 0
@@ -106,6 +108,7 @@ Item {
             spacing: 0
 
             RowLayout {
+                visible: BarConfig.showUpload
                 Layout.alignment: Qt.AlignHCenter
                 spacing: 0
 
@@ -128,6 +131,7 @@ Item {
             }
 
             RowLayout {
+                visible: BarConfig.showDownload
                 Layout.alignment: Qt.AlignHCenter
                 spacing: 0
 
@@ -154,7 +158,7 @@ Item {
     Binding {
         target: NetworkUsage
         property: "refCount"
-        value: Config.bar.status.showNetwork ? 1 : 0
+        value: Config.bar.status.showNetwork || BarConfig.showUpload || BarConfig.showDownload ? 1 : 0
     }
 
     // Pill background with remaining status icons

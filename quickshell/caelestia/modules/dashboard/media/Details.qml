@@ -36,7 +36,7 @@ ColumnLayout {
     StyledText {
         Layout.fillWidth: true
         text: Players.active?.trackTitle ?? ""
-        font: Tokens.font.title.large
+        font: Tokens.font.title.medium
         elide: Text.ElideRight
         animate: true
     }
@@ -45,7 +45,7 @@ ColumnLayout {
         Layout.fillWidth: true
         text: Players.active?.trackArtist || qsTr("Unknown artist")
         color: Colours.palette.m3onSurfaceVariant
-        font: Tokens.font.title.medium
+        font: Tokens.font.title.small
         elide: Text.ElideRight
         animate: true
     }
@@ -54,7 +54,7 @@ ColumnLayout {
         Layout.fillWidth: true
         text: Players.active?.trackAlbum || qsTr("Unknown album")
         color: Colours.palette.m3secondary
-        font: Tokens.font.title.medium
+        font: Tokens.font.title.small
         elide: Text.ElideRight
         animate: true
     }

@@ -14,9 +14,15 @@ import qs.services
 Item {
     id: root
 
+    property bool lyricsEnabled: true
+
     // Funny binding hack to make lyrics update
     readonly property var _: {
         const p = Players.active;
+        if (!root.lyricsEnabled) {
+            Lyrics.clearTrack();
+            return undefined;
+        }
         if (p)
             Lyrics.setTrack(p.trackArtist, p.trackTitle, p.trackAlbum, p.length);
         else
@@ -268,7 +274,7 @@ Item {
 
             text: modelData || ". . ."
             color: ListView.isCurrentItem ? Colours.palette.m3primary : mouse.containsMouse ? Colours.palette.m3onSurface : Colours.palette.m3outline
-            font: Tokens.font.body.medium
+            font: Tokens.font.body.small
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
             layer.enabled: effectScale > 0

@@ -33,11 +33,33 @@ Item {
             }
 
             LyricsInfo {}
+
+            Item {
+                implicitWidth: implicitHeight
+                implicitHeight: toggleIcon.implicitHeight + Tokens.padding.extraSmall * 2
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: BarConfig.showLyrics = !BarConfig.showLyrics
+                }
+
+                MaterialIcon {
+                    id: toggleIcon
+
+                    anchors.centerIn: parent
+                    text: BarConfig.showLyrics ? "expand_less" : "expand_more"
+                    fontStyle: Tokens.font.icon.medium
+                    color: Colours.palette.m3onSurfaceVariant
+                }
+            }
         }
 
         LyricList {
             Layout.fillWidth: true
             Layout.fillHeight: true
+            visible: BarConfig.showLyrics
+            lyricsEnabled: BarConfig.showLyrics
         }
 
         SplitButton {

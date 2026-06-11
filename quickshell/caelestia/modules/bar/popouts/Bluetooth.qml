@@ -111,6 +111,13 @@ ColumnLayout {
                 color: device.modelData.batteryAvailable && device.modelData.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
             }
 
+            StyledText {
+                visible: device.modelData.connected && device.modelData.batteryAvailable
+                text: Math.round(device.modelData.battery * 100) + "%"
+                color: device.modelData.battery < 0.2 ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
+                font: Tokens.font.body.small
+            }
+
             StyledRect {
                 id: connectBtn
 

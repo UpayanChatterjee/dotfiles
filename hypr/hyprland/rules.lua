@@ -244,7 +244,7 @@ hl.layer_rule({ match = { namespace = "quickshell:overview-blur" }, blur = true 
 hl.layer_rule({ match = { namespace = "quickshell:overview-blur" }, ignore_alpha = 0.2 })
 
 -- Vicinae
-hl.layer_rule({ match = { namespace = "vicinae" }, blur = true, ignore_alpha = 0 })
+hl.layer_rule({ match = { namespace = "vicinae" }, blur = true, ignore_alpha = 0, no_anim = true })
 
 -- GTK blur?
 -- hl.layer_rule({ match = { namespace = "gtk-layer-shell" }, blur = true })

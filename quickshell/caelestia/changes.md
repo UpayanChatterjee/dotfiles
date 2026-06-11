@@ -254,3 +254,64 @@ The fix translates old dispatch commands to their Lua equivalents (e.g., `hl.dsp
 **Hit-testing:** Each indicator (sysmon, netspeed) has its own independent `if` block with early `return` inside the `statusIcons` branch — checked in priority order: sysmon → netspeed → pill icons. No chaining or mutual dependency.
 
 **Layout:** Both loaders sit bare on the taskbar above the pill (no background). The pill's top anchor and the root `implicitHeight` adjust dynamically based on which loaders are active. Since `StatusIcons` is positioned by the bar's entry order (typically near the bottom), the indicators appear between the clock and the status icon pill.
+
+---
+
+## 2026-06-11: Media player widget auto-switches to actively playing player
+
+**File:** `services/Players.qml`
+
+**What:** The `active` property now prefers whichever player is currently playing, rather than always sticking to the manually selected or first-in-list player. Logic:
+1. If the manually selected player is playing → keep it (respects manual choice when active)
+2. If any other player is playing → switch to it automatically
+3. If nothing is playing → fall back to manual selection → default player config → first in list
+
+**Why:** If you started a second player (e.g. YouTube in browser) while Spotify was paused, the dashboard media widget stayed on Spotify. Now it follows playback state.
+
+**Changed:** Replaced the single-line `active` binding with a block expression that checks `p.isPlaying` on the manual player and then does `list.find(p => p.isPlaying)` before falling back to the old logic.
+
+---
+
+## 2026-06-11: Lyrics toggle in media dashboard tab
+
+**Files:**
+- `services/Players.qml` — added `property bool showLyrics: true` to existing `PersistentProperties` block; exposed as `property alias showLyrics: props.showLyrics`
+- `modules/dashboard/media/LyricsAndSelector.qml` — added toggle button (`expand_less`/`expand_more`) in Lyrics header row; passes `lyricsEnabled: Players.showLyrics` to `LyricList`
+- `modules/dashboard/media/LyricList.qml` — added `property bool lyricsEnabled: true`; `_` binding calls `Lyrics.clearTrack()` and returns early when disabled
+
+**Why persistence was broken:** The previous attempt put `PersistentProperties` inside `LyricsAndSelector`, which lives inside a `Loader` with `active: opacity > 0`. When the dashboard closes, opacity goes to 0, the Loader destroys the component, and the value is lost. Moving the property into the `Players` singleton (which is always alive) fixes this.
+
+**Behaviour:** Toggling off hides the lyric list and immediately stops any lyrics search (`Lyrics.clearTrack()`). Toggling on resumes fetching. State persists via `BarConfig` (see later entry — the original `PersistentProperties` approach was replaced).
+
+---
+
+## 2026-06-11: Nexus toggles for custom taskbar indicators (CPU, RAM, upload, download speed)
+
+**Files:**
+- `services/BarConfig.qml` (new) — singleton backed by `FileView` + `JsonAdapter` writing to `~/.config/caelestia/bar-extras.json`; exposes `showCpu`, `showRam`, `showUpload`, `showDownload`, `showLyrics`
+- `modules/bar/components/StatusIcons.qml` — sysmon loader gated on `BarConfig.showCpu || BarConfig.showRam`; each indicator's visibility gated individually; netspeed loader gated on `BarConfig.showUpload || BarConfig.showDownload`; `NetworkUsage.refCount` binding updated accordingly
+- `modules/nexus/pages/panels/taskbar/BarStatusIcons.qml` — four new `ToggleRow` entries (CPU usage, RAM usage, Upload speed, Download speed) added above existing icon toggles; imports `qs.services`
+- `modules/dashboard/media/LyricsAndSelector.qml` — `showLyrics` toggle moved from `Players` to `BarConfig`
+- `services/Players.qml` — removed `showLyrics`, `showCpu`, `showRam`, `showUpload`, `showDownload` (these never actually persisted across full restarts via `PersistentProperties`)
+
+**Why `PersistentProperties` didn't work:** It only transfers state between old/new QML instances during a hot-reload within the same process. A full `qs kill + caelestia shell -d` restart has no old instance, so all values reset to defaults. `FileView` + `JsonAdapter` writes to disk on every change (`onAdapterUpdated: writeAdapter()`) and reads back synchronously on startup (`blockLoading: true`), surviving full restarts.
+
+---
+
+## 2026-06-11: Reduced font sizes in media dashboard tab
+
+**Files:**
+- `modules/dashboard/media/Details.qml` — track title `title.large` → `title.medium`; artist and album `title.medium` → `title.small`
+- `modules/dashboard/media/LyricList.qml` — lyric lines `body.medium` → `body.small`
+
+**Why:** Long track/artist/album names were being clipped; smaller fonts allow more text to fit before eliding.
+
+---
+
+## 2026-06-11: WiFi signal strength and Bluetooth battery percentage in popouts
+
+**Files:**
+- `modules/bar/popouts/Network.qml` — added signal strength % for active network
+- `modules/bar/popouts/Bluetooth.qml` — added battery % for connected Bluetooth devices
+
+**What:** In the WiFi popout, the currently connected network now shows its signal strength (e.g. `72%`) right-aligned between the SSID name and the disconnect button. In the Bluetooth popout, connected devices that support battery reporting show their battery percentage (e.g. `85%`) in the same position, to the left of the connect button. Percentage turns error-red when battery < 20%, matching the existing battery icon color logic. Both are invisible when not applicable (not connected / battery unavailable).
