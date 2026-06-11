@@ -150,6 +150,38 @@ StyledRect {
                         onClicked: VPN.toggle()
                     }
                 }
+                DelegateChoice {
+                    roleValue: "shazam"
+                    delegate: Toggle {
+                        icon: "graphic_eq"
+                        checked: Shazam.running
+                        onClicked: Shazam.toggle()
+                    }
+                }
+                DelegateChoice {
+                    roleValue: "mono"
+                    delegate: Toggle {
+                        icon: "speaker"
+                        checked: Mono.active
+                        onClicked: Mono.toggle()
+                    }
+                }
+                DelegateChoice {
+                    roleValue: "stt"
+                    delegate: Toggle {
+                        icon: "speech_to_text"
+                        checked: STT.recording
+                        onClicked: STT.toggle()
+                    }
+                }
+                DelegateChoice {
+                    roleValue: "tts"
+                    delegate: Toggle {
+                        icon: "text_to_speech"
+                        checked: TTS.speaking
+                        onClicked: TTS.toggle()
+                    }
+                }
             }
         }
     }

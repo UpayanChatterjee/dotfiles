@@ -1,5 +1,31 @@
 # Caelestia Shell — Hyprland 0.55 Lua Migration
 
+## 2026-06-11: Fixed apps/screenshots opening on the wrong workspace
+
+**File:** `~/.config/hypr/hyprland/misc.lua` — added `initial_workspace_tracking = 0` to the `hl.config({ misc = {...} })` block.
+
+**Problem:** Apps launched from the quickshell launcher, and screenshot previews (swappy), would intermittently open on a workspace other than the active one.
+
+**Root cause:** Hyprland's `misc:initial_workspace_tracking` (default `1`) pins a newly-mapped window to the workspace recorded in the spawning process's `HL_INITIAL_WORKSPACE_TOKEN` env var, not the currently-active workspace. The long-running shells (`qs -c caelestia`, `qs -c overview`) carry a stale token from when they were launched at session start, and every child they spawn inherits it — launcher uses `execDetached(["app2unit", ...])` (`modules/launcher/services/Apps.qml`), screenshot preview uses `execDetached(["swappy", "-f", path])` (`modules/areapicker/Picker.qml`). So those windows landed on the shell's startup workspace. Intermittent because the token is consumed/expires after use.
+
+**Fix:** Setting `initial_workspace_tracking = 0` disables the feature entirely — windows always open on the active workspace. Chosen over surgically stripping the token from shell launches because it's a one-line, bulletproof fix that matches the desired behavior, with no coverage gaps.
+
+**IMPORTANT — config location:** This setup's *live* Hyprland config is the **Lua tree** (`~/.config/hypr/hyprland.lua` → `require("hyprland.misc")` etc.), NOT the `.conf` files. The `.conf` twins (`misc.conf`, `input.conf`, ...) are stale leftovers from before the 0.55 Lua migration and are not loaded. Editing `misc.conf` had no effect; `hyprctl reload` re-runs the Lua config only. Always edit the `.lua` files. Verify with `hyprctl getoption misc:initial_workspace_tracking` (expect `set: true`).
+
+---
+
+## 2026-06-11: Mako/quickshell notification seat handover
+
+**Files:**
+- `~/.local/bin/caelestia-shell` (new) — wrapper script that stops mako before starting quickshell, so quickshell can claim `org.freedesktop.Notifications` cleanly
+- `~/.config/hypr/hyprland/execs.conf` — changed `caelestia shell -d` to `caelestia-shell -d`
+
+**Problem:** Mako has a D-Bus activation file (`/usr/share/dbus-1/services/fr.emersion.mako.service`) that registers it as `org.freedesktop.Notifications`. When quickshell crashes, the next outgoing notification auto-activates mako via D-Bus. When quickshell restarts, it can't reclaim the seat because mako is already holding it.
+
+**Fix:** The wrapper calls `systemctl --user stop mako` (synchronous) before `exec caelestia shell "$@"`. The seat is free by the time quickshell registers. The reverse direction (quickshell dies → mako auto-activates) already works via D-Bus activation with no changes needed.
+
+---
+
 ## 2026-06-09: Removed `keyword bindlni` from Hypr.qml
 
 **File:** `services/Hypr.qml`
@@ -315,3 +341,38 @@ The fix translates old dispatch commands to their Lua equivalents (e.g., `hl.dsp
 - `modules/bar/popouts/Bluetooth.qml` — added battery % for connected Bluetooth devices
 
 **What:** In the WiFi popout, the currently connected network now shows its signal strength (e.g. `72%`) right-aligned between the SSID name and the disconnect button. In the Bluetooth popout, connected devices that support battery reporting show their battery percentage (e.g. `85%`) in the same position, to the left of the connect button. Percentage turns error-red when battery < 20%, matching the existing battery icon color logic. Both are invisible when not applicable (not connected / battery unavailable).
+
+---
+
+## 2026-06-11: Re-added Shazam, STT, TTS, Mono Audio toggles
+
+**Files:**
+- `services/Shazam.qml` (new) — singleton that runs `~/user_scripts/music/music_recognition.sh`; exposes `running` property and `toggle()`
+- `services/STT.qml` (new) — singleton that runs `~/user_scripts/tts_stt/stt_record.sh`; exposes `recording` property and `toggle()`
+- `services/TTS.qml` (new) — singleton that runs `~/user_scripts/tts_stt/tts_speak.sh`; exposes `speaking` property and `toggle()`
+- `services/Mono.qml` (new) — singleton that reads `~/.config/dusky/settings/mono_audio` for state; calls `~/user_scripts/audio/mono_audio_pipewire.py toggle` to toggle; exposes `active` property and `toggle()`
+- `modules/utilities/cards/Toggles.qml` — added four `DelegateChoice` blocks (shazam, mono, stt, tts) after the vpn entry
+
+**Icons:** `graphic_eq` (shazam), `speaker` (mono), `speech_to_text` (stt), `text_to_speech` (tts)
+
+**Config:** `shell.json` already has all four entries in `utilities.quickToggles` with `enabled: true` — no change needed there.
+
+---
+
+## 2026-06-11: RAM optimizations
+
+**Files:**
+- `~/.config/caelestia/shell.json` — two config changes
+- `services/Audio.qml` — gate CavaProvider behind refcount proxy
+- `modules/dashboard/media/CoverVisualiser.qml` — point ServiceRef at proxy
+- `modules/background/Visualiser.qml` — point ServiceRef at proxy
+
+**Changes:**
+
+1. **Disabled desktop clock blur** (`background.desktopClock.background.blur: false`). Removes a ShaderEffectSource + MultiEffect offscreen framebuffer that sampled the wallpaper texture every frame behind the clock.
+
+2. **Narrowed wallpaper directory** (`paths.wallpaperDir: "/home/tony/walls/dark/favs/"`). The FileSystemModel scans all images recursively and holds every entry as a QML object in memory. Using the smaller favs directory instead of the full walls tree reduces this proportionally.
+
+3. **Gated CavaProvider behind a refcount.** Previously, `CavaProvider { bars: 45 }` was unconditionally instantiated in the `Audio` singleton, running an active Pipewire audio capture + FFT pipeline 24/7. The existing `ServiceRef { service: Audio.cava }` calls had no effect because CavaProvider has no built-in `refCount` property — they were creating a dangling dynamic property.
+
+   Fix: added a `cavaRef` QtObject proxy on the Audio singleton with a real `refCount` property that syncs to `_cavaRefCount`. CavaProvider is now wrapped in a `Loader { asynchronous: false; active: _cavaRefCount > 0 }` so it is only instantiated when the dashboard media tab or background visualiser is active. `Audio.cava` is now a typed property (`CavaProvider`) pointing at `cavaLoader.item`. Updated `ServiceRef` targets in `CoverVisualiser.qml` and `Visualiser.qml` to use `Audio.cavaRef`. Added null-safe access (`?.values ?? []`) at the two value read sites. CavaProvider now only captures audio when the dashboard media tab is open (or the background visualiser is enabled).

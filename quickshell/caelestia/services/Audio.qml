@@ -28,8 +28,15 @@ Singleton {
     readonly property bool sourceMuted: !!source?.audio?.muted
     readonly property real sourceVolume: source?.audio?.volume ?? 0
 
-    readonly property alias cava: cava
+    readonly property CavaProvider cava: cavaLoader.item as CavaProvider
     readonly property alias beatTracker: beatTracker
+
+    // Gates CavaProvider: only runs when something references Audio.cavaRef
+    property int _cavaRefCount: 0
+    readonly property QtObject cavaRef: QtObject {
+        property int refCount: 0
+        onRefCountChanged: root._cavaRefCount = refCount
+    }
 
     signal volumeAdjustAttempted()
     signal sourceVolumeAdjustAttempted()
@@ -179,10 +186,14 @@ Singleton {
         objects: [...root.sinks, ...root.sources, ...root.streams]
     }
 
-    CavaProvider {
-        id: cava
+    Loader {
+        id: cavaLoader
 
-        bars: GlobalConfig.services.visualiserBars
+        asynchronous: false
+        active: root._cavaRefCount > 0
+        sourceComponent: CavaProvider {
+            bars: GlobalConfig.services.visualiserBars
+        }
     }
 
     BeatTracker {

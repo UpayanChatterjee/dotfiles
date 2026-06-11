@@ -16,6 +16,8 @@ hl.config({
 
 		on_focus_under_fullscreen = 2,
 		allow_session_lock_restore = true,
+		-- Windows always open on the active workspace (shells otherwise propagate a stale HL_INITIAL_WORKSPACE_TOKEN to spawned apps/screenshot previews)
+		initial_workspace_tracking = 0,
 		middle_click_paste = false,
 		focus_on_activate = true,
 		session_lock_xray = true,

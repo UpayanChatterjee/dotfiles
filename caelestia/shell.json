@@ -23,7 +23,7 @@
     "background": {
         "desktopClock": {
             "background": {
-                "blur": true,
+                "blur": false,
                 "enabled": true,
                 "opacity": 0.09462432310469314
             },
@@ -172,7 +172,7 @@
     "dashboard": {
         "dragThreshold": 0,
         "enabled": true,
-        "mediaUpdateInterval": 500,
+        "mediaUpdateInterval": 800,
         "performance": {
             "showBattery": true,
             "showCpu": true,
@@ -485,11 +485,11 @@
         "mediaGif": "root:/assets/bongocat.gif",
         "noNotifsPic": "root:/assets/dino.png",
         "sessionGif": "root:/assets/portal-rick-and-morty.gif",
-        "wallpaperDir": "/home/tony/walls"
+        "wallpaperDir": "/home/tony/walls/dark/favs/"
     },
     "services": {
         "audioIncrement": 0.05,
-        "brightnessIncrement": 0.1,
+        "brightnessIncrement": 0.05,
         "defaultPlayer": "Spotify",
         "gpuType": "",
         "lyricsBackend": "LyricsBackend::NetEase",
