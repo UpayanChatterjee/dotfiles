@@ -492,7 +492,7 @@
         "brightnessIncrement": 0.05,
         "defaultPlayer": "Spotify",
         "gpuType": "",
-        "lyricsBackend": "LyricsBackend::NetEase",
+        "lyricsBackend": "LyricsBackend::Auto",
         "maxVolume": 1,
         "playerAliases": [
             {

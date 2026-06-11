@@ -8,7 +8,7 @@
         "enable": false
       },
       "whatsie": {
-        "enable": true,
+        "enable": false,
         "match": [
           {
             "class": "com.ktechpit.whatsie"
@@ -16,6 +16,18 @@
         ],
         "command": [
           "whatsie"
+        ],
+        "move": true
+      },
+      "zapzap": {
+        "enable": true,
+        "match": [
+          {
+            "class": "com.rtosta.zapzap"
+          }
+        ],
+        "command": [
+          "zapzap"
         ],
         "move": true
       }

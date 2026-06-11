@@ -1,5 +1,64 @@
 # Caelestia Shell — Hyprland 0.55 Lua Migration
 
+## 2026-06-11: ZapZap dynamic theming (backgrounds + accent)
+
+Replaces WhatsApp Web's stock green with the wallpaper accent and themes its
+backgrounds, regenerated on every scheme change. Verified end-to-end via
+QtWebEngine remote debugging (`QTWEBENGINE_REMOTE_DEBUGGING=9222 zapzap` + CDP).
+
+**How modern WhatsApp Web (the `color-refresh` UI) is themed:**
+- Two layers. (1) WDS palette primitives on `:root`: `--WDS-neutral-gray-*`,
+  `--WDS-green-*`, `--WDS-emerald-*`. (2) Semantic system tokens
+  (`--WDS-surface-default`, `--WDS-systems-bubble-surface-outgoing/incoming`,
+  `--WDS-background-wash-*`, `--WDS-persistent-always-branded`, …) which the
+  per-chat-theme classes (obfuscated, e.g. `.x1umy8rd.x1umy8rd`) redeclare with
+  LITERAL hex values on a wrapper element *below* `<html>`.
+- Critical gotcha: a `:root { … !important }` override does NOT propagate past
+  that wrapper — descendants inherit each custom property from the *nearest
+  declaring ancestor*, and `!important` only wins cascade fights on the same
+  element. The override selector must be `*` so it lands on the wrapper itself.
+- So the generated CSS is `* { …all overrides… !important }` covering BOTH the
+  primitives and the semantic tokens. The old `--background-default`, `--teal`,
+  `._amk6` etc. are legacy and unused by `color-refresh`.
+
+**Why CSS, not JS:** ZapZap injects user JS as an inline `<script>` node, which
+WhatsApp Web's CSP blocks (never executes). CSS (`<style>` node) is not blocked.
+
+**Implementation:**
+- Generated in `~/.config/caelestia/post-theme-hook.sh` (Python block, reads
+  `SCHEME_COLOURS`) rather than the template engine, because the WDS `*-RGB`
+  alpha channels need bare `r,g,b` values the engine can't emit. Writes
+  `~/.local/state/caelestia/theme/zapzap.css`.
+- Mapping: gray-900/850/800/700 ← surface / surfaceContainerLow / Container /
+  ContainerHigh; bright green+emerald shades ← primary; dark green/emerald
+  shades ← primaryContainer (the dark accent surface in dark schemes, so light
+  text stays readable — do NOT use onPrimaryContainer, it's light in normal
+  dark schemes). Semantic tokens: surface-default / wash-plain|inset /
+  chat-background-wallpaper / chat-surface-tray ← surface; elevated washes /
+  nav-bar / chat-surface-composer / surface-elevated-default ←
+  surfaceContainerLow; surface-emphasized / bubble-surface-incoming ←
+  surfaceContainer; bubble-surface-outgoing ← primaryContainer;
+  persistent-always-branded (status dot green) ← primary.
+- Verified clean via rendered-color census over `#app *`: zero stock WhatsApp
+  colors remain (left pane, chat panel, both bubble directions, accent).
+- Wallpaper-colour tinting: all surfaces are blended towards primaryContainer
+  via `mix()` in the hook — `TINT = 0.14` for general surfaces, `0.35` for the
+  chat-area background (`systems-chat-background-wallpaper`), and the doodle
+  pattern (`systems-chat-foreground-wallpaper`) is `rgba(primary, .12)`.
+  Tune TINT in the hook to taste; 0 restores plain scheme surfaces.
+- Note: injection happens only at page load, so toggling things in ZapZap's
+  Customizations UI mid-session can leave the page unthemed until the next
+  app restart. With dark wallpapers the background change is subtle by design —
+  the accent (chips, badges, buttons) is the visible tell.
+- Symlinked to
+  `~/.local/share/ZapZap/customizations/accounts/storage-whats/css/zapzap.css`.
+- `~/.config/ZapZap/ZapZap.conf`: `accounts\storage-whats\css\enabled=true`,
+  `inherit=false`, empty `css\disabled_files`. (JS left disabled — CSP blocks it.)
+
+To re-add a green token if some element is missed: open WhatsApp in
+`QTWEBENGINE_REMOTE_DEBUGGING=9222 zapzap`, scan stylesheets for the offending
+var, and add it to the post-hook mapping.
+
 ## 2026-06-11: Fixed apps/screenshots opening on the wrong workspace
 
 **File:** `~/.config/hypr/hyprland/misc.lua` — added `initial_workspace_tracking = 0` to the `hl.config({ misc = {...} })` block.
