@@ -367,8 +367,9 @@
             },
             {
                 "command": [
-                    "systemctl",
-                    "poweroff"
+                    "sh",
+                    "-c",
+                    "~/.config/hypr/scripts/session-manager.py save; systemctl poweroff"
                 ],
                 "dangerous": true,
                 "description": "Shutdown the system",
@@ -378,8 +379,9 @@
             },
             {
                 "command": [
-                    "systemctl",
-                    "reboot"
+                    "sh",
+                    "-c",
+                    "~/.config/hypr/scripts/session-manager.py save; systemctl reboot"
                 ],
                 "dangerous": true,
                 "description": "Reboot the system",
@@ -391,7 +393,7 @@
                 "command": [
                     "sh",
                     "-c",
-                    "hyprctl dispatch 'hl.dsp.exit()'"
+                    "~/.config/hypr/scripts/session-manager.py save; hyprctl dispatch 'hl.dsp.exit()'"
                 ],
                 "dangerous": true,
                 "description": "Log out of the current session",
@@ -516,15 +518,17 @@
             "logout": [
                 "sh",
                 "-c",
-                "hyprctl dispatch 'hl.dsp.exit()'"
+                "~/.config/hypr/scripts/session-manager.py save; hyprctl dispatch 'hl.dsp.exit()'"
             ],
             "reboot": [
-                "systemctl",
-                "reboot"
+                "sh",
+                "-c",
+                "~/.config/hypr/scripts/session-manager.py save; systemctl reboot"
             ],
             "shutdown": [
-                "systemctl",
-                "poweroff"
+                "sh",
+                "-c",
+                "~/.config/hypr/scripts/session-manager.py save; systemctl poweroff"
             ]
         },
         "dragThreshold": 30,

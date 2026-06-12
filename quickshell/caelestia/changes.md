@@ -1,5 +1,24 @@
 # Caelestia Shell — Hyprland 0.55 Lua Migration
 
+## 2026-06-12: Hyprland session restore (macOS-style reopen windows)
+
+**Files:** `~/.config/hypr/scripts/session-manager.py` (NEW), `~/.config/hypr/hyprland/execs.lua`, `~/.config/caelestia/shell.json`
+
+**What:** After logout/reboot/shutdown, all previously open windows reopen on their original workspaces silently — focus stays on the current workspace, floating windows get exact position/size, pinned/fullscreen state restored, scratchpad apps (special:\*) included. App-internal state rides on the apps' own persistence (sioyek/okular last page, obsidian vaults, zen session restore); kitty windows reopen in their old cwd, and if yazi/nvim/btop/htop was running inside, it's relaunched in its directory. NOT restored: exact dwindle split tree (windows re-tile in saved left-to-right order), terminal scrollback, unsaved in-app state.
+
+**How:**
+- `session-manager.py save`: `hyprctl clients -j` → per mapped window record class/title/workspace/at/size/floating/pinned/fullscreen + relaunch command from `/proc/<pid>/cmdline` + `/proc/<pid>/cwd` (kitty: BFS `/proc/*/task/*/children` for a known TUI, strip `--cwd-file=` args). Skips empty-class windows and `EXCLUDE_CLASSES` (quickshell, xdm, clipse, vicinae, xembedsniproxy — things execs.lua already autostarts). Atomic write to `~/.local/state/caelestia/session.json`. One spawn per pid; extra same-pid windows are sweep-only records.
+- `restore`: for each saved window, `hyprctl dispatch "hl.dsp.exec_cmd([[cmd]], { workspace = 'N silent', float = true, move = {x,y}, size = {w,h}, pin = true })"` — exec rules are PID-tracked (0.55 wiki: forks escape), so a ~20s sweep pass then matches stray new clients by class and fixes them via `hl.dsp.window.move({ workspace, follow = false, window = 'address:0x…' })` + float/move/resize/fullscreen dispatchers. Guards: skips if `~/.local/state/caelestia/session-restore-disabled` exists, or if >3 non-excluded clients already open.
+- `daemon`: saves every 60s (90s initial delay so a half-restored session doesn't clobber the snapshot) — covers power-button/terminal shutdowns and crashes.
+- `execs.lua`: added `sleep 2 && …session-manager.py restore` + `…session-manager.py daemon` to `hl.on("hyprland.start", …)`.
+- `shell.json`: session-menu logout/reboot/shutdown commands (and matching launcher entries) now run `session-manager.py save;` first. Hibernate untouched (resumes natively).
+
+**Verified:** `save` produces correct JSON (yazi-in-kitty → `kitty -d ~/Downloads yazi`); live dispatch test: `exec_cmd` with `workspace = '4 silent'` spawned on ws 4 with focus staying on ws 2; floating rule landed pixel-exact at global coords `{200,150} 700x400`; restore guard aborts on populated session; full logout→login cycle confirmed working by user (2026-06-12).
+
+**Notes:** Dolphin tab restore needs its own setting enabled (Settings → Startup → "Show on startup: same locations as when Dolphin was closed last"). Single-instance/forking apps (obsidian, electron) are placed by the sweep's class-matching, best-effort for multiple same-class windows.
+
+---
+
 ## 2026-06-12: Keep Awake auto-off on charger unplug + toggle toasts
 
 **File:** `services/IdleInhibitor.qml`

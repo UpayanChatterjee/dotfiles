@@ -48,4 +48,8 @@ hl.on("hyprland.start", function()
 
 	-- vicinae
 	hl.exec_cmd("vicinae server")
+
+	-- Session restore: reopen previous session's windows, then keep saving state
+	hl.exec_cmd("sleep 2 && ~/.config/hypr/scripts/session-manager.py restore")
+	hl.exec_cmd("~/.config/hypr/scripts/session-manager.py daemon")
 end)
