@@ -1,5 +1,61 @@
 # Caelestia Shell — Hyprland 0.55 Lua Migration
 
+## 2026-06-14: Cider dynamic theming (full wallpaper theme, live via CDP)
+
+**Files:** `~/.config/caelestia/cider-theme.py` (NEW), `~/.config/caelestia/post-theme-hook.sh`, `~/.local/bin/cider-themed` (NEW), `~/.local/share/applications/cider.desktop` (NEW, user override), `~/.config/sh.cider.genten/client-options.yml`, plus `~/.config/sh.cider.genten/plugins/.disabled/` (moved-aside plugins).
+
+**What:** Cider (native Electron Apple-Music client, config dir `~/.config/sh.cider.genten/`) re-colors backgrounds, surfaces, text AND accent from the wallpaper palette, regenerated on every scheme change, **live with no restart** (playback uninterrupted).
+
+**Why CDP, not customCSS:** Cider's `visual.customCSS` is only read at startup, and Cider rewrites `spa-config.yml` on exit — so editing the config live gets clobbered and can't hot-reload. Cider is Electron/Chromium, so instead we open its DevTools port and inject a `<style>` + inline vars at runtime. Same family as the ZapZap CDP work, but here CDP is the *apply* path, not just investigation.
+
+**How:**
+- `cider-theme.py` reads `SCHEME_COLOURS` (from the hook) or `scheme.json`, maps Material You → Cider's CSS vocabulary (proven via `themes/12` Catppuccin): backgrounds `--base`←surface, `--mantle`←surfaceContainerLow, `--crust`←surfaceContainerLowest; surfaces `--surface0`←surfaceContainer, `--tracklistAltRowColor`←surfaceContainerHigh, `--selection-bg`←secondaryContainer; text `--text`/`--textDefault`/`--systemPrimary`←onSurface, `--subtext1`/`--systemSecondary`←onSurfaceVariant, `--subtext0`/`--overlay*`/`--systemTertiary…Quinary`←outline/outlineVariant; accent `--accent`/`--keyColor`/`--musicKeyColor`/`--q-primary`/`--progressColor`/`--gradientColor`/`--defaultColor`/`--buttonColor`←primary, `--buttonTextColor`←onPrimary (+ `-rgb` companions). Writes `~/.local/state/caelestia/theme/cider.css`.
+- Live inject over CDP (`http://127.0.0.1:9223`): upserts `<style id="caelestia-cider">` AND sets every var inline with `!important` on **both** `<html>` and `<body>`. Body is required because Cider's `customAccentColor` sets `--keyColor` inline on `<body>`, and a child's own declaration beats an inherited `!important`.
+- CDP gotcha: modern Electron returns **403** on CDP WebSocket handshakes carrying an `Origin` header — connect with `suppress_origin=True` (no relaunch/flag needed). `--remote-allow-origins=*` would be the flag-based alternative.
+- **No `@property`/CSS transition of our own:** registering these vars via `@property` conflicts with Cider's *own* `@property`+transition on the same names and **freezes** them at the old value (computed never follows the inline change). Cider already declares ~1s `cubic-bezier(0.45,-0.05,0.15,1.05)` transitions on its color vars, so plain values cross-fade smoothly on their own.
+- Trigger: a Cider block appended to `post-theme-hook.sh` runs the script when `$SCHEME_COLOURS` is set (no-ops silently if Cider/the port isn't up).
+- Cold start: `cider-themed` wrapper launches `cider --remote-debugging-port=9223`, waits for the port, then injects **twice** (immediately + after ~4 s) to win the race against Cider setting its own accent during Vue mount. The user `cider.desktop` override (Exec → `cider-themed`) makes the app launcher use it. `client-options.yml` `chromeFlags: ["--remote-debugging-port=9223"]` is a backstop so even a plain `cider` launch opens the port for the wallpaper-change hook.
+- Disabled the album-art accent plugins `cidr.techyt.adaptivecolors` and `cidr.amaru8.adaptiveaccentseverywhere` (moved to `plugins/.disabled/`, reversible) so the accent follows the wallpaper, not the current track.
+
+**Verified (2026-06-14, user-confirmed):** test-palette injected via `SCHEME_COLOURS` recolored Cider live (green → restored) through the exact hook path; cold start auto-themed on relaunch with no manual step; adaptive plugins confirmed not loaded (`--adaptiveAccent` absent); all background/surface/text/accent vars compute to the wallpaper palette.
+
+**Caveat:** cold-start auto-theming only fires when Cider is launched via the app launcher (now using the `cider.desktop` override → `cider-themed`). Launched any other way, the first paint is unthemed until the next wallpaper-change hook re-themes it live. To re-enable an adaptive plugin, move its folder back out of `plugins/.disabled/`.
+
+---
+
+## 2026-06-14: Stop cursor warping to center on tray-icon activation
+
+**File:** `~/.config/hypr/hyprland/input.lua`
+
+**What:** Clicking a system-tray icon for an app on a special workspace (ZapZap, Cider) reveals the app on its special workspace without yanking the mouse pointer to the center of the screen.
+
+**Why:** Default Hyprland behavior warps the cursor to the focused window's center. The tray click sends SNI `Activate`; with `misc:focus_on_activate = true` Hyprland focuses the now-shown special-workspace window and warps to it (window fills the workspace ⇒ ≈screen center). See Hyprland issue #7523. `warp_on_toggle_special` doesn't apply (the reveal goes through the focus/activate path, not the special-toggle path), and there's no per-window warp-disable rule.
+
+**How:** Added `no_warps = true` to the `cursor` block in `input.lua`. `focus_on_activate` left `true` so tray clicks still reveal/focus the app.
+
+**Scope/tradeoff:** Global — the cursor also no longer follows keyboard focus changes (Super+arrows) or newly-focused windows. Known multi-monitor caveat with sloppy focus (`follow_mouse = 2`): focusing a window on a monitor the cursor isn't on can bounce back (Hyprland #2967); not an issue on the single laptop screen.
+
+**Verified (2026-06-14, user-confirmed):** `hyprctl reload` clean; `hyprctl getoption cursor:no_warps` → `bool: true; set: true`; tray-click pointer-stays-put confirmed working. User is single-monitor for now — revisit the #2967 sloppy-focus caveat if/when a second monitor is added.
+
+---
+
+## 2026-06-14: Fix special-workspace toggling (revert to official `caelestia toggle`)
+
+**Files:** `~/.config/hypr/hyprland/keybinds.lua`, `~/.config/hypr/hyprland/gestures.lua`, `~/.config/hypr/hyprland/rules.lua`, `~/.config/caelestia/cli.json`
+
+**What:** Super+B (books+Readest), Super+D (comms+ZapZap), Super+M (toggle music only, no Cider spawn), and Cider auto-placing on the music workspace all work again after the Lua migration.
+
+**Why it broke:** During the hyprlang→Lua port, an agent wrongly assumed `hyprctl dispatch` needs Lua-syntax expressions and wrote a custom wrapper `~/.local/bin/caelestia-toggle` that the keybinds called. The official `caelestia` CLI already detects Lua configs natively — `caelestia/utils/hypr.py` `is_lua_config()` reads `hyprctl systeminfo` `configProvider: lua` and translates dispatchers via `DISPATCHER_MAP_LUA` (`togglespecialworkspace`→`hl.dsp.workspace.toggle_special`, etc.). The wrapper was redundant and buggy.
+
+**How:**
+- keybinds.lua (5 special-ws binds) + gestures.lua (specialws gesture): `caelestia-toggle X` → `caelestia toggle X`. Wrapper file left in place but now unused.
+- cli.json `toggles.music.cider`: removed `"command": ["cider"]` so Super+M never spawns Cider (kept `match` + `move:true` — toggle just tidies an open Cider onto the ws). Auto-placement of a freshly launched Cider is handled by the window rule, not the toggle.
+- rules.lua `special:music` rule: added lowercase `cider` to the class regex (Hyprland class regex is case-sensitive; rule had `Cider`, cli.json had `cider`).
+
+**Verified (2026-06-14, user-confirmed):** `hyprctl reload` clean; `caelestia toggle todo` shows/hides via the Lua dispatch path; Super+B/M/D and Cider auto-placement onto `special:music` all work, with Super+M no longer spawning Cider.
+
+---
+
 ## 2026-06-12: Hyprland session restore (macOS-style reopen windows)
 
 **Files:** `~/.config/hypr/scripts/session-manager.py` (NEW), `~/.config/hypr/hyprland/execs.lua`, `~/.config/caelestia/shell.json`

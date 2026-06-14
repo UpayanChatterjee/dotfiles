@@ -141,11 +141,11 @@ hl.bind(vars.kbToggleWindowFloating, hl.dsp.window.float({ action = "toggle" }))
 hl.bind(vars.kbCloseWindow, hl.dsp.window.close())
 
 -- Special workspace toggles
-hl.bind(vars.kbSystemMonitor, hl.dsp.exec_cmd("caelestia-toggle sysmon"))
-hl.bind(vars.kbMusic, hl.dsp.exec_cmd("caelestia-toggle music"))
-hl.bind(vars.kbCommunication, hl.dsp.exec_cmd("caelestia-toggle communication"))
-hl.bind(vars.kbTodo, hl.dsp.exec_cmd("caelestia-toggle todo"))
-hl.bind(vars.kbBooks, hl.dsp.exec_cmd("caelestia-toggle books"))
+hl.bind(vars.kbSystemMonitor, hl.dsp.exec_cmd("caelestia toggle sysmon"))
+hl.bind(vars.kbMusic, hl.dsp.exec_cmd("caelestia toggle music"))
+hl.bind(vars.kbCommunication, hl.dsp.exec_cmd("caelestia toggle communication"))
+hl.bind(vars.kbTodo, hl.dsp.exec_cmd("caelestia toggle todo"))
+hl.bind(vars.kbBooks, hl.dsp.exec_cmd("caelestia toggle books"))
 
 -- Apps
 hl.bind(vars.kbTerminal, hl.dsp.exec_cmd(home .. "/.local/bin/smart_kitty.sh"))

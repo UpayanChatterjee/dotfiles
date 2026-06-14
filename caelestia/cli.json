@@ -78,6 +78,20 @@
         ],
         "move": true
       }
+    },
+    "music": {
+      "cider": {
+        "enable": true,
+        "match": [
+          {
+            "class": "cider"
+          },
+          {
+            "title": "Cider"
+          }
+        ],
+        "move": true
+      }
     }
   }
 }

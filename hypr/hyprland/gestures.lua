@@ -19,7 +19,7 @@ hl.gesture({
 	fingers = vars.gestureFingers,
 	direction = "down",
 	action = function()
-		hl.exec_cmd("caelestia-toggle specialws")
+		hl.exec_cmd("caelestia toggle specialws")
 	end,
 })
 hl.gesture({

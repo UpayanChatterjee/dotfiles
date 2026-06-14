@@ -24,6 +24,7 @@ hl.config({
 
     cursor = {
         hotspot_padding = 1,
+        no_warps = true,
         -- no_hardware_cursors = true,
     },
 })

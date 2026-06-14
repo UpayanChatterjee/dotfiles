@@ -218,3 +218,10 @@ with open(path, 'w') as f:
     f.write(css)
 " 2>/dev/null
 fi
+
+# Cider: regenerate the wallpaper theme and live-inject it via CDP (no restart).
+# Needs Cider launched with --remote-debugging-port=9223 (cider-themed wrapper);
+# silently no-ops if Cider isn't running.
+if [ -n "$SCHEME_COLOURS" ]; then
+  python3 "${HOME}/.config/caelestia/cider-theme.py" 2>/dev/null
+fi
