@@ -1,5 +1,29 @@
 # Caelestia Shell — Hyprland 0.55 Lua Migration
 
+## 2026-06-15: Upstream-merge workflow + first catch-up merge (a1124c82 → 067938d)
+
+**What:** A repeatable way to pull upstream caelestia-shell updates into this customized fork without clobbering local mods, plus the first merge executed through it.
+
+**The workspace:** `~/projects/caelestia-merge` — a clone of `github.com/caelestia-dots/shell` with branches `main` (pristine upstream) and `local` (upstream fork-point + my customizations), and tag `mine-base` = last-synced baseline. The live shell dir (`~/.config/quickshell/caelestia`, tracked in the `~/.config` dotfiles repo) is **not** itself a git repo and stays untouched as a workflow.
+
+**Fork point:** Found by *content* (not file mtimes, which are misleading — they carry the old package's build date). The true base is upstream **`a1124c82`** (Jun 9): my pristine files match it exactly, and choosing the later `f86c359c` would have silently dropped real upstream fixes. Current upstream = **`067938d`** (package `caelestia-shell-git 2.0.3.r1.g067938d`). Real divergence was small: 27 edits + 12 added files, 12 commits to merge, only 2 true conflicts.
+
+**Recurring workflow (each package update):**
+1. `cd ~/projects/caelestia-merge`
+2. import any live edits: `rsync -a --exclude=.git --exclude=changes.md --exclude=.claude --exclude=.qmlls.ini ~/.config/quickshell/caelestia/ ./ && git add -A && git commit -m "live edits" || true`
+3. `git checkout main && git pull` ; `git checkout local && git merge main` (resolve conflicts)
+4. mirror shipped paths back: `git diff mine-base..local -- assets components modules services utils shell.qml LICENSE > /tmp/cael.patch` then `patch -p1 -d ~/.config/quickshell/caelestia < /tmp/cael.patch`
+5. reload + verify, then `git tag -f mine-base local`. **Discipline:** any fix made in the live dir must also be committed on `local`, or the next merge reverts it.
+6. `plugin/` C++, `flake.*`, `CMakeLists.txt`, `README`, `.github` are excluded from the mirror — they're not in the runtime copy; the compiled plugin ships in the package.
+
+**Conflicts resolved this round:**
+- `modules/drawers/ContentWindow.qml` — kept my "always overlay over fullscreen" gate-removal AND gained upstream's new `hasSpecialWorkspace && hasFullscreenOnNormalWs` case → `fsTransitionProg > 0 || (hasSpecialWorkspace && hasFullscreenOnNormalWs)`.
+- `services/Hypr.qml` — see below.
+
+**Caps/Num-lock toasts — upstream's event method rejected (kept the poll):** Upstream rewrote `reloadDynamicConfs()` to bind `Caps_Lock`/`Num_Lock` via Lua `hl.bind(... hl.dsp.global("caelestia:refreshDevices") ...)`. **Proven not to work on Hyprland 0.55.4:** the bind registers and survives reload, but the keypress never *fires* the dispatcher (verified by binding Caps_Lock to a `notify-send` test — no notification on toggle). Worse, `hl.bind` is non-idempotent, so re-running it on every `configreloaded` accumulates dead binds. So `Hypr.qml` keeps my **Timer-only** design (`Timer { interval: 500; onTriggered: extras.refreshDevices() }`), `reloadDynamicConfs` removed entirely. Toasts now feel near-instant anyway — the package's plugin rework (`hyprextras.cpp/.hpp`: `usingLua` + event-socket handling) makes the same poll round-trip much faster. `keybinds.lua` comment updated to record the register-but-doesn't-fire finding.
+
+---
+
 ## 2026-06-14: Cider dynamic theming (full wallpaper theme, live via CDP)
 
 **Files:** `~/.config/caelestia/cider-theme.py` (NEW), `~/.config/caelestia/post-theme-hook.sh`, `~/.local/bin/cider-themed` (NEW), `~/.local/share/applications/cider.desktop` (NEW, user override), `~/.config/sh.cider.genten/client-options.yml`, plus `~/.config/sh.cider.genten/plugins/.disabled/` (moved-aside plugins).
