@@ -7,7 +7,6 @@ hl.bind("SUPER + Super_L", hl.dsp.global("caelestia:launcher"), { release = true
 
 -- Misc keybinds
 hl.bind(vars.kbSession, hl.dsp.global("caelestia:session"))
-hl.bind(vars.kbShowPanels, hl.dsp.global("caelestia:showall"))
 hl.bind(vars.kbLock, hl.dsp.global("caelestia:lock"))
 
 -- Dashboard tabs
@@ -149,6 +148,7 @@ hl.bind(vars.kbMusic, hl.dsp.exec_cmd("caelestia toggle music"))
 hl.bind(vars.kbCommunication, hl.dsp.exec_cmd("caelestia toggle communication"))
 hl.bind(vars.kbTodo, hl.dsp.exec_cmd("caelestia toggle todo"))
 hl.bind(vars.kbBooks, hl.dsp.exec_cmd("caelestia toggle books"))
+hl.bind(vars.kbAnime, hl.dsp.exec_cmd("caelestia toggle anime"))
 
 -- Apps
 hl.bind(vars.kbTerminal, hl.dsp.exec_cmd(home .. "/.local/bin/smart_kitty.sh"))
@@ -218,3 +218,5 @@ hl.bind("mouse:274", function()
 end, { mouse = true, non_consuming = true })
 
 hl.bind("CTRL + Space", hl.dsp.exec_cmd("vicinae toggle"))
+
+hl.bind("F12", hl.dsp.exec_cmd("kitten quick-access-terminal"))

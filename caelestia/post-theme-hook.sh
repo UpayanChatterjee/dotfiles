@@ -32,6 +32,14 @@ print(f'{r:.8f} {g:.8f} {b:.8f} 0.2')
   sed -i "s/^visual_mark_color .*/visual_mark_color $_mc/" "$_sf"
 fi
 
+# Sioyek: make the running instance re-read its config so the PDF page
+# colours (custom_background_color/custom_text_color) follow the scheme.
+# sioyek is single-instance and only loads config at process start; it does
+# not watch the sourced caelestia.config, so a running instance stays stale.
+if command -v sioyek >/dev/null 2>&1 && pgrep -x sioyek >/dev/null 2>&1; then
+  sioyek --execute-command reload_config --nofocus >/dev/null 2>&1
+fi
+
 # Zen Browser: translate Caelestia colors and update Color Boost
 if [ -x "${HOME}/.config/zen-boosts/apply_zen_boost.py" ]; then
   "${HOME}/.config/zen-boosts/apply_zen_boost.py"

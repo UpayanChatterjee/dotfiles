@@ -25,6 +25,7 @@ ShellRoot {
 
     ConfigToasts {}
     Shortcuts {}
+    VicinaeBridge {}
     BatteryMonitor {}
     IdleMonitors {
         lock: lock

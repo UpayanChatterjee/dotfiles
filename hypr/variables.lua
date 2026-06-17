@@ -56,8 +56,8 @@ vars.inactiveWindowBorderColour = "rgba(" .. scheme.onSurfaceVariant .. "11)"
 
 -- ### Misc
 vars.volumeStep = 5
-vars.cursorTheme = "macOS"
-vars.cursorSize = 24
+vars.cursorTheme = "aosp-cursors"
+vars.cursorSize = 20
 
 -- ### Keybind helpers
 vars.kbMoveWinToWs = "SUPER + SHIFT"
@@ -65,8 +65,8 @@ vars.kbMoveWinToWsGroup = "CTRL + SUPER + ALT"
 vars.kbGoToWs = "SUPER"
 vars.kbGoToWsGroup = "CTRL + SUPER"
 
-vars.kbNextWs = "CTRL + SUPER + J"
-vars.kbPrevWs = "CTRL + SUPER + K"
+vars.kbNextWs = "CTRL + SUPER + L"
+vars.kbPrevWs = "CTRL + SUPER + H"
 
 vars.kbToggleSpecialWs = "SUPER + S"
 
@@ -92,6 +92,7 @@ vars.kbMusic = "SUPER + M"
 vars.kbCommunication = "SUPER + D"
 vars.kbTodo = "SUPER + T"
 vars.kbBooks = "SUPER + B"
+vars.kbAnime = "SUPER + A"
 
 -- Apps
 vars.kbTerminal = "SUPER + Return"
@@ -102,7 +103,6 @@ vars.kbFileExplorer = "SUPER + E"
 -- Misc
 vars.kbSession = "CTRL + ALT + Delete"
 vars.kbClearNotifs = "CTRL + ALT + C"
-vars.kbShowPanels = "SUPER + A"
 vars.kbLock = "CTRL + ALT + L"
 vars.kbRestoreLock = "SUPER + ALT + L"
 

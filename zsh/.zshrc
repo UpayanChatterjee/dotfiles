@@ -52,6 +52,7 @@ path=(
   $HOME/.local/bin
   $HOME/.cargo/bin
   $HOME/.duckdb/cli/latest
+  $HOME/.bun/bin
   $path
 )
 export PATH

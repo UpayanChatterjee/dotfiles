@@ -1,5 +1,38 @@
 # Caelestia Shell — Hyprland 0.55 Lua Migration
 
+## 2026-06-17: New `anime` special workspace for Seanime Denshi (Super+A)
+
+**Files:** `~/.config/hypr/variables.lua`, `~/.config/hypr/hyprland/keybinds.lua`, `~/.config/hypr/hyprland/rules.lua`, `~/.config/caelestia/cli.json`, `~/.config/caelestia/shell.json`.
+
+**What:** Added an `anime` special workspace toggled with **Super+A**, housing **Seanime Denshi** (window class `seanime-denshi`). Behaves exactly like Cider/`music`: the app is **not** spawned by the toggle — it auto-places onto `special:anime` when launched independently, and the toggle just reveals the workspace and tidies any open window onto it.
+
+**How (mirrors the Cider/music pattern):**
+- `rules.lua` — window rule `class = "seanime-denshi"` → `workspace = "special:anime"` handles auto-placement on launch (the Cider-equivalent).
+- `cli.json` — new `toggles.anime.seanime` block with `match` + `move:true` and **no** `command`, so `caelestia toggle anime` toggles visibility and moves a stray window on, but never launches the app (identical to `music.cider`).
+- `keybinds.lua` / `variables.lua` — new `vars.kbAnime = "SUPER + A"` bound to `caelestia toggle anime`, alongside the other special-ws toggles.
+- `shell.json` — added `{ "icon": "smart_display", "name": "anime" }` to `bar.workspaces.specialWorkspaceIcons`. Without this, `Icons.getSpecialWsIcon` (`utils/Icons.qml`) falls back to `name[0].toUpperCase()` = a plain "A" letter glyph; the Material Symbol gives a bespoke streaming/video icon instead.
+
+**Trade-off:** Super+A previously bound `caelestia:showall` (show all panels). Per request that bind was **dropped entirely** (`vars.kbShowPanels` removed) to free Super+A for the anime workspace; showall now has no keybind.
+
+**Verified (2026-06-17, user-confirmed):** `hyprctl reload` clean; Super+A is the only `A` bind (no `showall` left); `caelestia toggle anime` reveals/hides `special:anime` without spawning Seanime Denshi; launching Seanime Denshi auto-places it on `special:anime` with the `smart_display` bar icon.
+
+---
+
+## 2026-06-16: Sioyek PDF pages — switched custom-colour → dark mode (follow scheme, no blue cast)
+
+**Files:** `~/.config/caelestia/templates/sioyek.config`, `~/.config/sioyek/prefs_user.config`, `~/.config/caelestia/post-theme-hook.sh`.
+
+**What:** The dynamic sioyek theme (template → `~/.local/state/caelestia/theme/sioyek.config`, symlinked as `~/.config/sioyek/caelestia.config` and `source`d from `prefs_user.config`) was generating wallpaper colours correctly all along — but the **PDF pages** looked unchanged ("everforest"). Switched the page rendering from `toggle_custom_color` to `toggle_dark_mode`, with `dark_mode_background_color = surface`. Pages now render as a clean, neutral, surface-coloured dark background that follows the wallpaper (no blue cast). The canvas around pages is near-black (≈ surface).
+
+**Why it looked broken (verified empirically by rendering the actual PDF under sandboxed instances):**
+- The config *was* loading: `source`, `~` expansion and `#rrggbb` hex all work in sioyek 2.0 `g552008ac`; forcing neon green/red custom colours rendered the page green/red, proving caelestia's values reach the renderer.
+- `toggle_custom_color` is **not a flat recolour** — it's a contrast-based matrix transform (`get_custom_color_transform_matrix`, pdf_view_opengl_widget.cpp:2755; `custom_color_contrast` 0.5). For *near-neutral* dark/light colours like caelestia's `surface`/`onSurface`, it washes the hue out to a fixed bluish-slate (~`#181a21`) that's almost identical to sioyek's *default* custom colours (`#2e3440`/`#d8dee9`) — hence "still everforest." Tested dark rose, medium rose, dark/medium sepia and a swap: all rendered bluish (R−B −1…−16). Only fully-saturated neon transfers hue (useless for reading). The old "everforest" was never a real config — an earlier commit only added `startup_commands toggle_custom_color` and never set colours, so the default bluish custom page had been showing ever since.
+- `toggle_dark_mode` instead renders the page as `dark_mode_background_color` directly (no transform), which is **neutral** (measured R−B ≈ 0) and can be set to `surface` so it follows the wallpaper.
+
+**Also:** `post-theme-hook.sh` now runs `sioyek --execute-command reload_config --nofocus` (guarded by `command -v sioyek` + `pgrep -x sioyek`) after regenerating colours. sioyek is single-instance (`use_single_instance = !SHOULD_LAUNCH_NEW_INSTANCE`, main.cpp:742) and its config watcher (`on_config_file_changed`, main_widget.cpp:1883) doesn't watch `source`d files, so without this a running instance never picks up scheme changes. Note `startup_commands` only runs at process start, so an *already-running* sioyek needs a real restart to switch custom→dark mode; reload only refreshes colour values.
+
+---
+
 ## 2026-06-15: Upstream-merge workflow + first catch-up merge (a1124c82 → 067938d)
 
 **What:** A repeatable way to pull upstream caelestia-shell updates into this customized fork without clobbering local mods, plus the first merge executed through it.

@@ -155,6 +155,10 @@
                 {
                     "icon": "menu_book",
                     "name": "books"
+                },
+                {
+                    "icon": "smart_display",
+                    "name": "anime"
                 }
             ],
             "windowIcons": [
@@ -495,7 +499,7 @@
         "defaultPlayer": "Spotify",
         "gpuType": "",
         "lyricsBackend": "LyricsBackend::Auto",
-        "maxVolume": 1,
+        "maxVolume": 1.5,
         "playerAliases": [
             {
                 "from": "com.github.th_ch.youtube_music",

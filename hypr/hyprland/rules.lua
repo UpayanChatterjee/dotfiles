@@ -90,6 +90,10 @@ hl.window_rule({
 	match = { class = "calibre-gui|calibre|com\\.bilingify\\.readest|readest" },
 	workspace = "special:books",
 })
+hl.window_rule({
+	match = { class = "seanime-denshi" },
+	workspace = "special:anime",
+})
 
 -- Dialogs
 hl.window_rule({ match = { title = "(Select|Open)( a)? (File|Folder)(s)?" }, float = true })

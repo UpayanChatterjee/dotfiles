@@ -1,7 +1,7 @@
 {
     "showCpu": false,
     "showDownload": true,
-    "showLyrics": true,
+    "showLyrics": false,
     "showRam": true,
     "showUpload": false
 }

@@ -92,6 +92,17 @@
         ],
         "move": true
       }
+    },
+    "anime": {
+      "seanime": {
+        "enable": true,
+        "match": [
+          {
+            "class": "seanime-denshi"
+          }
+        ],
+        "move": true
+      }
     }
   }
 }
