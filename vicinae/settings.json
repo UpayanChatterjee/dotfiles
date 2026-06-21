@@ -11,6 +11,8 @@
 {
    "$schema": "https://vicinae.com/schemas/config.json",
    "close_on_focus_loss": true,
+   "pop_to_root_on_close": true,
+   "escape_key_behavior": "close_window",
    "font": {
       "rendering": "native",
       "normal": {
@@ -31,10 +33,22 @@
    "launcher_window": {
       "opacity": 0.8,
       "compact_mode": {
-         "enabled": true
+         "enabled": false
       }
    },
    "providers": {
+      "@UpayanChatterjee/caelestia-control": {
+         "entrypoints": {
+            "control-caelestia": {
+               "alias": ">"
+            }
+         }
+      },
+      "clipboard": {
+         "preferences": {
+            "monitoring": false
+         }
+      },
       "files": {
          "entrypoints": {
             "search": {

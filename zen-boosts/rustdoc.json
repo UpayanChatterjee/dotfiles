@@ -1,18 +1,18 @@
 {
   "boostName": "rustdoc",
-  "dotAngleDeg": 216.0,
+  "dotAngleDeg": 91.91489361702126,
   "dotPos": {
-    "x": 0.3529264802522645,
-    "y": 0.8015454025333706
+    "x": 0.8321652140455564,
+    "y": 0.4528139789972735
   },
   "dotDistance": 1.0,
-  "secondaryDotAngleDegDelta": 89.62500000000006,
+  "secondaryDotAngleDegDelta": 314.2389525368249,
   "secondaryDotPos": {
-    "x": 0.1974984690039523,
-    "y": 0.35490322627622894
+    "x": 0.6979300501277577,
+    "y": 0.2291052875074463
   },
-  "brightness": 0.7799564270152506,
-  "saturation": 0.42079207920792105,
+  "brightness": 0.6840958605664488,
+  "saturation": 0.5786206896551723,
   "contrast": 0.75,
   "fontFamily": "",
   "enableColorBoost": true,

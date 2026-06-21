@@ -69,8 +69,7 @@
         "enable": true,
         "match": [
           {
-            "class": "org.kde.plasma-systemmonitor",
-            "title": "Overview — System Monitor"
+            "class": "org.kde.plasma-systemmonitor"
           }
         ],
         "command": [
@@ -99,6 +98,9 @@
         "match": [
           {
             "class": "seanime-denshi"
+          },
+          {
+            "class": "com.stremio.stremio"
           }
         ],
         "move": true

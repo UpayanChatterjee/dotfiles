@@ -1,5 +1,27 @@
 # Caelestia Shell — Hyprland 0.55 Lua Migration
 
+## 2026-06-21: Fix mako hijacking the notification seat (startup race)
+
+**File:** `~/.config/systemd/user/mako.service.d/override.conf` (new). No edits to the packaged `mako.service`, the `caelestia-shell` wrapper, or `execs.conf`.
+
+**Symptom:** Notifications stopped appearing in the caelestia shell — mako was rendering all of them, despite the shell running fine.
+
+**Root cause:** Completes the `2026-06-11` seat-handover fix below. The `caelestia-shell` wrapper stops mako then `exec`s quickshell, but quickshell's `NotificationServer` (`services/Notifs.qml:83`) only registers the `org.freedesktop.Notifications` D-Bus name *after* QML finishes loading — a multi-second window. Any notification emitted during that window re-activates mako via its D-Bus activation file (`/usr/share/dbus-1/services/fr.emersion.mako.service`), mako grabs the free seat, and quickshell can never reclaim it (mako doesn't allow D-Bus name replacement). The wrapper's `systemctl --user stop mako` cannot win this race reliably.
+
+**Fix:** A systemd drop-in gates mako's D-Bus activation behind `ExecCondition`s so it only ever starts when **no** higher-priority handler is alive — making mako the lowest-priority, last-resort daemon:
+
+```ini
+[Service]
+ExecCondition=/bin/sh -c '! pgrep -f "[q]s -c caelestia" >/dev/null'
+ExecCondition=/bin/sh -c '! pgrep -x plasmashell >/dev/null'
+```
+
+All `ExecCondition=` must pass for mako to start. While `qs -c caelestia` (Hyprland) or `plasmashell` (KDE Plasma) is running, mako is blocked → the seat stays free for the real handler. When both are gone, the conditions pass and mako D-Bus-activates as the fallback (the reverse-direction behavior from `2026-06-11` is preserved). The `[q]s` bracket trick keeps `pgrep` from matching the `ExecCondition`'s own `sh`. Extend with one more line per process for any future DE/daemon.
+
+**Recovery after install:** `systemctl --user daemon-reload` → `systemctl --user stop mako` → `caelestia shell -k` → relaunch via `caelestia-shell -d` so the shell claims the freed seat.
+
+**Verified (2026-06-21):** after recovery, `busctl --user status org.freedesktop.Notifications` reports the `qs -c caelestia` PID (not mako); `notify-send` renders in caelestia and mako does **not** reactivate while the shell is up; `ExecCondition` exit codes confirmed (caelestia up → exit 1 = blocked; shell absent → exit 0 = fallback open).
+
 ## 2026-06-17: New `anime` special workspace for Seanime Denshi (Super+A)
 
 **Files:** `~/.config/hypr/variables.lua`, `~/.config/hypr/hyprland/keybinds.lua`, `~/.config/hypr/hyprland/rules.lua`, `~/.config/caelestia/cli.json`, `~/.config/caelestia/shell.json`.
@@ -15,6 +37,8 @@
 **Trade-off:** Super+A previously bound `caelestia:showall` (show all panels). Per request that bind was **dropped entirely** (`vars.kbShowPanels` removed) to free Super+A for the anime workspace; showall now has no keybind.
 
 **Verified (2026-06-17, user-confirmed):** `hyprctl reload` clean; Super+A is the only `A` bind (no `showall` left); `caelestia toggle anime` reveals/hides `special:anime` without spawning Seanime Denshi; launching Seanime Denshi auto-places it on `special:anime` with the `smart_display` bar icon.
+
+**Update (2026-06-17): Stremio added to the same `anime` workspace.** Stremio (class `com.stremio.stremio`) now gets the same treatment as Seanime Denshi — auto-place on launch + tidy-on-toggle, never spawned by the toggle. `rules.lua` anime rule class is now the alternation `seanime-denshi|com\.stremio\.stremio`; `cli.json` `toggles.anime.seanime.match` gained a second `{ "class": "com.stremio.stremio" }` entry (matches are OR'd, `move:true`, no command). Verified: `caelestia toggle anime` moved a running Stremio from a normal workspace onto `special:anime` without spawning a new instance.
 
 ---
 

@@ -67,7 +67,7 @@ hl.window_rule({
 })
 
 -- Special workspaces
-hl.window_rule({ match = { class = "btop" }, workspace = "special:sysmon" })
+hl.window_rule({ match = { class = "btop|org\\.kde\\.plasma-systemmonitor" }, workspace = "special:sysmon" })
 
 hl.window_rule({
 	match = { class = "feishin|Spotify|Supersonic|Cider|cider|com\\.github\\.th_ch\\.youtube_music" },
@@ -91,7 +91,7 @@ hl.window_rule({
 	workspace = "special:books",
 })
 hl.window_rule({
-	match = { class = "seanime-denshi" },
+	match = { class = "seanime-denshi|com\\.stremio\\.stremio" },
 	workspace = "special:anime",
 })
 
