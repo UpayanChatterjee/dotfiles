@@ -1,5 +1,50 @@
 # Caelestia Shell — Hyprland 0.55 Lua Migration
 
+## 2026-06-27: Upstream merge — 2.0.3 → **2.1.0**, 17 commits up to `90a1b46` (via caelestia-merge)
+
+**Repo:** `~/projects/caelestia-merge`, branch `local`. Merge commit `4b855796` (parents: prior baseline `6d45d90d` + upstream `90a1b466`, merge-base `c488b8e`). 53 files changed, +1644/−1274. Deployed runtime QML to `~/.config` via `rsync -ac --delete` over `assets components modules services utils` + `shell.qml LICENSE` (infra dirs `plugin/ nix/ scripts/ extras/ flake.* CMakeLists.txt README .github` and keepers `changes.md`, `.claude/`, `.qmlls.ini` excluded).
+
+**Baseline repair first:** the `mine-base` tag was stale — it pointed at `7dd12cba` (pre-dating the 2026-06-24 merge) instead of `local`@`6d45d90d`. Confirmed live `~/.config` was byte-identical to the `local` worktree (so the true deployed baseline was `6d45d90d`) and reset `git tag -f mine-base local` **before** merging, so the deploy-diff `mine-base..local` captured exactly the 2.1.0 delta and not a re-application of the last merge.
+
+**Upstream 2.1.0 highlights pulled in:** new **nexus Ethernet section** (#1602 — `modules/nexus/common/EthernetSection.qml`, `modules/nexus/pages/network/EthernetDetailPage.qml`) + nexus/network refactor; sidebar `showOnHover` + drawers `isOpen` IPC (#1505); click-to-seek on sliders (#1539); improved bar clock date; localized geocoding + city-name formatting (#1593); `M3TextField` control; GPU-detection without chained procs; layer-transparency/blur clamps; `wrap_term_launch.sh` asset; misc fixes (wallpaper launcher crash, power-button centering, window-pid→string).
+
+**Components refactor — 14 upstream deletions handled by 3-way merge:** upstream removed unused controls/components (#1625): `components/{ConnectionHeader,ConnectionInfoSection,PropertyRow,SectionContainer,SectionHeader}.qml`, `components/controls/{CollapsibleSection,SpinBoxRow,SplitButtonRow,StyledInputField,SwitchRow,ToggleButton,ToggleRow}.qml`, `components/effects/InnerBorder.qml`, and `services/Network.qml`. **Verified none were fork-modified** (`git diff c488b8e..6d45d90d` empty for all 14) and **no surviving file references them** — the `SectionHeader`/`ToggleRow` still used by nexus pages resolve to the separate `modules/nexus/common/` copies (imported via `qs.modules.nexus.common`), not the deleted `components/` ones. A naive rsync-of-`/etc/xdg` would have wrongly kept these; the git merge against base `c488b8e` deleted them correctly.
+
+**Conflicts:** none — git auto-merged cleanly. Only **3 files** had genuine fork∩upstream overlap (`modules/bar/Bar.qml`, `modules/Shortcuts.qml`, `modules/bar/popouts/Network.qml`); verified BOTH sides survived: fork's sysmon/netspeed hit-testing + upstream's `id→entryId`/`modelData` refactor in Bar.qml; fork's dashboard shortcuts + upstream's `isOpen` IPC in Shortcuts.qml; fork's WiFi signal-% + upstream's `interface→iface` rename in Network.qml. All 13 fork keepers present (VicinaeBridge, BarConfig, FanSpeeds, Mono, Shazam, STT, TTS, NetworkSpeed, SystemMonitor popout, xdm.png, portal gif). Hypr.qml Timer-only Caps/Num + `dispatch()` Lua translation intact; IdleMonitors on `SessionManager`; `shell.qml` keeps `VicinaeBridge {}`. qmllint clean on all merge-touched + new files.
+
+**Cross-check:** `diff -rq /etc/xdg/quickshell/caelestia ~/.config` shows **0 upstream files missing** from live, 13 fork-only extras, 26 fork-modified upstream files — exactly as expected.
+
+**Verified (2026-06-27):** clean `caelestia shell -d` restart → `Configuration Loaded`, stable single instance, holds `org.freedesktop.Notifications` seat (not mako), fork IPC targets (`hypr.refreshDevices`, `gameMode`) registered. Only benign warnings remain (missing KDE icon themes, `Config.bar accessed without a screen` init-timing — both pre-existing). Earlier CoverVisualiser/Notification null-property warnings were transient artifacts of the old instance hot-reloading mid-rsync, absent on clean load. Backup of pre-deploy `~/.config` at `~/.cache/caelestia-config-backup-20260627-221313.tar.gz`. `mine-base` advanced to `4b855796`.
+
+## 2026-06-24: Upstream merge — 7 commits up to `c488b8e` (via caelestia-merge)
+
+**Repo:** `~/projects/caelestia-merge`, branch `local`. Merge commit `6d45d90d` (parents: reconcile `b98da63c` + upstream `c488b8e`). Deployed runtime QML to `~/.config` via `rsync` (infra dirs `plugin/ nix/ scripts/ extras/` and keepers `changes.md`, `.claude/` excluded).
+
+**Reconcile first:** `~/.config` had drifted from the `local` branch — folded the live edits in before merging: `shell.qml` (`VicinaeBridge {}`), `modules/VicinaeBridge.qml` (fork-only), and the `IdleMonitors` SessionManager fix below.
+
+**Upstream changes pulled in:** round + animated dash calendar; non-systemd support (#1607); blobs-gaining-energy-on-slow-frames fix; nexus **Apps page** + **Notification settings** (#1597, new files `AppsPage.qml`, `apps/AllApps.qml`, `apps/AppInfo.qml`, `services/NotificationsPage.qml`, `common/BlobPopup.qml`, `common/PopupRow.qml`, `containers/VerticalFadeListView.qml`); don't reload on unrelated file events.
+
+**Conflicts:** none — git auto-merged all 65 changed files against merge-base `067938d6`. Verified post-merge: all 10 fork-only files present (VicinaeBridge, BarConfig, FanSpeeds, Mono, Shazam, STT, TTS, NetworkSpeed, SystemMonitor, xdm asset); Hypr.qml Timer customizations intact; SessionManager (not LogindManager); braces balanced.
+
+**Verified (2026-06-24):** `caelestia shell -d` loads clean (234 MB PSS, no errors in qslog). Backup of pre-deploy `~/.config` at `~/.cache/caelestia-config-backup-20260624-090745.tar.gz`.
+
+## 2026-06-24: Migrate `IdleMonitors` from `LogindManager` to `SessionManager`
+
+**File:** `modules/IdleMonitors.qml` (brought in line with packaged upstream).
+
+**Symptom:** A fresh `caelestia shell -d` fails to load: `Type IdleMonitors unavailable` → `caused by @modules/IdleMonitors.qml[30:5]: LogindManager is not a type`. The bar had survived 2.6 days only because the old `qs` process held a compatible plugin in memory; any restart/reboot would have hit this.
+
+**Root cause:** `LogindManager` was a Caelestia C++ **plugin** type (`Caelestia.Internal.logindmanager`), *not* a quickshell type. Upstream caelestia (`caelestia-shell-git 2.0.3.r8.gc488b8e`) refactored it into `Caelestia.Services.SessionManager`. The installed plugin (`/usr/lib/qt6/qml/Caelestia/`) no longer registers `LogindManager` under `Caelestia.Internal`; our forked QML still referenced the old name, so the config failed to load. (Unrelated to quickshell — installed quickshell-git was fine.)
+
+**Fix:** Adopted the packaged `IdleMonitors.qml`:
+- imports: drop `Caelestia.Internal`, add `import QtQuick` + `import Caelestia.Services`.
+- `handleIdleAction` non-string branch: `else if (!SessionManager.exec(action)) Quickshell.execDetached(action);`.
+- replace `LogindManager {}` with `Connections { target: SessionManager; onAboutToSleep/onLockRequested/onUnlockRequested }`.
+
+This restores lock-on-sleep and lock/unlock-on-request with the installed plugin. Our fork's copy of this file had no local modifications (it was just stale upstream), so this is a clean adoption. Other files still use `Caelestia.Internal` for unrelated types — left untouched.
+
+**Verified (2026-06-24):** `caelestia shell -d` loads with no errors in the qslog; `pgrep -f 'qs -c caelestia'` shows the bar at ~242 MB PSS. Also noted the bar leaks ~140 MB/day (PSS 260 MB fresh → 628 MB after 2.6 days uptime) — worth watching after the pending upstream merge.
+
 ## 2026-06-21: Fix mako hijacking the notification seat (startup race)
 
 **File:** `~/.config/systemd/user/mako.service.d/override.conf` (new). No edits to the packaged `mako.service`, the `caelestia-shell` wrapper, or `execs.conf`.

@@ -1,18 +1,18 @@
 {
   "boostName": "erp",
-  "dotAngleDeg": 91.91489361702126,
+  "dotAngleDeg": 219.47368421052627,
   "dotPos": {
-    "x": 0.8321652140455564,
-    "y": 0.4528139789972735
+    "x": 0.3349260297718252,
+    "y": 0.792080184800523
   },
   "dotDistance": 1.0,
-  "secondaryDotAngleDegDelta": 314.2389525368249,
+  "secondaryDotAngleDegDelta": 284.24724602203185,
   "secondaryDotPos": {
-    "x": 0.6979300501277577,
-    "y": 0.2291052875074463
+    "x": 0.7424707876594017,
+    "y": 0.7318796393214146
   },
-  "brightness": 0.6840958605664488,
-  "saturation": 0.5786206896551723,
+  "brightness": 0.8518518518518519,
+  "saturation": 0.2735294117647058,
   "contrast": 0.75,
   "fontFamily": "Inter Display",
   "enableColorBoost": true,

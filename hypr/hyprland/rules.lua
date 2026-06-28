@@ -195,6 +195,22 @@ hl.window_rule({
 	-- workspace = "special",
 	-- render_unfocused = false,
 })
+hl.window_rule({
+	match = { class = "xembedsniproxy" },
+	no_initial_focus = true,
+	focus_on_activate = false,
+	suppress_event = "activate activatefocus",
+	float = true,
+	no_focus = true,
+	no_blur = true,
+	no_shadow = true,
+	opacity = "0.0 override",
+	-- move = { 0, 0 },
+	size = { 0, 0 },
+	allows_input = false,
+	-- workspace = "special",
+	-- render_unfocused = false,
+})
 
 -- Force KDE apps to be fully opaque (fixes transparent menus)
 -- hl.window_rule({ match = { class = "^(org\\.kde.*)$" }, force_rgbx = true })
