@@ -1,18 +1,18 @@
 {
   "boostName": "reddit",
-  "dotAngleDeg": 219.47368421052627,
+  "dotAngleDeg": 219.99999999999997,
   "dotPos": {
-    "x": 0.3349260297718252,
-    "y": 0.792080184800523
+    "x": 0.33225000000000016,
+    "y": 0.7905515229696793
   },
   "dotDistance": 1.0,
-  "secondaryDotAngleDegDelta": 284.24724602203185,
+  "secondaryDotAngleDegDelta": 43.3333333333334,
   "secondaryDotPos": {
-    "x": 0.7424707876594017,
-    "y": 0.7318796393214146
+    "x": 0.1785945186181534,
+    "y": 0.5962224845745706
   },
-  "brightness": 0.8518518518518519,
-  "saturation": 0.2735294117647058,
+  "brightness": 0.7973856209150326,
+  "saturation": 0.28709677419354884,
   "contrast": 0.75,
   "fontFamily": "MonoLisa",
   "enableColorBoost": true,

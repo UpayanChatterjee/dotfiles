@@ -91,7 +91,7 @@ hl.window_rule({
 	workspace = "special:books",
 })
 hl.window_rule({
-	match = { class = "seanime-denshi|com\\.stremio\\.stremio" },
+	match = { class = "seanime-denshi|com\\.stremio\\.Stremio" },
 	workspace = "special:anime",
 })
 

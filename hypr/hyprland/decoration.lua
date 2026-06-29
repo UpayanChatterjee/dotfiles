@@ -37,7 +37,7 @@ hl.config({
 		fullscreen_opacity = 1.0, -- Opacity of fullscreen windows [0.0 - 1.0]
 		dim_modal = true, -- Enables dimming of parents of modal windows
 		dim_inactive = true, -- Enables dimming of inactive windows
-		dim_strength = 0.5, -- How much inactive windows should be dimmed [0.0 - 1.0]
+		dim_strength = 0.25, -- How much inactive windows should be dimmed [0.0 - 1.0]
 		dim_special = 0.5, -- How much to dim screen when special workspace is open [0.0 - 1.0]
 	},
 	-- opengl = {

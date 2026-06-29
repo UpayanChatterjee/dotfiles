@@ -100,7 +100,7 @@
             "class": "seanime-denshi"
           },
           {
-            "class": "com.stremio.stremio"
+            "class": "com.stremio.Stremio"
           }
         ],
         "move": true
